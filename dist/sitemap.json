@@ -1,0 +1,155 @@
+[
+  {
+    "title": "DASHBOARD",
+    "icon": "Layout",
+    "path": "/"
+  },
+  {
+    "title": "ANA SƏHİFƏ",
+    "icon": "Home",
+    "children": [
+      {
+        "title": "Ümumi Görünüş",
+        "path": "/?page=home",
+        "icon": "Layout"
+      },
+      {
+        "title": "Naviqasiya",
+        "path": "/?page=navbar",
+        "icon": "Menu"
+      },
+      {
+        "title": "Giriş Hissəsi",
+        "path": "/?page=hero",
+        "icon": "Maximize"
+      },
+      {
+        "title": "Sürüşən Yazı",
+        "path": "/?page=marquee",
+        "icon": "Type"
+      },
+      {
+        "title": "Kateqoriya Liderləri",
+        "path": "/?page=categoryleaders",
+        "icon": "Star"
+      },
+      {
+        "title": "Sayt Sonu",
+        "path": "/?page=footer",
+        "icon": "Anchor"
+      }
+    ]
+  },
+  {
+    "title": "HAQQIMIZDA",
+    "icon": "Info",
+    "children": [
+      {
+        "title": "Ümumi Məlumat",
+        "path": "/?page=about",
+        "icon": "FileText"
+      }
+    ]
+  },
+  {
+    "title": "XƏBƏRLƏR",
+    "icon": "FileText",
+    "children": [
+      {
+        "title": "Xəbər Siyahısı",
+        "path": "/?mode=news",
+        "icon": "List"
+      },
+      {
+        "title": "Xəbər Səhifəsi",
+        "path": "/?page=newspage",
+        "icon": "Layout"
+      }
+    ]
+  },
+  {
+    "title": "TƏDBİRLƏR",
+    "icon": "Calendar",
+    "children": [
+      {
+        "title": "Tədbir Təqvimi",
+        "path": "/?mode=events",
+        "icon": "Clock"
+      },
+      {
+        "title": "Tədbir Səhifəsi",
+        "path": "/?page=eventspage",
+        "icon": "Layout"
+      }
+    ]
+  },
+  {
+    "title": "SÜRÜCÜLƏR",
+    "icon": "Trophy",
+    "children": [
+      {
+        "title": "Sürücü Reytinqi",
+        "path": "/?mode=drivers",
+        "icon": "Award"
+      },
+      {
+        "title": "Sürücülər Səhifəsi",
+        "path": "/?page=driverspage",
+        "icon": "Layout"
+      }
+    ]
+  },
+  {
+    "title": "QALEREYA",
+    "icon": "Image",
+    "children": [
+      {
+        "title": "Video Arxivi",
+        "path": "/?mode=videos",
+        "icon": "Video"
+      },
+      {
+        "title": "Foto Arxiv",
+        "path": "/?mode=photos",
+        "icon": "Image"
+      },
+      {
+        "title": "Qalereya Səhifəsi",
+        "path": "/?page=gallerypage",
+        "icon": "Layout"
+      }
+    ]
+  },
+  {
+    "title": "QAYDALAR",
+    "icon": "Shield",
+    "children": [
+      {
+        "title": "Qaydalar Səhifəsi",
+        "path": "/?page=rulespage",
+        "icon": "Layout"
+      }
+    ]
+  },
+  {
+    "title": "ƏLAQƏ",
+    "icon": "Phone",
+    "children": [
+      {
+        "title": "Əlaqə Səhifəsi",
+        "path": "/?page=contactpage",
+        "icon": "Layout"
+      }
+    ]
+  },
+  {
+    "title": "ADMİN HESABLARI",
+    "icon": "Users",
+    "path": "/users-management"
+  },
+  {
+    "title": "SİSTEM AYARLARI",
+    "icon": "Settings",
+    "path": "/frontend-settings"
+  }
+]

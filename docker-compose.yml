@@ -1,0 +1,15 @@
+services:
+  forsaj-db-local:
+    image: mysql:8.0
+    container_name: forsaj-db-local
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: "forsaj_root_secure_2026"
+      MYSQL_DATABASE: "forsaj_admin"
+      MYSQL_USER: "forsaj_user"
+      MYSQL_PASSWORD: "forsaj_password_99"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-local-data:/var/lib/mysql

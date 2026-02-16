@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "title": "Yeni Offroad Mövsümü Başlayırm",
+    "date": "2024-03-20",
+    "img": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2070&auto=format&fit=crop",
+    "description": "Yeni mövsümdə sizi daha maraqlı yarışlar və sınaqlar gözləyir. Bütün iştirakçıları hazır olmağa çağırırıq!",
+    "category": "XƏBƏRLƏR",
+    "status": "published"
+  },
+  {
+    "id": 2,
+    "title": "Forsaj Club Beynəlxalq Yarışlarda",
+    "date": "2024-04-15",
+    "img": "https://images.unsplash.com/photo-1547038577-da80abbc4f19?q=80&w=2055&auto=format&fit=crop",
+    "description": "Klubumuzun pilotları beynəlxalq dərəcəli offroad ralli yarışlarında iştirak etmək üçün dəvət alıblar.",
+    "category": "UĞURLARIMIZ",
+    "status": "published"
+  },
+  {
+    "id": 3,
+    "title": "Kross-kantri üzrə Azərbaycan Çempionatı",
+    "date": "2024-05-10",
+    "img": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2070&auto=format&fit=crop",
+    "description": "Ölkənin ən güclü pilotları çempionluq uğrunda mübarizəyə qoşulur. Yarışlar 3 mərhələdən ibarət olacaq.",
+    "category": "YARIŞLAR",
+    "status": "published"
+  },
+  {
+    "id": 4,
+    "title": "Offroad Texnikasına Necə Qulluq Etməli?",
+    "date": "2024-05-25",
+    "img": "https://images.unsplash.com/photo-1485291571150-772bcfc10da5?q=80&w=2070&auto=format&fit=crop",
+    "description": "Çətin yol şəraitində avtomobilinizi qorumaq üçün lazım olan vacib məsləhətlər.",
+    "category": "MƏSLƏHƏTLƏR",
+    "status": "published"
+  },
+  {
+    "id": 5,
+    "title": "Forsaj Club Gənc Pilotlar Layihəsi",
+    "date": "2024-06-05",
+    "img": "https://images.unsplash.com/photo-1547038577-da80abbc4f19?q=80&w=2055&auto=format&fit=crop",
+    "description": "Gənc nəslin motorsporta cəlb edilməsi üçün yeni təlim mərkəzimiz fəaliyyətə başlayır.",
+    "category": "LAYİHƏLƏR",
+    "status": "published"
+  },
+  {
+    "id": 6,
+    "title": "Yeni Ekspedisiya: Şahdağ Yüksəklikləri",
+    "date": "2024-06-20",
+    "img": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop",
+    "description": "Klub üzvləri Şahdağın ən çətin zirvələrinə doğru yola çıxırlar.",
+    "category": "EKSPEDİSİYA",
+    "status": "published"
+  }
+]
