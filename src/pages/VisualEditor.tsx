@@ -203,6 +203,12 @@ const canDeleteSection = (section: Section) => {
     return !extractSectionKey(section);
 };
 
+const isSectionVisibleInAdmin = (section: Section) => {
+    const key = extractSectionKey(section);
+    if (key && key.includes('_')) return false;
+    return true;
+};
+
 const componentLabels: Record<string, string> = {
     'hero': 'Giriş Hissəsi',
     'marquee': 'Sürüşən Yazı',
@@ -1101,7 +1107,9 @@ const VisualEditor: React.FC = () => {
 
         // Match against all sections
         const matchText = page.sections.some(s =>
+            isSectionVisibleInAdmin(s) && (
             (s.label.toLowerCase().includes(lower) || s.value.toLowerCase().includes(lower))
+            )
         );
 
         // Match against all images
@@ -1113,6 +1121,7 @@ const VisualEditor: React.FC = () => {
     });
 
     const displayedSections = (currentPage?.sections || []).filter(s => {
+        if (!isSectionVisibleInAdmin(s)) return false;
         return !searchTerm ||
             s.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
             s.value.toLowerCase().includes(searchTerm.toLowerCase());
