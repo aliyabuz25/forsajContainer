@@ -203,9 +203,13 @@ const canDeleteSection = (section: Section) => {
     return !extractSectionKey(section);
 };
 
+const UNDERSCORE_KEY_TOKEN = /\b[A-Z0-9]+(?:_[A-Z0-9]+)+\b/;
+
 const isSectionVisibleInAdmin = (section: Section) => {
     const key = extractSectionKey(section);
     if (key && key.includes('_')) return false;
+    if (UNDERSCORE_KEY_TOKEN.test((section.id || '').trim())) return false;
+    if (UNDERSCORE_KEY_TOKEN.test((section.label || '').trim())) return false;
     return true;
 };
 
@@ -345,7 +349,8 @@ const VisualEditor: React.FC = () => {
             if (Array.isArray(newsData)) {
                 setNews(newsData);
                 if (newsData.length > 0 && selectedNewsId === null) {
-                    handleNewsSelect(newsData[0].id);
+                    setSelectedNewsId(newsData[0].id);
+                    setNewsForm({ ...newsData[0] });
                 }
             }
 
@@ -405,6 +410,13 @@ const VisualEditor: React.FC = () => {
             if (idx !== -1) setSelectedPageIndex(idx);
         }
     }, [location.search, pages]);
+
+    useEffect(() => {
+        if (editorMode !== 'news' && editorMode !== 'events' && isItemModalOpen) {
+            setIsItemModalOpen(false);
+            setEditingType(null);
+        }
+    }, [editorMode, isItemModalOpen]);
 
     const startExtraction = async () => {
         setIsExtracting(true);
