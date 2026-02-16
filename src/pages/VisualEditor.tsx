@@ -96,18 +96,111 @@ const QUILL_MODULES = {
     ],
 };
 
-const QuillEditor: React.FC<{ value: string, onChange: (val: string) => void, id: string }> = ({ value, onChange, id }) => {
+const QuillEditor: React.FC<{ value: string, onChange: (val: string) => void, id: string, readOnly?: boolean }> = ({ value, onChange, id, readOnly = false }) => {
     return (
         <div className="quill-editor-wrapper" id={id}>
             <ReactQuill
                 theme="snow"
                 value={value || ''}
                 onChange={onChange}
-                modules={QUILL_MODULES}
+                modules={readOnly ? { toolbar: false } : QUILL_MODULES}
+                readOnly={readOnly}
                 placeholder="Məzmunu daxil edin..."
             />
         </div>
     );
+};
+
+const looksLikeCodeText = (text?: string) => {
+    const value = (text || '').toLowerCase().trim();
+    if (!value) return false;
+
+    const codeMarkers = [
+        'import ',
+        'export ',
+        'const ',
+        'let ',
+        'var ',
+        'function ',
+        '=>',
+        'useeffect(',
+        'usestate(',
+        'classname=',
+        'onclick=',
+        'onsubmit=',
+        'fetch(',
+        'axios.',
+        'json.parse(',
+        'json.stringify(',
+        'return (',
+        'npm run',
+        'docker ',
+        'dockerfile',
+        'traefik.',
+        'nginx',
+        'mysql_',
+        'pathprefix(',
+        'hostsni(',
+        '/etc/',
+        'process.env',
+        'window.location',
+        'localhost'
+    ];
+
+    if (codeMarkers.some(marker => value.includes(marker))) return true;
+
+    const symbolCount = ((text || '').match(/[{}[\];]/g) || []).length;
+    return symbolCount > 10;
+};
+
+const CONTENT_KEY_PATTERNS = [
+    /^PAGE_/,
+    /^BTN_/,
+    /^SEO_/,
+    /^NAV_/,
+    /^MENU_/,
+    /^FOOTER_/,
+    /^META_/,
+    /^OG_/,
+    /^TITLE$/,
+    /^SUBTITLE$/,
+    /^DESCRIPTION$/,
+    /^KEYWORDS$/
+];
+
+const extractSectionKey = (section: Section) => {
+    if (/^[A-Z0-9_]+$/.test(section.id)) return section.id.trim();
+
+    const label = (section.label || '').trim();
+    if (label.startsWith('KEY:')) {
+        return label.replace(/^KEY:\s*/i, '').trim();
+    }
+
+    return '';
+};
+
+const isContentKey = (key: string) => CONTENT_KEY_PATTERNS.some((pattern) => pattern.test(key));
+
+const isSectionBusinessEditable = (section: Section) => {
+    const key = extractSectionKey(section);
+    if (key) return isContentKey(key);
+
+    const combined = `${section.id} ${section.label} ${section.value} ${section.url || ''}`;
+    return !looksLikeCodeText(combined);
+};
+
+const canEditSectionField = (section: Section, field: 'value' | 'label' | 'url') => {
+    if (!isSectionBusinessEditable(section)) return false;
+
+    const key = extractSectionKey(section);
+    if (key) return field === 'value';
+
+    return true;
+};
+
+const canDeleteSection = (section: Section) => {
+    if (!isSectionBusinessEditable(section)) return false;
+    return !extractSectionKey(section);
 };
 
 const componentLabels: Record<string, string> = {
@@ -364,6 +457,8 @@ const VisualEditor: React.FC = () => {
         const newPages = [...pages];
         const sectionIdx = newPages[pageIdx].sections.findIndex(s => s.id === sectionId);
         if (sectionIdx !== -1) {
+            const targetSection = newPages[pageIdx].sections[sectionIdx];
+            if (!canEditSectionField(targetSection, field)) return;
             newPages[pageIdx].sections[sectionIdx][field] = value;
             setPages(newPages);
         }
@@ -1739,41 +1834,58 @@ const VisualEditor: React.FC = () => {
                                                     Bu səhifədə sorğuya uyğun mətn tapılmadı.
                                                 </div>
                                             ) : (
-                                                displayedSections.map((section) => (
-                                                    <div key={section.id} className="field-item-wrapper" style={{ position: 'relative', background: '#fcfcfd', padding: '1rem', borderRadius: '12px', border: '1px solid #f0f0f2' }}>
-                                                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
-                                                            <input
-                                                                type="text"
-                                                                value={section.label}
-                                                                onChange={(e) => handleSectionChange(selectedPageIndex, section.id, 'label', e.target.value)}
-                                                                style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', border: 'none', background: 'none', width: 'auto', padding: 0 }}
+                                                displayedSections.map((section) => {
+                                                    const editable = isSectionBusinessEditable(section);
+                                                    const key = extractSectionKey(section);
+                                                    const editableLabel = canEditSectionField(section, 'label');
+                                                    const editableValue = canEditSectionField(section, 'value');
+                                                    const editableUrl = canEditSectionField(section, 'url');
+                                                    const deletable = canDeleteSection(section);
+
+                                                    return (
+                                                        <div key={section.id} className="field-item-wrapper" style={{ position: 'relative', background: editable ? '#fcfcfd' : '#f8fafc', padding: '1rem', borderRadius: '12px', border: editable ? '1px solid #f0f0f2' : '1px dashed #cbd5e1' }}>
+                                                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                                                <input
+                                                                    type="text"
+                                                                    value={section.label}
+                                                                    onChange={(e) => handleSectionChange(selectedPageIndex, section.id, 'label', e.target.value)}
+                                                                    disabled={!editableLabel}
+                                                                    style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', border: 'none', background: 'none', width: 'auto', padding: 0 }}
+                                                                />
+                                                                <span style={{ fontSize: '10px', color: editable ? '#ccc' : '#475569' }}>
+                                                                    {editable ? (key ? '• MƏZMUN AÇARI (YALNIZ DƏYƏR)' : '• REZERV') : '• SİSTEM / KOD (KİLİDLİ)'}
+                                                                </span>
+                                                            </div>
+                                                            <QuillEditor
+                                                                id={`editor-${section.id}`}
+                                                                value={section.value || ''}
+                                                                onChange={(val: string) => handleSectionChange(selectedPageIndex, section.id, 'value', val)}
+                                                                readOnly={!editableValue}
                                                             />
-                                                            <span style={{ fontSize: '10px', color: '#ccc' }}>• REZERV</span>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                                <Globe size={14} style={{ color: '#94a3b8' }} />
+                                                                <input
+                                                                    type="text"
+                                                                    value={section.url || ''}
+                                                                    onChange={(e) => handleSectionChange(selectedPageIndex, section.id, 'url', e.target.value)}
+                                                                    disabled={!editableUrl}
+                                                                    placeholder="URL (Məs: /about veya https://...)"
+                                                                    style={{ fontSize: '12px', padding: '6px 10px', border: '1px solid #e2e8f0', borderRadius: '6px', flex: 1 }}
+                                                                />
+                                                            </div>
+                                                            {deletable && (
+                                                                <button
+                                                                    className="field-delete-btn"
+                                                                    onClick={() => removeField('text', section.id)}
+                                                                    style={{ position: 'absolute', right: '10px', top: '10px', background: '#fff', border: '1px solid #fee2e2', color: '#ef4444', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
+                                                                >
+                                                                    <Trash2 size={12} />
+                                                                </button>
+                                                            )}
                                                         </div>
-                                                        <QuillEditor
-                                                            id={`editor-${section.id}`}
-                                                            value={section.value || ''}
-                                                            onChange={(val: string) => handleSectionChange(selectedPageIndex, section.id, 'value', val)}
-                                                        />
-                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                            <Globe size={14} style={{ color: '#94a3b8' }} />
-                                                            <input
-                                                                type="text"
-                                                                value={section.url || ''}
-                                                                onChange={(e) => handleSectionChange(selectedPageIndex, section.id, 'url', e.target.value)}
-                                                                placeholder="URL (Məs: /about veya https://...)"
-                                                                style={{ fontSize: '12px', padding: '6px 10px', border: '1px solid #e2e8f0', borderRadius: '6px', flex: 1 }}
-                                                            />
-                                                        </div>
-                                                        <button
-                                                            className="field-delete-btn"
-                                                            onClick={() => removeField('text', section.id)}
-                                                            style={{ position: 'absolute', right: '10px', top: '10px', background: '#fff', border: '1px solid #fee2e2', color: '#ef4444', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
-                                                        >
-                                                            <Trash2 size={12} />
-                                                        </button>
-                                                    </div>
-                                                )))}
+                                                    );
+                                                })
+                                            )}
                                         </div>
                                     </div>
 
