@@ -8,7 +8,7 @@ const Marquee: React.FC = () => {
 
   if (!marqueePage || marqueePage.active === false) return null;
 
-  const text = marqueePage.sections[0]?.value || "FORSAJ CLUB";
+  const text = marqueePage.sections?.[0]?.value || "FORSAJ CLUB";
 
   const MarqueeItem = () => (
     <div className="inline-flex items-center gap-8 mx-8">

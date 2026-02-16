@@ -23,42 +23,69 @@ interface PageContent {
     images: ImageSection[];
 }
 
+let siteContentCache: PageContent[] | null = null;
+let siteContentInFlight: Promise<PageContent[]> | null = null;
+
+const normalizeContent = (data: any): PageContent[] => {
+    if (!Array.isArray(data)) return [];
+    return data.map((p: any) => ({
+        id: String(p?.page_id || p?.id || '').toLowerCase(),
+        title: p?.title || '',
+        active: typeof p?.active === 'boolean' ? p.active : true,
+        sections: Array.isArray(p?.sections) ? p.sections : [],
+        images: Array.isArray(p?.images) ? p.images : []
+    }));
+};
+
+const fetchSiteContentOnce = async (): Promise<PageContent[]> => {
+    if (siteContentCache) return siteContentCache;
+    if (siteContentInFlight) return siteContentInFlight;
+
+    siteContentInFlight = (async () => {
+        const response = await fetch('/api/site-content');
+        if (!response.ok) throw new Error('Failed to fetch site content');
+        const data = await response.json();
+        const normalized = normalizeContent(data);
+        siteContentCache = normalized;
+        return normalized;
+    })().finally(() => {
+        siteContentInFlight = null;
+    });
+
+    return siteContentInFlight;
+};
+
 export const useSiteContent = (scopePageId?: string) => {
     const [content, setContent] = useState<PageContent[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        let isMounted = true;
+
         const loadContent = async () => {
             try {
-                const response = await fetch('/api/site-content');
-                if (!response.ok) throw new Error('Failed to fetch site content');
-
-                const data = await response.json();
-
-                if (data) {
-                    // Check if data is already in expected format or needs mapping
-                    // The API returns the format directly usually, but we keep mapping just in case
-                    const mapped = Array.isArray(data) ? data.map((p: any) => ({
-                        id: p.page_id || p.id,
-                        title: p.title,
-                        active: p.active,
-                        sections: p.sections,
-                        images: p.images
-                    })) : [];
-                    setContent(mapped as any);
+                if (siteContentCache) {
+                    if (isMounted) setContent(siteContentCache);
+                    return;
                 }
+
+                const mapped = await fetchSiteContentOnce();
+                if (isMounted) setContent(mapped as any);
             } catch (err) {
                 console.error('Failed to load site content from API:', err);
             } finally {
-                setIsLoading(false);
+                if (isMounted) setIsLoading(false);
             }
         };
 
         loadContent();
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     const getPage = (id: string) => {
-        // This function assumes 'content' is PageContent[], which might be incorrect after the change
+        if (!id) return undefined;
         return (content as PageContent[]).find(p => p.id === id.toLowerCase());
     };
 
@@ -83,10 +110,11 @@ export const useSiteContent = (scopePageId?: string) => {
 
         const page = getPage(pageId);
         if (!page) return defaultValue;
+        const sections = Array.isArray(page.sections) ? page.sections : [];
 
         const section = typeof sectionIdOrIndex === 'number'
-            ? page.sections[sectionIdOrIndex]
-            : page.sections.find(s => s.id === sectionIdOrIndex);
+            ? sections[sectionIdOrIndex]
+            : sections.find(s => s.id === sectionIdOrIndex);
 
         return section ? section.value : defaultValue;
     };
@@ -110,10 +138,11 @@ export const useSiteContent = (scopePageId?: string) => {
 
         const page = getPage(pageId);
         if (!page) return { path: defaultPath, alt: '' };
+        const images = Array.isArray(page.images) ? page.images : [];
 
         const image = typeof imageIdOrIndex === 'number'
-            ? page.images[imageIdOrIndex]
-            : page.images.find(img => img.id === imageIdOrIndex);
+            ? images[imageIdOrIndex]
+            : images.find(img => img.id === imageIdOrIndex);
 
         return image ? { path: image.path, alt: image.alt } : { path: defaultPath, alt: '' };
     };
@@ -137,10 +166,11 @@ export const useSiteContent = (scopePageId?: string) => {
 
         const page = getPage(pageId);
         if (!page) return defaultUrl;
+        const sections = Array.isArray(page.sections) ? page.sections : [];
 
         const section = typeof sectionIdOrIndex === 'number'
-            ? page.sections[sectionIdOrIndex]
-            : page.sections.find(s => s.id === sectionIdOrIndex);
+            ? sections[sectionIdOrIndex]
+            : sections.find(s => s.id === sectionIdOrIndex);
 
         return section?.url || defaultUrl;
     };
