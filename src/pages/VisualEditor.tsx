@@ -219,6 +219,8 @@ const componentLabels: Record<string, string> = {
     'app': 'Tətbiq Ayarları'
 };
 
+const CONTENT_VERSION_KEY = 'forsaj_site_content_version';
+
 const VisualEditor: React.FC = () => {
     const [pages, setPages] = useState<PageContent[]>([]);
     const [selectedPageIndex, setSelectedPageIndex] = useState(0);
@@ -527,11 +529,15 @@ const VisualEditor: React.FC = () => {
             const extractedPages = data.pages || data;
 
             // Sync with JSON storage
-            await fetch('/api/save-content', {
+            const syncRes = await fetch('/api/save-content', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(extractedPages)
             });
+            if (!syncRes.ok) {
+                const errText = await syncRes.text();
+                throw new Error(errText || 'Save failed');
+            }
 
             setProgress(90);
             setPages(extractedPages);
@@ -546,6 +552,7 @@ const VisualEditor: React.FC = () => {
             setTimeout(() => {
                 setIsExtracting(false);
                 localStorage.setItem('forsaj_extracted', 'true');
+                localStorage.setItem(CONTENT_VERSION_KEY, Date.now().toString());
                 toast.success('Sinxronizasiya tamamlandı! Baza yeniləndi.', { id: toastId });
                 setTimeout(() => window.location.reload(), 1500);
             }, 500);
@@ -785,41 +792,48 @@ const VisualEditor: React.FC = () => {
         const toastId = toast.loading('Yadda saxlanılır...');
         try {
             if (editorMode === 'extract') {
-                await fetch('/api/save-content', {
+                const res = await fetch('/api/save-content', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(pages)
                 });
+                if (!res.ok) throw new Error(await res.text());
+                localStorage.setItem(CONTENT_VERSION_KEY, Date.now().toString());
             } else if (editorMode === 'events') {
-                await fetch('/api/events', {
+                const res = await fetch('/api/events', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(events)
                 });
+                if (!res.ok) throw new Error(await res.text());
             } else if (editorMode === 'news') {
-                await fetch('/api/news', {
+                const res = await fetch('/api/news', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(news)
                 });
+                if (!res.ok) throw new Error(await res.text());
             } else if (editorMode === 'drivers') {
-                await fetch('/api/drivers', {
+                const res = await fetch('/api/drivers', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(driverCategories)
                 });
+                if (!res.ok) throw new Error(await res.text());
             } else if (editorMode === 'videos') {
-                await fetch('/api/videos', {
+                const res = await fetch('/api/videos', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(videos)
                 });
+                if (!res.ok) throw new Error(await res.text());
             } else if (editorMode === 'photos') {
-                await fetch('/api/gallery-photos', {
+                const res = await fetch('/api/gallery-photos', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(galleryPhotos)
                 });
+                if (!res.ok) throw new Error(await res.text());
             }
 
             toast.success('Dəyişikliklər bulud bazasına qeyd edildi!', { id: toastId });

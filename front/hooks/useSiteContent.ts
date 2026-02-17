@@ -25,6 +25,9 @@ interface PageContent {
 
 let siteContentCache: PageContent[] | null = null;
 let siteContentInFlight: Promise<PageContent[]> | null = null;
+let siteContentCacheAt = 0;
+const CACHE_TTL_MS = 10000;
+const CONTENT_VERSION_KEY = 'forsaj_site_content_version';
 
 const normalizeContent = (data: any): PageContent[] => {
     if (!Array.isArray(data)) return [];
@@ -38,15 +41,17 @@ const normalizeContent = (data: any): PageContent[] => {
 };
 
 const fetchSiteContentOnce = async (): Promise<PageContent[]> => {
-    if (siteContentCache) return siteContentCache;
+    if (siteContentCache && Date.now() - siteContentCacheAt < CACHE_TTL_MS) return siteContentCache;
     if (siteContentInFlight) return siteContentInFlight;
 
     siteContentInFlight = (async () => {
-        const response = await fetch('/api/site-content');
+        const version = localStorage.getItem(CONTENT_VERSION_KEY) || '';
+        const response = await fetch(`/api/site-content?v=${encodeURIComponent(version)}`);
         if (!response.ok) throw new Error('Failed to fetch site content');
         const data = await response.json();
         const normalized = normalizeContent(data);
         siteContentCache = normalized;
+        siteContentCacheAt = Date.now();
         return normalized;
     })().finally(() => {
         siteContentInFlight = null;
@@ -79,8 +84,20 @@ export const useSiteContent = (scopePageId?: string) => {
         };
 
         loadContent();
+
+        const onStorage = (event: StorageEvent) => {
+            if (event.key !== CONTENT_VERSION_KEY) return;
+            siteContentCache = null;
+            siteContentCacheAt = 0;
+            fetchSiteContentOnce()
+                .then((mapped) => { if (isMounted) setContent(mapped); })
+                .catch((err) => console.error('Failed to refresh site content from storage event:', err));
+        };
+
+        window.addEventListener('storage', onStorage);
         return () => {
             isMounted = false;
+            window.removeEventListener('storage', onStorage);
         };
     }, []);
 

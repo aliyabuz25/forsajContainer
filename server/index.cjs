@@ -38,6 +38,10 @@ console.log('-------------------');
 
 // Database Initialization with Retry logic
 const initDB = async (retries = 10) => {
+    if (dbInitInProgress) return;
+    dbInitInProgress = true;
+    lastDbInitAttemptAt = Date.now();
+
     while (retries > 0) {
         try {
             const connection = await pool.getConnection();
@@ -75,6 +79,7 @@ const initDB = async (retries = 10) => {
             dbReady = true;
             await migrateFilesToDB();
             connection.release();
+            dbInitInProgress = false;
             return; // Success
         } catch (error) {
             dbReady = false;
@@ -88,6 +93,8 @@ const initDB = async (retries = 10) => {
             }
         }
     }
+
+    dbInitInProgress = false;
 };
 
 
@@ -164,6 +171,8 @@ const CONTENT_FILE_PATHS = {
 };
 
 let dbReady = false;
+let dbInitInProgress = false;
+let lastDbInitAttemptAt = 0;
 
 // ------------------------------------------
 // DATABASE HELPERS & MIGRATION
@@ -225,6 +234,10 @@ const saveContentToFile = async (id, data) => {
 };
 
 const getContent = async (id, fallback = []) => {
+    if (!dbReady && !dbInitInProgress && Date.now() - lastDbInitAttemptAt > 15000) {
+        initDB(1).catch(() => { });
+    }
+
     const dbData = await getContentFromDB(id);
     if (dbData !== null) return dbData;
 
@@ -235,6 +248,10 @@ const getContent = async (id, fallback = []) => {
 };
 
 const saveContent = async (id, data) => {
+    if (!dbReady && !dbInitInProgress && Date.now() - lastDbInitAttemptAt > 15000) {
+        initDB(1).catch(() => { });
+    }
+
     const dbSaved = await saveContentToDB(id, data);
     const fileSaved = await saveContentToFile(id, data);
     return dbSaved || fileSaved;
@@ -252,13 +269,10 @@ const migrateFilesToDB = async () => {
 
     for (const file of filesToMigrate) {
         try {
-            const existingInDB = await getContentFromDB(file.id);
-            if (!existingInDB) {
-                if (fs.existsSync(file.path)) {
-                    const data = await fsPromises.readFile(file.path, 'utf8');
-                    await saveContentToDB(file.id, JSON.parse(data));
-                    console.log(`[MIGRATION] ${file.id} data moved to database.`);
-                }
+            if (fs.existsSync(file.path)) {
+                const data = await fsPromises.readFile(file.path, 'utf8');
+                await saveContentToDB(file.id, JSON.parse(data));
+                console.log(`[MIGRATION] ${file.id} data synced to database.`);
             }
         } catch (err) {
             console.error(`[MIGRATION] Failed for ${file.id}:`, err);
@@ -1125,8 +1139,8 @@ app.all('/api/extract-content', async (req, res) => {
 // API: Get Content
 app.get('/api/get-content', async (req, res) => {
     try {
-        const data = await getContentFromDB('site-content');
-        res.json(data || []);
+        const data = await getContent('site-content', []);
+        res.json(data);
     } catch (error) {
         res.status(500).json({ error: 'Failed to read content' });
     }
