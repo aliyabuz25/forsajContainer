@@ -8,7 +8,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
-  const { getPage, language, setSiteLanguage } = useSiteContent('navbar');
+  const { getPage, getText, language, setSiteLanguage } = useSiteContent('navbar');
   const { getImage: getImageGeneral } = useSiteContent('general');
   const [isLangOpen, setIsLangOpen] = useState(false);
 
@@ -65,9 +65,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
       return true;
     })
     .map((s) => {
-      const name = (s.value || s.label || '').trim();
+      const fallbackName = (s.value || s.label || '').trim();
+      const name = getText(s.id, fallbackName);
       const rawUrl = (s.url || '').trim();
-      const inferred = inferViewFromText(name) || inferViewFromText(s.label || '');
+      const inferred = inferViewFromText(fallbackName) || inferViewFromText(s.label || '');
       const normalizedUrl = normalize(rawUrl);
 
       let id = rawUrl;
