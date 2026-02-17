@@ -344,11 +344,33 @@ app.get('/api/db-status', async (req, res) => {
 });
 
 app.get('/api/health', (req, res) => {
-    res.json({
-        status: 'ok',
-        timestamp: new Date().toISOString(),
-        db_pool: !!pool
-    });
+    const requireDbHealth = String(process.env.REQUIRE_DB_HEALTH || '').toLowerCase() === 'true';
+    (async () => {
+        let dbConnected = false;
+        let dbError = '';
+        try {
+            const connection = await pool.getConnection();
+            await connection.query('SELECT 1');
+            connection.release();
+            dbConnected = true;
+        } catch (error) {
+            dbError = error?.message || 'db_unreachable';
+        }
+
+        const payload = {
+            status: dbConnected ? 'ok' : 'degraded',
+            timestamp: new Date().toISOString(),
+            db_pool: !!pool,
+            db_connected: dbConnected,
+            ...(dbError ? { db_error: dbError } : {})
+        };
+
+        if (requireDbHealth && !dbConnected) {
+            return res.status(503).json(payload);
+        }
+
+        return res.json(payload);
+    })();
 });
 
 app.get('/', (req, res) => {

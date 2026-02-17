@@ -13,6 +13,7 @@ services:
       MYSQL_USER: "forsaj_user"
       MYSQL_PASSWORD: "forsaj_password_99"
       MYSQL_DATABASE: "forsaj_admin"
+      REQUIRE_DB_HEALTH: "true"
     volumes:
       - /datastore/forsaj/data:/app/data
     depends_on:
