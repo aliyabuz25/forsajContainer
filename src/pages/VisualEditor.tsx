@@ -125,6 +125,23 @@ const extractSectionKey = (section: Section) => {
 const KEY_TOKEN_REGEX = /\b[A-Z0-9]+(?:_[A-Z0-9]+)+\b/;
 const looksLikeKeyToken = (value?: string) => KEY_TOKEN_REGEX.test((value || '').trim());
 const humanizeKey = (value: string) => value.replace(/_/g, ' ').replace(/\s+/g, ' ').trim();
+const normalizePlainText = (value: string) => {
+    if (!value) return '';
+    let current = value;
+
+    for (let i = 0; i < 4; i++) {
+        const doc = new DOMParser().parseFromString(current, 'text/html');
+        const decoded = (doc.body.textContent || '').trim();
+        if (!decoded || decoded === current) break;
+        current = decoded;
+    }
+
+    const finalDoc = new DOMParser().parseFromString(current, 'text/html');
+    return (finalDoc.body.textContent || '')
+        .replace(/\u00a0/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+};
 
 const STAT_LABEL_PREFIX = 'label-stat-';
 const STAT_VALUE_PREFIX = 'value-stat-';
@@ -561,7 +578,19 @@ const VisualEditor: React.FC = () => {
         if (sectionIdx !== -1) {
             const targetSection = newPages[pageIdx].sections[sectionIdx];
             if (!canEditSectionField(targetSection, field)) return;
-            newPages[pageIdx].sections[sectionIdx][field] = value;
+            let nextValue = value;
+            const key = extractSectionKey(targetSection);
+            const plainTextSection =
+                !!key ||
+                isStatSectionId(targetSection.id) ||
+                targetSection.id.startsWith('val-') ||
+                targetSection.id.startsWith('txt-');
+
+            if ((field === 'value' || field === 'label') && plainTextSection) {
+                nextValue = normalizePlainText(value);
+            }
+
+            newPages[pageIdx].sections[sectionIdx][field] = nextValue;
             setPages(newPages);
         }
     };
@@ -669,14 +698,16 @@ const VisualEditor: React.FC = () => {
         const targetId = field === 'label' ? `${STAT_LABEL_PREFIX}${suffix}` : `${STAT_VALUE_PREFIX}${suffix}`;
         const idx = current.sections.findIndex(s => s.id === targetId);
 
+        const normalized = normalizePlainText(value);
+
         if (idx !== -1) {
-            current.sections[idx].value = value;
+            current.sections[idx].value = normalized;
         } else {
             current.sections.push({
                 id: targetId,
                 type: 'text',
                 label: field === 'label' ? 'Statistika Etiketi' : 'Statistika Dəyəri',
-                value
+                value: normalized
             });
         }
 

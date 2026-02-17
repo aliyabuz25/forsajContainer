@@ -9,8 +9,22 @@ const About: React.FC = () => {
   const page = getPage('about');
   const toPlainText = (value: string) => {
     if (!value) return '';
-    const doc = new DOMParser().parseFromString(value, 'text/html');
-    return (doc.body.textContent || '').replace(/\u00a0/g, ' ').trim();
+    let current = value;
+
+    // Handle double/triple encoded HTML entities like &lt;P&gt; and &amp;NBSP;
+    for (let i = 0; i < 4; i++) {
+      const doc = new DOMParser().parseFromString(current, 'text/html');
+      const decoded = (doc.body.textContent || '').trim();
+      if (!decoded || decoded === current) break;
+      current = decoded;
+    }
+
+    // If residual HTML tags remain as text, strip them one last time.
+    const finalDoc = new DOMParser().parseFromString(current, 'text/html');
+    return (finalDoc.body.textContent || '')
+      .replace(/\u00a0/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
   };
   const text = (id: string, fallback: string) => toPlainText(getText(id, fallback));
 
