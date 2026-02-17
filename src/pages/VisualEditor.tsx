@@ -203,39 +203,6 @@ const componentLabels: Record<string, string> = {
     'app': 'Tətbiq Ayarları'
 };
 
-<<<<<<< ours
-const previewViewByPageId: Record<string, 'home' | 'about' | 'news' | 'events' | 'drivers' | 'rules' | 'contact' | 'gallery'> = {
-    hero: 'home',
-    marquee: 'home',
-    navbar: 'home',
-    mission_vision: 'home',
-    values: 'home',
-    partners: 'home',
-    offroadinfo: 'home',
-    whatisoffroad: 'home',
-    nextrace: 'home',
-    about: 'about',
-    news: 'news',
-    newspanel: 'news',
-    newspage: 'news',
-    events: 'events',
-    eventspage: 'events',
-    drivers: 'drivers',
-    driverspage: 'drivers',
-    categoryleaders: 'drivers',
-    rules: 'rules',
-    rulespage: 'rules',
-    contact: 'contact',
-    contactpage: 'contact',
-    gallery: 'gallery',
-    gallerypage: 'gallery',
-    videos: 'gallery',
-    videoarchive: 'gallery',
-    footer: 'home'
-};
-
-=======
->>>>>>> theirs
 const VisualEditor: React.FC = () => {
     const [pages, setPages] = useState<PageContent[]>([]);
     const [selectedPageIndex, setSelectedPageIndex] = useState(0);
@@ -1339,22 +1306,6 @@ const VisualEditor: React.FC = () => {
             i.path.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
-<<<<<<< ours
-    const previewView = (() => {
-        if (editorMode === 'events') return 'events';
-        if (editorMode === 'news') return 'news';
-        if (editorMode === 'drivers') return 'drivers';
-        if (editorMode === 'videos' || editorMode === 'photos') return 'gallery';
-        return previewViewByPageId[currentPage?.id || ''] || 'home';
-    })();
-
-    const defaultPreviewBase = window.location.hostname === 'localhost' ? 'http://localhost:5174' : window.location.origin;
-    const previewBaseUrl = (import.meta.env.VITE_FRONTEND_PREVIEW_URL || defaultPreviewBase).replace(/\/$/, '');
-    const previewUrl = `${previewBaseUrl}/?view=${previewView}&preview=1&t=${previewNonce}`;
-    const previewLabel = componentLabels[currentPage?.id || ''] || previewView.toUpperCase();
-
-=======
->>>>>>> theirs
     return (
         <div className="visual-editor fade-in">
             <div className="editor-header">
@@ -2304,27 +2255,6 @@ const VisualEditor: React.FC = () => {
                             </div>
                         )}
                     </main>
-<<<<<<< ours
-                                    {showLivePreview && (
-                        <aside className="live-preview-panel">
-                            <div className="live-preview-header">
-                                <div>
-                                    <p className="live-preview-title">Canlı Önizləmə</p>
-                                    <p className="live-preview-subtitle">Sayt görünümü: {previewLabel}</p>
-                                </div>
-                            </div>
-                            <iframe
-                                key={previewUrl}
-                                src={previewUrl}
-                                className="live-preview-frame"
-                                title="Site Preview"
-                                loading="lazy"
-                            />
-                        </aside>
-                    )}
-                    </div>
-=======
->>>>>>> theirs
                 </div>
             )
             }
