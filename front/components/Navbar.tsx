@@ -36,14 +36,14 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange }) => {
 
   const inferViewFromText = (value: string): string | null => {
     const token = normalize(value);
-    if (token.includes('anashe')) return 'home';
+    if (token.includes('anashe') || token.includes('anasif')) return 'home';
     if (token.includes('haqqimizda')) return 'about';
-    if (token.includes('xeber') || token.includes('xbr')) return 'news';
-    if (token.includes('tedbir') || token.includes('tdbir')) return 'events';
-    if (token.includes('surucu') || token.includes('src')) return 'drivers';
-    if (token.includes('qalereya')) return 'gallery';
+    if (token.includes('xeber') || token.includes('xber') || token.includes('xbr')) return 'news';
+    if (token.includes('tedbir') || token.includes('tdbir') || token.includes('tebdir')) return 'events';
+    if (token.includes('surucu') || token.includes('srucu') || token.includes('src')) return 'drivers';
+    if (token.includes('qalereya') || token.includes('galereya')) return 'gallery';
     if (token.includes('qayda')) return 'rules';
-    if (token.includes('elaqe') || token.includes('laq')) return 'contact';
+    if (token.includes('elaqe') || token.includes('laq') || token.includes('elaq')) return 'contact';
     return null;
   };
 
