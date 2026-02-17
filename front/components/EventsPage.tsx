@@ -135,16 +135,29 @@ const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
               <form className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10" onSubmit={async (e) => {
                 e.preventDefault();
                 const form = e.target as HTMLFormElement;
+                const fd = new FormData(form);
+                const name = String(fd.get('name') || '').trim();
+                const contact = String(fd.get('contact') || '').trim();
+                const car = String(fd.get('car') || '').trim();
+                const tire = String(fd.get('tire') || '').trim();
+                const engine = String(fd.get('engine') || '').trim();
+                const club = String(fd.get('club') || '').trim();
+
+                if (!name || !contact || !car || !tire || !engine || !club) {
+                  toast.error('Zəhmət olmasa bütün sahələri doldurun.');
+                  return;
+                }
+
                 const data = {
-                  name: (form.querySelector('input[placeholder*="Tam ad"]') as HTMLInputElement).value,
-                  contact: (form.querySelector('input[placeholder*="+994"]') as HTMLInputElement).value,
+                  name,
+                  contact,
                   type: 'Pilot Registration',
                   content: JSON.stringify({
                     event: selectedEvent?.title,
-                    car: (form.querySelector('input[placeholder*="Toyota"]') as HTMLInputElement).value,
-                    tire: (form.querySelector('input[placeholder*="35 DÜYM"]') as HTMLInputElement).value,
-                    engine: (form.querySelector('input[placeholder*="4.4L"]') as HTMLInputElement).value,
-                    club: (form.querySelector('select') as HTMLSelectElement).value
+                    car,
+                    tire,
+                    engine,
+                    club
                   })
                 };
 
@@ -158,7 +171,8 @@ const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
                     toast.success('Qeydiyyat müraciətiniz uğurla göndərildi!');
                     setRegStep(null);
                   } else {
-                    throw new Error();
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err?.error || 'request_failed');
                   }
                 } catch {
                   toast.error('Gondərilmə zamanı xəta baş verdi.');
@@ -166,30 +180,30 @@ const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
               }}>
                 <div className="space-y-4">
                   <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-widest">{getText('FIELD_NAME', 'AD VƏ SOYAD')}</label>
-                  <input type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none uppercase placeholder:text-gray-800" placeholder={getText('PLACEHOLDER_NAME', 'Tam ad daxil edin')} />
+                  <input name="name" required type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none uppercase placeholder:text-gray-800" placeholder={getText('PLACEHOLDER_NAME', 'Tam ad daxil edin')} />
                 </div>
                 <div className="space-y-4">
                   <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-widest">{getText('FIELD_PHONE', 'TELEFON')}</label>
-                  <input type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none placeholder:text-gray-800" placeholder="+994 -- --- -- --" />
+                  <input name="contact" required type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none placeholder:text-gray-800" placeholder="+994 -- --- -- --" />
                 </div>
                 <div className="space-y-4">
                   <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-widest">{getText('FIELD_CAR_MODEL', 'AVTOMOBİLİN MARKA/MODELİ')}</label>
-                  <input type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none uppercase placeholder:text-gray-800" placeholder={getText('PLACEHOLDER_CAR', 'Məs: Toyota LC 105')} />
+                  <input name="car" required type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none uppercase placeholder:text-gray-800" placeholder={getText('PLACEHOLDER_CAR', 'Məs: Toyota LC 105')} />
                 </div>
                 <div className="space-y-4">
                   <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-widest">{getText('FIELD_TIRE_SIZE', 'TƏKƏR ÖLÇÜSÜ')}</label>
-                  <input type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none uppercase placeholder:text-gray-800" placeholder={getText('PLACEHOLDER_TIRE', 'Məs: 35 DÜYM')} />
+                  <input name="tire" required type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none uppercase placeholder:text-gray-800" placeholder={getText('PLACEHOLDER_TIRE', 'Məs: 35 DÜYM')} />
                 </div>
 
                 <div className="space-y-4">
                   <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-widest">{getText('FIELD_ENGINE', 'MÜHƏRRİK HƏCMİ')}</label>
-                  <input type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none uppercase placeholder:text-gray-800" placeholder={getText('PLACEHOLDER_ENGINE', 'Məs: 4.4L')} />
+                  <input name="engine" required type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none uppercase placeholder:text-gray-800" placeholder={getText('PLACEHOLDER_ENGINE', 'Məs: 4.4L')} />
                 </div>
 
                 <div className="space-y-4">
                   <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-widest">{getText('FIELD_CLUB', 'TƏMSİL ETDİYİ KLUB')}</label>
                   <div className="relative">
-                    <select className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none uppercase appearance-none cursor-pointer">
+                    <select name="club" required className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none uppercase appearance-none cursor-pointer">
                       {clubs.map((club) => (
                         <option key={club} value={club.toLowerCase()}>{club.toUpperCase()}</option>
                       ))}

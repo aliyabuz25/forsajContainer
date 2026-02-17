@@ -31,13 +31,28 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        const cleanUsername = username.trim();
+        const cleanName = name.trim();
+        if (!cleanUsername || !password.trim()) {
+            toast.error('İstifadəçi adı və şifrə mütləqdir');
+            return;
+        }
+        if (!isLoginMode && !cleanName) {
+            toast.error('Tam ad mütləqdir');
+            return;
+        }
+        if (!isLoginMode && password.length < 6) {
+            toast.error('Şifrə ən azı 6 simvol olmalıdır');
+            return;
+        }
+
         setIsLoading(true);
 
         try {
             const endpoint = isLoginMode ? '/api/login' : '/api/setup';
             const body = isLoginMode
-                ? { username, password }
-                : { username, password, name };
+                ? { username: cleanUsername, password }
+                : { username: cleanUsername, password, name: cleanName };
 
             const response = await fetch(endpoint, {
                 method: 'POST',

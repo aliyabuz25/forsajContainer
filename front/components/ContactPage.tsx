@@ -144,12 +144,18 @@ const ContactPage: React.FC = () => {
           <form className="space-y-10" onSubmit={async (e) => {
             e.preventDefault();
             const form = e.target as HTMLFormElement;
+            const fd = new FormData(form);
             const data = {
-              name: (form.querySelector('input[placeholder*="AD SOYAD"]') as HTMLInputElement).value,
-              contact: (form.querySelector('input[placeholder*="TELEFON"]') as HTMLInputElement).value,
-              type: (form.querySelector('select') as HTMLSelectElement).value,
-              content: (form.querySelector('textarea') as HTMLTextAreaElement).value
+              name: String(fd.get('name') || '').trim(),
+              contact: String(fd.get('contact') || '').trim(),
+              type: String(fd.get('type') || '').trim(),
+              content: String(fd.get('content') || '').trim()
             };
+
+            if (!data.name || !data.contact || !data.type || !data.content) {
+              toast.error('Zəhmət olmasa bütün sahələri doldurun.');
+              return;
+            }
 
             try {
               const res = await fetch('/api/applications', {
@@ -161,7 +167,8 @@ const ContactPage: React.FC = () => {
                 toast.success('Müraciətiniz uğurla göndərildi!');
                 form.reset();
               } else {
-                throw new Error();
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err?.error || 'request_failed');
               }
             } catch {
               toast.error('Gondərilmə zamanı xəta baş verdi.');
@@ -170,18 +177,18 @@ const ContactPage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
               <div className="space-y-3">
                 <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-[0.3em]">{getText('FIELD_NAME_LABEL', 'AD VƏ SOYAD')}</label>
-                <input type="text" placeholder={getText('FIELD_NAME_PLACEHOLDER', 'AD SOYAD DAXİL EDİN')} className="w-full bg-[#111] border border-white/5 text-white p-5 font-black italic text-xs uppercase outline-none focus:border-[#FF4D00] transition-colors placeholder:text-gray-800" />
+                <input name="name" required type="text" placeholder={getText('FIELD_NAME_PLACEHOLDER', 'AD SOYAD DAXİL EDİN')} className="w-full bg-[#111] border border-white/5 text-white p-5 font-black italic text-xs uppercase outline-none focus:border-[#FF4D00] transition-colors placeholder:text-gray-800" />
               </div>
               <div className="space-y-3">
                 <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-[0.3em]">{getText('FIELD_CONTACT_LABEL', 'ƏLAQƏ VASİTƏSİ')}</label>
-                <input type="text" placeholder={getText('FIELD_CONTACT_PLACEHOLDER', 'TELEFON VƏ YA EMAIL')} className="w-full bg-[#111] border border-white/5 text-white p-5 font-black italic text-xs uppercase outline-none focus:border-[#FF4D00] transition-colors placeholder:text-gray-800" />
+                <input name="contact" required type="text" placeholder={getText('FIELD_CONTACT_PLACEHOLDER', 'TELEFON VƏ YA EMAIL')} className="w-full bg-[#111] border border-white/5 text-white p-5 font-black italic text-xs uppercase outline-none focus:border-[#FF4D00] transition-colors placeholder:text-gray-800" />
               </div>
             </div>
 
             <div className="space-y-3">
               <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-[0.3em]">{getText('FIELD_TOPIC_LABEL', 'MÜRACİƏT İSTİQAMƏTİ')}</label>
               <div className="relative">
-                <select className="w-full bg-[#111] border border-white/5 text-white p-5 font-black italic text-xs uppercase appearance-none outline-none focus:border-[#FF4D00] transition-colors">
+                <select name="type" required className="w-full bg-[#111] border border-white/5 text-white p-5 font-black italic text-xs uppercase appearance-none outline-none focus:border-[#FF4D00] transition-colors">
                   <option>{getText('TOPIC_GENERAL', 'ÜMUMİ SORĞU')}</option>
                   <option>{getText('TOPIC_PILOT', 'PİLOT QEYDİYYATI')}</option>
                   <option>{getText('TOPIC_TECH', 'TEXNİKİ YARDIM')}</option>
@@ -192,7 +199,7 @@ const ContactPage: React.FC = () => {
 
             <div className="space-y-3">
               <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-[0.3em]">{getText('FIELD_MESSAGE_LABEL', 'MESAJINIZ')}</label>
-              <textarea placeholder={getText('FIELD_MESSAGE_PLACEHOLDER', 'BURADA YAZIN...')} rows={5} className="w-full bg-[#111] border border-white/5 text-white p-5 font-black italic text-xs uppercase outline-none focus:border-[#FF4D00] transition-colors resize-none placeholder:text-gray-800" />
+              <textarea name="content" required placeholder={getText('FIELD_MESSAGE_PLACEHOLDER', 'BURADA YAZIN...')} rows={5} className="w-full bg-[#111] border border-white/5 text-white p-5 font-black italic text-xs uppercase outline-none focus:border-[#FF4D00] transition-colors resize-none placeholder:text-gray-800" />
             </div>
 
             <button className="w-full bg-[#FF4D00] text-black py-6 font-black italic text-3xl uppercase tracking-tighter flex items-center justify-center gap-4 hover:bg-white transition-all transform shadow-[0_15px_40px_rgba(255,77,0,0.2)]">

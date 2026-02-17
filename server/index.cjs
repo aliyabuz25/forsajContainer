@@ -257,6 +257,12 @@ const saveContent = async (id, data) => {
     return dbSaved || fileSaved;
 };
 
+const isPlainObject = (value) => Object.prototype.toString.call(value) === '[object Object]';
+const normalizeListPayload = (value) => {
+    if (!Array.isArray(value)) return null;
+    return value.filter(item => isPlainObject(item) || Array.isArray(item) || typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean' || item === null);
+};
+
 const migrateFilesToDB = async () => {
     const filesToMigrate = [
         { id: 'site-content', path: SITE_CONTENT_PATH },
@@ -365,7 +371,8 @@ app.get('/api/gallery-photos', async (req, res) => {
 // API: Save Gallery Photos
 app.post('/api/gallery-photos', async (req, res) => {
     try {
-        const photos = req.body;
+        const photos = normalizeListPayload(req.body);
+        if (!photos) return res.status(400).json({ error: 'Invalid gallery payload' });
         const ok = await saveContent('gallery-photos', photos);
         if (!ok) return res.status(500).json({ error: 'Failed to save gallery photos' });
         res.json({ success: true });
@@ -405,7 +412,8 @@ app.get('/api/events', async (req, res) => {
 // API: Save Events
 app.post('/api/events', async (req, res) => {
     try {
-        const events = req.body;
+        const events = normalizeListPayload(req.body);
+        if (!events) return res.status(400).json({ error: 'Invalid events payload' });
         const ok = await saveContent('events', events);
         if (!ok) return res.status(500).json({ error: 'Failed to save events' });
         res.json({ success: true });
@@ -428,7 +436,8 @@ app.get('/api/news', async (req, res) => {
 // API: Save News
 app.post('/api/news', async (req, res) => {
     try {
-        const news = req.body;
+        const news = normalizeListPayload(req.body);
+        if (!news) return res.status(400).json({ error: 'Invalid news payload' });
         const ok = await saveContent('news', news);
         if (!ok) return res.status(500).json({ error: 'Failed to save news' });
         res.json({ success: true });
@@ -601,8 +610,8 @@ app.get('/api/check-setup', async (req, res) => {
 // API: Get Videos
 app.get('/api/videos', async (req, res) => {
     try {
-        const data = await getContentFromDB('videos');
-        res.json(data || []);
+        const data = await getContent('videos', []);
+        res.json(data);
     } catch (error) {
         console.error('Error reading videos:', error);
         res.status(500).json({ error: 'Failed to read videos' });
@@ -612,7 +621,8 @@ app.get('/api/videos', async (req, res) => {
 // API: Save Videos
 app.post('/api/videos', async (req, res) => {
     try {
-        const videos = req.body;
+        const videos = normalizeListPayload(req.body);
+        if (!videos) return res.status(400).json({ error: 'Invalid videos payload' });
         const ok = await saveContent('videos', videos);
         if (!ok) return res.status(500).json({ error: 'Failed to save videos' });
         res.json({ success: true });
@@ -654,7 +664,8 @@ app.post('/api/upload-image', upload.single('image'), (req, res) => {
 // API: Save Content
 app.post('/api/save-content', async (req, res) => {
     try {
-        const content = req.body;
+        const content = normalizeListPayload(req.body);
+        if (!content) return res.status(400).json({ error: 'Invalid site content payload' });
         const ok = await saveContent('site-content', content);
         if (!ok) return res.status(500).json({ error: 'Failed to save content' });
         res.json({ success: true });
@@ -689,7 +700,8 @@ app.get('/api/drivers', async (req, res) => {
 // API: Save Drivers with Automatic Ranking
 app.post('/api/drivers', async (req, res) => {
     try {
-        let categories = req.body;
+        let categories = normalizeListPayload(req.body);
+        if (!categories) return res.status(400).json({ error: 'Invalid drivers payload' });
 
         // Automatic Ranking Logic
         if (Array.isArray(categories)) {
@@ -719,7 +731,37 @@ app.post('/api/drivers', async (req, res) => {
 
 // API: Submit Application
 app.post('/api/applications', async (req, res) => {
-    const { name, contact, type, content } = req.body;
+    const rawName = req.body?.name;
+    const rawContact = req.body?.contact;
+    const rawType = req.body?.type;
+    const rawContent = req.body?.content;
+
+    const name = String(rawName || '').trim();
+    const contact = String(rawContact || '').trim();
+    const type = String(rawType || '').trim();
+    const content = String(rawContent || '').trim();
+
+    if (!name || !contact || !type || !content) {
+        return res.status(400).json({ error: 'Bütün sahələr doldurulmalıdır' });
+    }
+
+    if (name.length > 255 || contact.length > 255 || type.length > 100 || content.length > 10000) {
+        return res.status(400).json({ error: 'Sahə uzunluğu limiti aşıldı' });
+    }
+
+    if (type.toLowerCase().includes('pilot')) {
+        try {
+            const payload = JSON.parse(content);
+            const requiredPilotFields = ['event', 'car', 'tire', 'engine', 'club'];
+            const hasAll = requiredPilotFields.every((key) => String(payload?.[key] || '').trim().length > 0);
+            if (!hasAll) {
+                return res.status(400).json({ error: 'Pilot müraciəti üçün bütün texniki sahələr məcburidir' });
+            }
+        } catch {
+            return res.status(400).json({ error: 'Pilot müraciəti məlumatları yanlışdır' });
+        }
+    }
+
     try {
         await pool.query(
             'INSERT INTO applications (name, contact, type, content) VALUES (?, ?, ?, ?)',
@@ -728,7 +770,7 @@ app.post('/api/applications', async (req, res) => {
         res.json({ success: true });
     } catch (error) {
         console.error('Error submitting application:', error);
-        res.status(500).json({ error: 'Müraciət göndərilərkən xəta baş verdi' });
+        res.status(500).json({ error: 'Müraciət göndərilərkən xəta baş verdi', code: error?.code || 'db_error' });
     }
 });
 

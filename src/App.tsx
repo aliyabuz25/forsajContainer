@@ -72,7 +72,13 @@ const App: React.FC = () => {
     const token = localStorage.getItem('forsaj_admin_token');
 
     if (savedUser && token) {
-      setUser(JSON.parse(savedUser));
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch {
+        localStorage.removeItem('forsaj_admin_user');
+        localStorage.removeItem('forsaj_admin_token');
+        setUser(null);
+      }
     } else {
       setUser(null);
     }
@@ -86,13 +92,15 @@ const App: React.FC = () => {
       if (!token) return;
 
       try {
+        let nextUnreadCount = unreadCount;
         // Fetch unread count
         const unreadRes = await fetch('/api/applications/unread-count', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (unreadRes.ok) {
           const { count } = await unreadRes.json();
-          setUnreadCount(count);
+          nextUnreadCount = Number(count) || 0;
+          setUnreadCount(nextUnreadCount);
         }
 
         // Fetch sitemap
@@ -119,11 +127,13 @@ const App: React.FC = () => {
                 title: 'Müraciətlər',
                 path: '/applications',
                 icon: 'Inbox',
-                badge: unreadCount > 0 ? { text: unreadCount.toString(), color: 'bg-red-500' } : undefined
+                badge: nextUnreadCount > 0 ? { text: nextUnreadCount.toString(), color: 'bg-red-500' } : undefined
               }
             ];
-          } else if (unreadCount > 0) {
-            hasApplications.badge = { text: unreadCount.toString(), color: 'bg-red-500' };
+          } else if (nextUnreadCount > 0) {
+            hasApplications.badge = { text: nextUnreadCount.toString(), color: 'bg-red-500' };
+          } else {
+            delete hasApplications.badge;
           }
 
           // Remove any existing system-settings variants before injecting the canonical one.
@@ -183,7 +193,7 @@ const App: React.FC = () => {
     fetchData();
     const interval = setInterval(fetchData, 30000); // Check every 30s
     return () => clearInterval(interval);
-  }, [user, unreadCount]);
+  }, [user]);
 
   if (isLoading) {
     return <div style={{
@@ -206,6 +216,7 @@ const App: React.FC = () => {
           <>
             <Sidebar menuItems={sitemap} user={user} onLogout={() => {
               localStorage.removeItem('forsaj_admin_user');
+              localStorage.removeItem('forsaj_admin_token');
               setUser(null);
             }} />
             <main className="main-content">
