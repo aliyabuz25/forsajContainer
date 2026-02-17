@@ -15,17 +15,44 @@ import Footer from './components/Footer';
 import { useSiteContent } from './hooks/useSiteContent';
 import { useEffect } from 'react';
 
+type FrontView = 'home' | 'about' | 'news' | 'events' | 'drivers' | 'rules' | 'contact' | 'gallery';
+
+const VALID_VIEWS: FrontView[] = ['home', 'about', 'news', 'events', 'drivers', 'rules', 'contact', 'gallery'];
+
+const isFrontView = (value: string | null): value is FrontView => {
+  return !!value && VALID_VIEWS.includes(value as FrontView);
+};
+
+const getViewFromLocation = (): FrontView => {
+  const params = new URLSearchParams(window.location.search);
+  const value = params.get('view') || params.get('page');
+  return isFrontView(value) ? value : 'home';
+};
+
 const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<'home' | 'about' | 'news' | 'events' | 'drivers' | 'rules' | 'contact' | 'gallery'>('home');
+  const [currentView, setCurrentView] = useState<FrontView>(() => getViewFromLocation());
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-  const handleViewChange = (view: 'home' | 'about' | 'news' | 'events' | 'drivers' | 'rules' | 'contact' | 'gallery', category: string | null = null) => {
+  const handleViewChange = (view: FrontView, category: string | null = null) => {
     setCurrentView(view);
     setActiveCategory(category);
+    const params = new URLSearchParams(window.location.search);
+    params.set('view', view);
+    params.delete('page');
+    const nextSearch = params.toString();
+    const nextUrl = `${window.location.pathname}${nextSearch ? `?${nextSearch}` : ''}${window.location.hash}`;
+    window.history.replaceState(null, '', nextUrl);
     window.scrollTo(0, 0);
   };
 
   const { getText } = useSiteContent('general');
+
+  useEffect(() => {
+    const syncFromUrl = () => setCurrentView(getViewFromLocation());
+    syncFromUrl();
+    window.addEventListener('popstate', syncFromUrl);
+    return () => window.removeEventListener('popstate', syncFromUrl);
+  }, []);
 
   useEffect(() => {
     const title = getText('SEO_TITLE', 'Forsaj Club - Offroad Motorsport Hub');

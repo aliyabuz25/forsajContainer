@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Save, Type, Image as ImageIcon, Layout, Globe, Plus, Trash2, X, Search, Calendar, FileText, Trophy, RotateCcw, Video, Play } from 'lucide-react';
+import { Save, Type, Image as ImageIcon, Layout, Globe, Plus, Trash2, X, Search, Calendar, FileText, Trophy, RotateCcw, Video, Play, Eye, EyeOff, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
@@ -182,6 +182,31 @@ const componentLabels: Record<string, string> = {
     'app': 'Tətbiq Ayarları'
 };
 
+const previewViewByPageId: Record<string, 'home' | 'about' | 'news' | 'events' | 'drivers' | 'rules' | 'contact' | 'gallery'> = {
+    hero: 'home',
+    marquee: 'home',
+    navbar: 'home',
+    mission_vision: 'home',
+    values: 'home',
+    partners: 'home',
+    offroadinfo: 'home',
+    whatisoffroad: 'home',
+    nextrace: 'home',
+    about: 'about',
+    news: 'news',
+    newspage: 'news',
+    eventspage: 'events',
+    drivers: 'drivers',
+    categoryleaders: 'drivers',
+    rulespage: 'rules',
+    contactpage: 'contact',
+    gallery: 'gallery',
+    gallerypage: 'gallery',
+    videos: 'gallery',
+    videoarchive: 'gallery',
+    footer: 'home'
+};
+
 const VisualEditor: React.FC = () => {
     const [pages, setPages] = useState<PageContent[]>([]);
     const [selectedPageIndex, setSelectedPageIndex] = useState(0);
@@ -198,6 +223,8 @@ const VisualEditor: React.FC = () => {
     const [activeImageField, setActiveImageField] = useState<{ pageIdx: number, imgId: string } | null>(null);
     const [newSectionTitle, setNewSectionTitle] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [showLivePreview, setShowLivePreview] = useState(true);
+    const [previewNonce, setPreviewNonce] = useState(0);
 
     const [events, setEvents] = useState<EventItem[]>([]);
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
@@ -1197,6 +1224,18 @@ const VisualEditor: React.FC = () => {
             i.path.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
+    const previewView = (() => {
+        if (editorMode === 'events') return 'events';
+        if (editorMode === 'news') return 'news';
+        if (editorMode === 'drivers') return 'drivers';
+        if (editorMode === 'videos' || editorMode === 'photos') return 'gallery';
+        return previewViewByPageId[currentPage?.id || ''] || 'home';
+    })();
+
+    const defaultPreviewBase = window.location.hostname === 'localhost' ? 'http://localhost:5174' : window.location.origin;
+    const previewBaseUrl = (import.meta.env.VITE_FRONTEND_PREVIEW_URL || defaultPreviewBase).replace(/\/$/, '');
+    const previewUrl = `${previewBaseUrl}/?view=${previewView}&preview=1&t=${previewNonce}`;
+
     return (
         <div className="visual-editor fade-in">
             <div className="editor-header">
@@ -1832,6 +1871,7 @@ const VisualEditor: React.FC = () => {
                         </div>
                     </aside>
 
+                    <div className={`editor-workspace ${showLivePreview ? 'with-preview' : ''}`}>
                     <main className="editor-canvas">
                         {currentPage ? (
                             <>
@@ -1853,6 +1893,32 @@ const VisualEditor: React.FC = () => {
                                             }} style={{ background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0' }}>
                                                 <Plus size={14} /> Yeni Dəyər Əlavə Et
                                             </button>
+                                        )}
+                                        <button
+                                            className="add-field-minimal"
+                                            onClick={() => setShowLivePreview(v => !v)}
+                                            style={{ background: '#eef2ff', color: '#4338ca', border: '1px solid #c7d2fe' }}
+                                        >
+                                            {showLivePreview ? <EyeOff size={14} /> : <Eye size={14} />}
+                                            {showLivePreview ? 'Önizləməni Gizlə' : 'Önizləməni Aç'}
+                                        </button>
+                                        {showLivePreview && (
+                                            <>
+                                                <button
+                                                    className="add-field-minimal"
+                                                    onClick={() => setPreviewNonce(v => v + 1)}
+                                                    style={{ background: '#f8fafc', color: '#0f172a', border: '1px solid #e2e8f0' }}
+                                                >
+                                                    <RotateCcw size={14} /> Önizləməni Yenilə
+                                                </button>
+                                                <button
+                                                    className="add-field-minimal"
+                                                    onClick={() => window.open(previewUrl, '_blank', 'noopener,noreferrer')}
+                                                    style={{ background: '#f8fafc', color: '#0f172a', border: '1px solid #e2e8f0' }}
+                                                >
+                                                    <ExternalLink size={14} /> Yeni Tab
+                                                </button>
+                                            </>
                                         )}
                                         <div style={{ width: '1px', height: '24px', background: '#e2e8f0', margin: '0 4px' }}></div>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#f8fafc', padding: '4px 12px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
@@ -2136,6 +2202,24 @@ const VisualEditor: React.FC = () => {
                             </div>
                         )}
                     </main>
+                    {showLivePreview && (
+                        <aside className="live-preview-panel">
+                            <div className="live-preview-header">
+                                <div>
+                                    <p className="live-preview-title">Canlı Önizləmə</p>
+                                    <p className="live-preview-subtitle">Sayt görünümü: {previewView.toUpperCase()}</p>
+                                </div>
+                            </div>
+                            <iframe
+                                key={previewUrl}
+                                src={previewUrl}
+                                className="live-preview-frame"
+                                title="Site Preview"
+                                loading="lazy"
+                            />
+                        </aside>
+                    )}
+                    </div>
                 </div>
             )
             }
