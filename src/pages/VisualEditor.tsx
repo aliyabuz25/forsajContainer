@@ -122,6 +122,10 @@ const extractSectionKey = (section: Section) => {
     return '';
 };
 
+const KEY_TOKEN_REGEX = /\b[A-Z0-9]+(?:_[A-Z0-9]+)+\b/;
+const looksLikeKeyToken = (value?: string) => KEY_TOKEN_REGEX.test((value || '').trim());
+const humanizeKey = (value: string) => value.replace(/_/g, ' ').replace(/\s+/g, ' ').trim();
+
 const STAT_LABEL_PREFIX = 'label-stat-';
 const STAT_VALUE_PREFIX = 'value-stat-';
 const isStatSectionId = (id: string) => id.startsWith(STAT_LABEL_PREFIX) || id.startsWith(STAT_VALUE_PREFIX);
@@ -194,11 +198,16 @@ const previewViewByPageId: Record<string, 'home' | 'about' | 'news' | 'events' |
     nextrace: 'home',
     about: 'about',
     news: 'news',
+    newspanel: 'news',
     newspage: 'news',
+    events: 'events',
     eventspage: 'events',
     drivers: 'drivers',
+    driverspage: 'drivers',
     categoryleaders: 'drivers',
+    rules: 'rules',
     rulespage: 'rules',
+    contact: 'contact',
     contactpage: 'contact',
     gallery: 'gallery',
     gallerypage: 'gallery',
@@ -1188,6 +1197,7 @@ const VisualEditor: React.FC = () => {
     const displayedSections = (currentPage?.sections || []).filter(s => {
         if (!isSectionVisibleInAdmin(s)) return false;
         if (currentPage?.id === 'about' && isStatSectionId(s.id)) return false;
+        if (!extractSectionKey(s) && looksLikeKeyToken(s.value)) return false;
         return !searchTerm ||
             s.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
             s.value.toLowerCase().includes(searchTerm.toLowerCase());
@@ -1235,6 +1245,7 @@ const VisualEditor: React.FC = () => {
     const defaultPreviewBase = window.location.hostname === 'localhost' ? 'http://localhost:5174' : window.location.origin;
     const previewBaseUrl = (import.meta.env.VITE_FRONTEND_PREVIEW_URL || defaultPreviewBase).replace(/\/$/, '');
     const previewUrl = `${previewBaseUrl}/?view=${previewView}&preview=1&t=${previewNonce}`;
+    const previewLabel = componentLabels[currentPage?.id || ''] || previewView.toUpperCase();
 
     return (
         <div className="visual-editor fade-in">
@@ -1879,7 +1890,7 @@ const VisualEditor: React.FC = () => {
                                     <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>
                                         {componentLabels[currentPage.id] || currentPage.title}
                                     </h2>
-                                    <div className="canvas-actions" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                    <div className="canvas-actions">
                                         {currentPage.id === 'about' && (
                                             <button className="add-field-minimal" onClick={addAboutStatRow} style={{ background: '#f5f3ff', color: '#7c3aed', border: '1px solid #ddd6fe' }}>
                                                 <Trophy size={14} /> Statistika Əlavə Et
@@ -2027,21 +2038,31 @@ const VisualEditor: React.FC = () => {
                                                             <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
                                                                 <input
                                                                     type="text"
-                                                                    value={section.label}
+                                                                    value={looksLikeKeyToken(section.label) ? humanizeKey(section.label) : section.label}
                                                                     onChange={(e) => handleSectionChange(selectedPageIndex, section.id, 'label', e.target.value)}
                                                                     disabled={!editableLabel}
                                                                     style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', border: 'none', background: 'none', width: 'auto', padding: 0 }}
                                                                 />
                                                                 <span style={{ fontSize: '10px', color: editable ? '#ccc' : '#475569' }}>
-                                                                    {editable ? (key ? '• Açar sahə (dəyər redaktəsi)' : '• Standart mətn sahəsi') : '• Kilidli sistem sahəsi'}
+                                                                    {editable ? (key ? '• Açar mətn' : '• Mətn sahəsi') : '• Kilidli sistem sahəsi'}
                                                                 </span>
                                                             </div>
-                                                            <QuillEditor
-                                                                id={`editor-${section.id}`}
-                                                                value={section.value || ''}
-                                                                onChange={(val: string) => handleSectionChange(selectedPageIndex, section.id, 'value', val)}
-                                                                readOnly={!editableValue}
-                                                            />
+                                                            {key ? (
+                                                                <textarea
+                                                                    value={section.value || ''}
+                                                                    onChange={(e) => handleSectionChange(selectedPageIndex, section.id, 'value', e.target.value)}
+                                                                    disabled={!editableValue}
+                                                                    rows={3}
+                                                                    style={{ width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', lineHeight: '1.4', resize: 'vertical' }}
+                                                                />
+                                                            ) : (
+                                                                <QuillEditor
+                                                                    id={`editor-${section.id}`}
+                                                                    value={section.value || ''}
+                                                                    onChange={(val: string) => handleSectionChange(selectedPageIndex, section.id, 'value', val)}
+                                                                    readOnly={!editableValue}
+                                                                />
+                                                            )}
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                                 <Globe size={14} style={{ color: '#94a3b8' }} />
                                                                 <input
@@ -2202,12 +2223,12 @@ const VisualEditor: React.FC = () => {
                             </div>
                         )}
                     </main>
-                    {showLivePreview && (
+                                    {showLivePreview && (
                         <aside className="live-preview-panel">
                             <div className="live-preview-header">
                                 <div>
                                     <p className="live-preview-title">Canlı Önizləmə</p>
-                                    <p className="live-preview-subtitle">Sayt görünümü: {previewView.toUpperCase()}</p>
+                                    <p className="live-preview-subtitle">Sayt görünümü: {previewLabel}</p>
                                 </div>
                             </div>
                             <iframe
