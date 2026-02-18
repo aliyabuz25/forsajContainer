@@ -6,6 +6,11 @@ import toast from 'react-hot-toast';
 const ContactPage: React.FC = () => {
   const { getText } = useSiteContent('contactpage');
   const { getText: getGeneralText } = useSiteContent('general');
+  const onlineLabel = getText('ONLINE_STATUS_LABEL', 'ONLINE');
+  const formStatusLabel = getText('FORM_STATUS_LABEL', 'STATUS: ONLINE');
+  const requiredFieldsToast = getText('FORM_TOAST_REQUIRED', 'Zəhmət olmasa bütün sahələri doldurun.');
+  const submitSuccessToast = getText('FORM_TOAST_SUCCESS', 'Müraciətiniz uğurla göndərildi!');
+  const submitErrorToast = getText('FORM_TOAST_ERROR', 'Gondərilmə zamanı xəta baş verdi.');
 
   const { getPage: getSocialsPage } = useSiteContent('socials');
   const socialsPage = getSocialsPage('socials');
@@ -70,7 +75,7 @@ const ContactPage: React.FC = () => {
 
               <div className="mt-8 flex justify-between items-center text-[10px] font-black italic uppercase tracking-widest">
                 <span className="flex items-center gap-3 text-gray-500"><Clock size={14} className="text-[#FF4D00]" /> {getGeneralText('CONTACT_HOURS') || getText('WORK_HOURS', '09:00 - 18:00')}</span>
-                <span className="text-[#25D366] flex items-center gap-2 font-black"><span className="w-2 h-2 bg-[#25D366] rounded-full animate-pulse"></span> ONLINE</span>
+                <span className="text-[#25D366] flex items-center gap-2 font-black"><span className="w-2 h-2 bg-[#25D366] rounded-full animate-pulse"></span> {onlineLabel}</span>
               </div>
             </div>
 
@@ -138,7 +143,7 @@ const ContactPage: React.FC = () => {
         <div className="bg-[#050505] text-white p-10 md:p-20 relative overflow-hidden shadow-2xl border border-white/5 mb-12">
           <div className="flex justify-between items-center mb-12 border-b border-white/5 pb-8">
             <h3 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter leading-none">{getText('FORM_TITLE', 'MÜRACİƏT FORMU')}</h3>
-            <span className="bg-[#FF4D00] px-4 py-1.5 text-black font-black italic text-[10px] uppercase tracking-widest shadow-lg">STATUS: ONLINE</span>
+            <span className="bg-[#FF4D00] px-4 py-1.5 text-black font-black italic text-[10px] uppercase tracking-widest shadow-lg">{formStatusLabel}</span>
           </div>
 
           <form className="space-y-10" onSubmit={async (e) => {
@@ -153,7 +158,7 @@ const ContactPage: React.FC = () => {
             };
 
             if (!data.name || !data.contact || !data.type || !data.content) {
-              toast.error('Zəhmət olmasa bütün sahələri doldurun.');
+              toast.error(requiredFieldsToast);
               return;
             }
 
@@ -164,14 +169,14 @@ const ContactPage: React.FC = () => {
                 body: JSON.stringify(data)
               });
               if (res.ok) {
-                toast.success('Müraciətiniz uğurla göndərildi!');
+                toast.success(submitSuccessToast);
                 form.reset();
               } else {
                 const err = await res.json().catch(() => ({}));
                 throw new Error(err?.error || 'request_failed');
               }
             } catch {
-              toast.error('Gondərilmə zamanı xəta baş verdi.');
+              toast.error(submitErrorToast);
             }
           }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">

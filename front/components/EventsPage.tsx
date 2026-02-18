@@ -37,6 +37,9 @@ interface EventVideoItem {
 
 const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
   const { getText } = useSiteContent('eventspage');
+  const requiredFieldsToast = getText('PILOT_FORM_TOAST_REQUIRED', 'Zəhmət olmasa bütün sahələri doldurun.');
+  const submitSuccessToast = getText('PILOT_FORM_TOAST_SUCCESS', 'Qeydiyyat müraciətiniz uğurla göndərildi!');
+  const submitErrorToast = getText('PILOT_FORM_TOAST_ERROR', 'Gondərilmə zamanı xəta baş verdi.');
 
   const [eventsData, setEventsData] = useState<EventItem[]>([]);
   const [pastVideos, setPastVideos] = useState<EventVideoItem[]>([]);
@@ -141,22 +144,23 @@ const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
   };
 
   const handleJoinSpectator = () => {
-    window.open('https://iticket.az', '_blank');
+    const spectatorUrl = getText('SPECTATOR_TICKET_URL', 'https://iticket.az');
+    window.open(spectatorUrl, '_blank');
   };
 
   const RegistrationModal = () => {
     if (!regStep) return null;
 
     const clubs = [
-      'Fərdi İştirakçı',
-      'Club 4X4',
-      'Extreme 4X4',
-      'Forsaj Club',
-      'Offroad.az',
-      'Overland 4X4',
-      'PatrolClub.az',
-      'Victory Club',
-      'Zəfər 4X4 Club'
+      getText('CLUB_OPTION_1', 'Fərdi İştirakçı'),
+      getText('CLUB_OPTION_2', 'Club 4X4'),
+      getText('CLUB_OPTION_3', 'Extreme 4X4'),
+      getText('CLUB_OPTION_4', 'Forsaj Club'),
+      getText('CLUB_OPTION_5', 'Offroad.az'),
+      getText('CLUB_OPTION_6', 'Overland 4X4'),
+      getText('CLUB_OPTION_7', 'PatrolClub.az'),
+      getText('CLUB_OPTION_8', 'Victory Club'),
+      getText('CLUB_OPTION_9', 'Zəfər 4X4 Club')
     ];
 
     return (
@@ -226,7 +230,7 @@ const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
                 const club = String(fd.get('club') || '').trim();
 
                 if (!name || !contact || !car || !tire || !engine || !club) {
-                  toast.error('Zəhmət olmasa bütün sahələri doldurun.');
+                  toast.error(requiredFieldsToast);
                   return;
                 }
 
@@ -250,14 +254,14 @@ const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
                     body: JSON.stringify(data)
                   });
                   if (res.ok) {
-                    toast.success('Qeydiyyat müraciətiniz uğurla göndərildi!');
+                    toast.success(submitSuccessToast);
                     setRegStep(null);
                   } else {
                     const err = await res.json().catch(() => ({}));
                     throw new Error(err?.error || 'request_failed');
                   }
                 } catch {
-                  toast.error('Gondərilmə zamanı xəta baş verdi.');
+                  toast.error(submitErrorToast);
                 }
               }}>
                 <div className="space-y-4">
@@ -266,7 +270,7 @@ const EventsPage: React.FC<EventsPageProps> = ({ onViewChange }) => {
                 </div>
                 <div className="space-y-4">
                   <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-widest">{getText('FIELD_PHONE', 'TELEFON')}</label>
-                  <input name="contact" required type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none placeholder:text-gray-800" placeholder="+994 -- --- -- --" />
+                  <input name="contact" required type="text" className="w-full bg-black border border-white/5 text-white p-5 font-black italic text-sm focus:ring-1 focus:ring-[#FF4D00] outline-none placeholder:text-gray-800" placeholder={getText('PLACEHOLDER_PHONE', '+994 -- --- -- --')} />
                 </div>
                 <div className="space-y-4">
                   <label className="text-gray-600 font-black italic text-[10px] uppercase tracking-widest">{getText('FIELD_CAR_MODEL', 'AVTOMOBİLİN MARKA/MODELİ')}</label>

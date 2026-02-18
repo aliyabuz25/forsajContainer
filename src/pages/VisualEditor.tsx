@@ -227,8 +227,8 @@ const isSectionVisibleInAdmin = (_section: Section) => {
 
 const shouldSkipSectionInEditor = (section: Section) => {
     const key = extractSectionKey(section);
-    // Hide token-like keys such as VIEW_ALL_BTN in admin edit UI.
-    if (key && key.includes('_')) return true;
+    // Keep human-facing key fields editable, but hide raw token placeholders.
+    if (key && key.includes('_') && looksLikeKeyToken(normalizePlainText(section.value || ''))) return true;
     if (!key && looksLikeKeyToken(section.value)) return true;
     return false;
 };
@@ -558,6 +558,82 @@ const VisualEditor: React.FC = () => {
                     ensureSection('text-4', 'Hero Düymə 2', 'HAQQIMIZDA', 'about');
                     heroPage.sections = sections;
                 };
+                const ensurePageSectionDefaults = (
+                    page: PageContent,
+                    defaults: Array<{ id: string; label: string; value: string; url?: string }>
+                ) => {
+                    const sections = page.sections || [];
+                    defaults.forEach((item) => {
+                        const idx = sections.findIndex((s) => s.id === item.id);
+                        if (idx === -1) {
+                            sections.push({
+                                id: item.id,
+                                type: 'text',
+                                label: item.label,
+                                value: item.value,
+                                ...(item.url ? { url: item.url } : {})
+                            });
+                            return;
+                        }
+                        if (item.url && !sections[idx].url) sections[idx].url = item.url;
+                    });
+                    page.sections = sections;
+                };
+                const ensureContactDefaults = (page: PageContent) => {
+                    ensurePageSectionDefaults(page, [
+                        { id: 'ONLINE_STATUS_LABEL', label: 'Onlayn Status Mətni', value: 'ONLINE' },
+                        { id: 'FORM_STATUS_LABEL', label: 'Form Status Mətni', value: 'STATUS: ONLINE' },
+                        { id: 'FORM_TOAST_REQUIRED', label: 'Form Boş Sahə Xəbərdarlığı', value: 'Zəhmət olmasa bütün sahələri doldurun.' },
+                        { id: 'FORM_TOAST_SUCCESS', label: 'Form Uğurlu Göndəriş Mesajı', value: 'Müraciətiniz uğurla göndərildi!' },
+                        { id: 'FORM_TOAST_ERROR', label: 'Form Xəta Mesajı', value: 'Gondərilmə zamanı xəta baş verdi.' }
+                    ]);
+                };
+                const ensureEventsDefaults = (page: PageContent) => {
+                    ensurePageSectionDefaults(page, [
+                        { id: 'PILOT_FORM_TOAST_REQUIRED', label: 'Pilot Form Boş Sahə Xəbərdarlığı', value: 'Zəhmət olmasa bütün sahələri doldurun.' },
+                        { id: 'PILOT_FORM_TOAST_SUCCESS', label: 'Pilot Form Uğurlu Göndəriş Mesajı', value: 'Qeydiyyat müraciətiniz uğurla göndərildi!' },
+                        { id: 'PILOT_FORM_TOAST_ERROR', label: 'Pilot Form Xəta Mesajı', value: 'Gondərilmə zamanı xəta baş verdi.' },
+                        { id: 'PLACEHOLDER_PHONE', label: 'Telefon Placeholder', value: '+994 -- --- -- --' },
+                        { id: 'SPECTATOR_TICKET_URL', label: 'İzləyici Bilet Linki', value: 'https://iticket.az', url: 'https://iticket.az' },
+                        { id: 'CLUB_OPTION_1', label: 'Klub Seçimi 1', value: 'Fərdi İştirakçı' },
+                        { id: 'CLUB_OPTION_2', label: 'Klub Seçimi 2', value: 'Club 4X4' },
+                        { id: 'CLUB_OPTION_3', label: 'Klub Seçimi 3', value: 'Extreme 4X4' },
+                        { id: 'CLUB_OPTION_4', label: 'Klub Seçimi 4', value: 'Forsaj Club' },
+                        { id: 'CLUB_OPTION_5', label: 'Klub Seçimi 5', value: 'Offroad.az' },
+                        { id: 'CLUB_OPTION_6', label: 'Klub Seçimi 6', value: 'Overland 4X4' },
+                        { id: 'CLUB_OPTION_7', label: 'Klub Seçimi 7', value: 'PatrolClub.az' },
+                        { id: 'CLUB_OPTION_8', label: 'Klub Seçimi 8', value: 'Victory Club' },
+                        { id: 'CLUB_OPTION_9', label: 'Klub Seçimi 9', value: 'Zəfər 4X4 Club' }
+                    ]);
+                };
+                const ensureFooterDefaults = (page: PageContent) => {
+                    ensurePageSectionDefaults(page, [
+                        { id: 'FOOTER_LOGO_ALT', label: 'Footer Logo Alt', value: 'Forsaj Logo' },
+                        { id: 'FOOTER_ABOUT_TEXT', label: 'Footer Haqqında Mətn', value: 'Azərbaycanın ən prestijli motorsport mərkəzi. Sərhədsiz offroad həyəcanını bizimlə yaşayın.' },
+                        { id: 'FOOTER_ADDRESS_LABEL', label: 'Footer Ünvan Başlığı', value: 'ÜNVAN' },
+                        { id: 'FOOTER_CONTACT_LABEL', label: 'Footer Əlaqə Başlığı', value: 'ƏLAQƏ' },
+                        { id: 'FOOTER_NAV_TITLE', label: 'Footer Naviqasiya Başlığı', value: 'NAVİQASİYA' },
+                        { id: 'FOOTER_MOTORSPORT_TITLE', label: 'Footer Motorsport Başlığı', value: 'MOTORSPORT' },
+                        { id: 'FOOTER_NEWSLETTER_TITLE', label: 'Footer Abunə Başlığı', value: 'XƏBƏRDAR OL' },
+                        { id: 'FOOTER_NEWSLETTER_DESC', label: 'Footer Abunə Təsviri', value: 'Yarış təqvimi və xəbərlərdən anında xəbərdar olmaq üçün abunə olun.' },
+                        { id: 'FOOTER_NEWSLETTER_PLACEHOLDER', label: 'Footer Abunə Placeholder', value: 'EMAIL DAXİL EDİN' },
+                        { id: 'FOOTER_COPYRIGHT', label: 'Footer Copyright', value: '© 2024 FORSAJ CLUB. ALL RIGHTS RESERVED.' },
+                        { id: 'FOOTER_PRIVACY_LABEL', label: 'Footer Privacy Link Mətni', value: 'Privacy Policy', url: '#' },
+                        { id: 'FOOTER_TERMS_LABEL', label: 'Footer Terms Link Mətni', value: 'Terms of Service', url: '#' }
+                    ]);
+                };
+                const ensureCategoryLeaderDefaults = (page: PageContent) => {
+                    ensurePageSectionDefaults(page, [
+                        { id: 'LEADER_TITLE_SUFFIX', label: 'Lider Başlıq Suffix', value: 'LİDERİ' },
+                        { id: 'EMPTY_DRIVER_NAME', label: 'Boş Sürücü Adı', value: '---' },
+                        { id: 'EMPTY_DRIVER_TEAM', label: 'Boş Komanda Adı', value: '---' }
+                    ]);
+                };
+                const ensureNextRaceDefaults = (page: PageContent) => {
+                    ensurePageSectionDefaults(page, [
+                        { id: 'RACE_IMAGE_ALT', label: 'Növbəti Yarış Görsel Alt', value: 'Next Race' }
+                    ]);
+                };
 
                 defaultIds.forEach(id => {
                     const found = updatedContent.find(p => p.id === id);
@@ -574,6 +650,16 @@ const VisualEditor: React.FC = () => {
                         ensurePartnersDefaults(found);
                     } else if (id === 'hero') {
                         ensureHeroDefaults(found);
+                    } else if (id === 'contactpage') {
+                        ensureContactDefaults(found);
+                    } else if (id === 'eventspage') {
+                        ensureEventsDefaults(found);
+                    } else if (id === 'footer') {
+                        ensureFooterDefaults(found);
+                    } else if (id === 'categoryleaders') {
+                        ensureCategoryLeaderDefaults(found);
+                    } else if (id === 'nextrace') {
+                        ensureNextRaceDefaults(found);
                     }
                 });
 
@@ -583,6 +669,16 @@ const VisualEditor: React.FC = () => {
                 if (partnersPage) ensurePartnersDefaults(partnersPage);
                 const heroPage = updatedContent.find(p => p.id === 'hero');
                 if (heroPage) ensureHeroDefaults(heroPage);
+                const contactPage = updatedContent.find(p => p.id === 'contactpage');
+                if (contactPage) ensureContactDefaults(contactPage);
+                const eventsPage = updatedContent.find(p => p.id === 'eventspage');
+                if (eventsPage) ensureEventsDefaults(eventsPage);
+                const footerPage = updatedContent.find(p => p.id === 'footer');
+                if (footerPage) ensureFooterDefaults(footerPage);
+                const categoryLeadersPage = updatedContent.find(p => p.id === 'categoryleaders');
+                if (categoryLeadersPage) ensureCategoryLeaderDefaults(categoryLeadersPage);
+                const nextRacePage = updatedContent.find(p => p.id === 'nextrace');
+                if (nextRacePage) ensureNextRaceDefaults(nextRacePage);
 
                 const defaultRank = new Map(defaultIds.map((id, idx) => [id, idx]));
                 updatedContent.sort((a, b) => {
@@ -2695,7 +2791,7 @@ const VisualEditor: React.FC = () => {
                                                                     <Globe size={14} style={{ color: '#94a3b8' }} />
                                                                     <input
                                                                         type="text"
-                                                                        value={section.url || ''}
+                                                                        value={toAbsoluteUrl(section.url || '')}
                                                                         disabled={!canEditUrl}
                                                                         onChange={(e) => handleSectionChange(pageIdx, section.id, 'url', e.target.value)}
                                                                         onBlur={() => normalizeSectionUrl(pageIdx, section.id)}

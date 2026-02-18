@@ -9,6 +9,9 @@ interface CategoryLeadersProps {
 
 const CategoryLeaders: React.FC<CategoryLeadersProps> = ({ onViewChange }) => {
   const { getText } = useSiteContent('categoryleaders');
+  const leaderSuffix = getText('LEADER_TITLE_SUFFIX', 'LİDERİ');
+  const emptyName = getText('EMPTY_DRIVER_NAME', '---');
+  const emptyTeam = getText('EMPTY_DRIVER_TEAM', '---');
   const [leaders, setLeaders] = React.useState<any[]>([]);
 
   React.useEffect(() => {
@@ -25,9 +28,9 @@ const CategoryLeaders: React.FC<CategoryLeadersProps> = ({ onViewChange }) => {
             const topDriver = [...drivers].sort((a: any, b: any) => a.rank - b.rank)[0];
             return {
               id: cat.id,
-              title: `${cat.name} LİDERİ`,
-              name: topDriver?.name || '---',
-              team: topDriver?.team || '---',
+              title: `${cat.name} ${leaderSuffix}`,
+              name: topDriver?.name || emptyName,
+              team: topDriver?.team || emptyTeam,
               score: topDriver?.points || 0,
               img: topDriver?.img || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?grayscale'
             };

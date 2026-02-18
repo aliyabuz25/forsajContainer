@@ -17,7 +17,7 @@ interface Event {
 }
 
 const NextRace: React.FC<NextRaceProps> = ({ onViewChange }) => {
-  const { getText, getUrl } = useSiteContent('nextrace');
+  const { getText, getUrl, getImage } = useSiteContent('nextrace');
   const [nextEvent, setNextEvent] = useState<Event | null>(null);
 
   useEffect(() => {
@@ -53,7 +53,8 @@ const NextRace: React.FC<NextRaceProps> = ({ onViewChange }) => {
   const displayLocation = nextEvent?.location || getText('RACE_CITY', 'SUMQAYIT');
   const displayCategory = nextEvent?.category || getText('RACE_TYPE', 'CHALLENGE');
   const displayFullLocation = nextEvent?.title || getText('RACE_LOCATION', 'SUMQAYIT SAHİL TRASI // SECTOR 04');
-  const displayImage = nextEvent?.img || "https://images.unsplash.com/photo-1541447271487-09612b3f49f7?q=80&w=1974&auto=format&fit=crop";
+  const raceFallbackImage = getImage('race-bg', 'https://images.unsplash.com/photo-1541447271487-09612b3f49f7?q=80&w=1974&auto=format&fit=crop');
+  const displayImage = nextEvent?.img || raceFallbackImage.path;
 
   return (
     <section className="py-24 px-6 lg:px-20 bg-[#0F0F0F]">
@@ -88,7 +89,7 @@ const NextRace: React.FC<NextRaceProps> = ({ onViewChange }) => {
         <div className="md:w-1/2 bg-black relative min-h-[300px] md:min-h-0 overflow-hidden">
           <img
             src={displayImage}
-            alt="Next Race"
+            alt={getText('RACE_IMAGE_ALT', 'Next Race')}
             className="w-full h-full object-cover opacity-40 grayscale group-hover:scale-105 transition-transform duration-1000"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>

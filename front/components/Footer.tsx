@@ -10,6 +10,19 @@ interface FooterProps {
 const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
   const { getText, getUrl, getImage } = useSiteContent('footer');
   const { getText: getGeneralText, getImage: getImageGeneral } = useSiteContent('general');
+  const footerAbout = getText('FOOTER_ABOUT_TEXT', 'Azərbaycanın ən prestijli motorsport mərkəzi. Sərhədsiz offroad həyəcanını bizimlə yaşayın.');
+  const addressLabel = getText('FOOTER_ADDRESS_LABEL', 'ÜNVAN');
+  const contactLabel = getText('FOOTER_CONTACT_LABEL', 'ƏLAQƏ');
+  const navTitle = getText('FOOTER_NAV_TITLE', 'NAVİQASİYA');
+  const motorsportTitle = getText('FOOTER_MOTORSPORT_TITLE', 'MOTORSPORT');
+  const newsletterTitle = getText('FOOTER_NEWSLETTER_TITLE', 'XƏBƏRDAR OL');
+  const newsletterDesc = getText('FOOTER_NEWSLETTER_DESC', 'Yarış təqvimi və xəbərlərdən anında xəbərdar olmaq üçün abunə olun.');
+  const newsletterPlaceholder = getText('FOOTER_NEWSLETTER_PLACEHOLDER', 'EMAIL DAXİL EDİN');
+  const copyrightText = getText('FOOTER_COPYRIGHT', '© 2024 FORSAJ CLUB. ALL RIGHTS RESERVED.');
+  const privacyLabel = getText('FOOTER_PRIVACY_LABEL', 'Privacy Policy');
+  const termsLabel = getText('FOOTER_TERMS_LABEL', 'Terms of Service');
+  const privacyUrl = getUrl('FOOTER_PRIVACY_LABEL', '#');
+  const termsUrl = getUrl('FOOTER_TERMS_LABEL', '#');
 
   const logoImg = getImageGeneral('SITE_LOGO_LIGHT').path;
 
@@ -58,7 +71,7 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
         <div className="lg:col-span-1">
           <div className="flex items-center gap-3 mb-8 cursor-pointer" onClick={() => onViewChange('home')}>
             {logoImg ? (
-              <img src={logoImg} alt="Forsaj Logo" className="h-12 w-auto object-contain" />
+              <img src={logoImg} alt={getText('FOOTER_LOGO_ALT', 'Forsaj Logo')} className="h-12 w-auto object-contain" />
             ) : (
               <div className="flex items-center gap-3">
                 <div className="bg-[#FF4D00] w-10 h-10 rounded-sm flex items-center justify-center relative shadow-[0_0_20px_rgba(255,77,0,0.4)] group-hover:scale-110 transition-transform">
@@ -74,7 +87,7 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
             )}
           </div>
           <p className="text-gray-500 font-bold italic text-[11px] uppercase leading-relaxed mb-10 max-w-xs tracking-tight">
-            Azərbaycanın ən prestijli motorsport mərkəzi. Sərhədsiz offroad həyəcanını bizimlə yaşayın.
+            {footerAbout}
           </p>
           <div className="flex gap-4 mb-8">
             {socialLinks.map(({ Icon, url }, idx) => (
@@ -96,7 +109,7 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
                 <MapPin size={18} />
               </div>
               <div>
-                <p className="text-[9px] font-black italic uppercase tracking-widest text-[#FF4D00] mb-1">ÜNVAN</p>
+                <p className="text-[9px] font-black italic uppercase tracking-widest text-[#FF4D00] mb-1">{addressLabel}</p>
                 <p className="text-[11px] font-bold italic uppercase leading-tight">
                   {getGeneralText('CONTACT_ADDRESS_1') || 'AZADLIQ 102, BAKI'}
                 </p>
@@ -108,7 +121,7 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
                 <Phone size={18} />
               </div>
               <div>
-                <p className="text-[9px] font-black italic uppercase tracking-widest text-[#FF4D00] mb-1">ƏLAQƏ</p>
+                <p className="text-[9px] font-black italic uppercase tracking-widest text-[#FF4D00] mb-1">{contactLabel}</p>
                 <p className="text-[11px] font-bold italic uppercase leading-none">
                   {getGeneralText('CONTACT_PHONE') || '+994 50 123 45 67'}
                 </p>
@@ -118,7 +131,7 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
         </div>
 
         <div>
-          <h4 className="text-[#FF4D00] font-black italic text-[13px] mb-8 uppercase tracking-[0.3em]">NAVİQASİYA</h4>
+          <h4 className="text-[#FF4D00] font-black italic text-[13px] mb-8 uppercase tracking-[0.3em]">{navTitle}</h4>
           <ul className="space-y-5">
             {navigationLinks.map(link => (
               <li key={link.name}>
@@ -141,7 +154,7 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
         </div>
 
         <div>
-          <h4 className="text-[#FF4D00] font-black italic text-[13px] mb-8 uppercase tracking-[0.3em]">MOTORSPORT</h4>
+          <h4 className="text-[#FF4D00] font-black italic text-[13px] mb-8 uppercase tracking-[0.3em]">{motorsportTitle}</h4>
           <ul className="space-y-5">
             {rulesLinks.map(link => (
               <li key={link.name}>
@@ -164,14 +177,14 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
         </div>
 
         <div className="bg-white/5 p-8 rounded-sm border border-white/5">
-          <h4 className="text-white font-black italic text-[13px] mb-4 uppercase tracking-tighter">XƏBƏRDAR OL</h4>
+          <h4 className="text-white font-black italic text-[13px] mb-4 uppercase tracking-tighter">{newsletterTitle}</h4>
           <p className="text-gray-500 font-bold italic text-[10px] uppercase mb-8 leading-relaxed tracking-tight">
-            Yarış təqvimi və xəbərlərdən anında xəbərdar olmaq üçün abunə olun.
+            {newsletterDesc}
           </p>
           <div className="flex items-center">
             <input
               type="email"
-              placeholder="EMAIL DAXİL EDİN"
+              placeholder={newsletterPlaceholder}
               className="flex-grow bg-[#111] border border-white/10 border-r-0 py-4 px-5 font-black italic text-[10px] text-white uppercase focus:outline-none focus:border-[#FF4D00] transition-colors placeholder:text-gray-600"
             />
             <button className="bg-[#FF4D00] text-black p-4 hover:bg-white transition-colors flex items-center justify-center">
@@ -183,11 +196,11 @@ const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
 
       <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
         <p className="text-gray-600 font-black italic text-[9px] uppercase tracking-widest">
-          © 2024 FORSAJ CLUB. ALL RIGHTS RESERVED.
+          {copyrightText}
         </p>
         <div className="flex gap-10">
-          <a href="#" className="text-gray-600 font-black italic text-[9px] uppercase tracking-widest hover:text-[#FF4D00] transition-colors">Privacy Policy</a>
-          <a href="#" className="text-gray-600 font-black italic text-[9px] uppercase tracking-widest hover:text-[#FF4D00] transition-colors">Terms of Service</a>
+          <a href={privacyUrl || '#'} target={privacyUrl?.startsWith('http') ? '_blank' : undefined} rel={privacyUrl?.startsWith('http') ? 'noopener noreferrer' : undefined} className="text-gray-600 font-black italic text-[9px] uppercase tracking-widest hover:text-[#FF4D00] transition-colors">{privacyLabel}</a>
+          <a href={termsUrl || '#'} target={termsUrl?.startsWith('http') ? '_blank' : undefined} rel={termsUrl?.startsWith('http') ? 'noopener noreferrer' : undefined} className="text-gray-600 font-black italic text-[9px] uppercase tracking-widest hover:text-[#FF4D00] transition-colors">{termsLabel}</a>
         </div>
       </div>
     </footer>
