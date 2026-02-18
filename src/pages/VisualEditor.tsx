@@ -259,7 +259,8 @@ const componentLabels: Record<string, string> = {
 
 const TAB_PAGE_GROUPS: Record<string, string[]> = {
     home: ['navbar', 'hero', 'marquee', 'categoryleaders', 'footer'],
-    abouttab: ['about', 'mission_vision', 'values'],
+    // About page in frontend reads all content from "about" page id.
+    abouttab: ['about'],
     newstab: ['newspage'],
     eventstab: ['eventspage'],
     driverstab: ['drivers'],
