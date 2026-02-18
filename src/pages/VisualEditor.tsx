@@ -326,7 +326,6 @@ const VisualEditor: React.FC = () => {
 
     const [galleryPhotos, setGalleryPhotos] = useState<GalleryPhotoItem[]>([]);
     const autoSyncTriggeredRef = useRef(false);
-    const aboutStatsPatchedRef = useRef(false);
     const [selectedPhotoId, setSelectedPhotoId] = useState<number | null>(null);
     const [photoForm, setPhotoForm] = useState<Partial<GalleryPhotoItem>>({});
 
@@ -582,6 +581,7 @@ const VisualEditor: React.FC = () => {
                             ...section,
                             label: nextLabel,
                             value: nextValue,
+                            ...(section.url ? { url: toAbsoluteUrl(section.url) } : {}),
                             order: normalizeOrder(section.order, sectionIndex)
                         };
                     })
@@ -650,7 +650,6 @@ const VisualEditor: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (aboutStatsPatchedRef.current) return;
         if (!pages.length) return;
 
         const aboutIdx = pages.findIndex((p) => p.id === 'about');
@@ -658,10 +657,7 @@ const VisualEditor: React.FC = () => {
 
         const aboutPage = pages[aboutIdx];
         const hasStatPairs = (aboutPage.sections || []).some((s) => isStatSectionId(s.id));
-        if (hasStatPairs) {
-            aboutStatsPatchedRef.current = true;
-            return;
-        }
+        if (hasStatPairs) return;
 
         const defaults = [
             { label: 'PİLOTLAR', value: '140+' },
@@ -693,7 +689,6 @@ const VisualEditor: React.FC = () => {
 
         target.sections = sections;
         patched[aboutIdx] = target;
-        aboutStatsPatchedRef.current = true;
         setPages(patched);
     }, [pages]);
 
