@@ -856,10 +856,10 @@ const VisualEditor: React.FC = () => {
         setPages(newPages);
     };
 
-    const addAboutStatRow = () => {
-        if (selectedPageIndex < 0 || selectedPageIndex >= pages.length) return;
+    const addAboutStatRow = (pageIdx: number = selectedPageIndex) => {
+        if (pageIdx < 0 || pageIdx >= pages.length) return;
         const newPages = [...pages];
-        const current = newPages[selectedPageIndex];
+        const current = newPages[pageIdx];
         if (!current || current.id !== 'about') return;
 
         const suffix = `${Date.now()}`;
@@ -871,10 +871,10 @@ const VisualEditor: React.FC = () => {
         toast.success('Yeni statistika əlavə edildi');
     };
 
-    const updateAboutStatField = (suffix: string, field: 'label' | 'value', value: string) => {
-        if (selectedPageIndex < 0 || selectedPageIndex >= pages.length) return;
+    const updateAboutStatField = (suffix: string, field: 'label' | 'value', value: string, pageIdx: number = selectedPageIndex) => {
+        if (pageIdx < 0 || pageIdx >= pages.length) return;
         const newPages = [...pages];
-        const current = newPages[selectedPageIndex];
+        const current = newPages[pageIdx];
         if (!current || current.id !== 'about') return;
 
         const targetId = field === 'label' ? `${STAT_LABEL_PREFIX}${suffix}` : `${STAT_VALUE_PREFIX}${suffix}`;
@@ -896,10 +896,10 @@ const VisualEditor: React.FC = () => {
         setPages(newPages);
     };
 
-    const removeAboutStatRow = (suffix: string) => {
-        if (selectedPageIndex < 0 || selectedPageIndex >= pages.length) return;
+    const removeAboutStatRow = (suffix: string, pageIdx: number = selectedPageIndex) => {
+        if (pageIdx < 0 || pageIdx >= pages.length) return;
         const newPages = [...pages];
-        const current = newPages[selectedPageIndex];
+        const current = newPages[pageIdx];
         if (!current || current.id !== 'about') return;
 
         current.sections = current.sections.filter(
@@ -2454,10 +2454,30 @@ const VisualEditor: React.FC = () => {
                                 )}
                                 {activeGroupPages.map(({ page, pageIdx }) => {
                                     const pageSections = (page.sections || [])
-                                        .filter((section) => isSectionVisibleInAdmin(section) && !shouldSkipSectionInEditor(section))
+                                        .filter((section) => {
+                                            if (!isSectionVisibleInAdmin(section) || shouldSkipSectionInEditor(section)) return false;
+                                            if (page.id === 'about' && isStatSectionId(section.id)) return false;
+                                            return true;
+                                        })
                                         .sort((a, b) => normalizeOrder(a.order, 0) - normalizeOrder(b.order, 0));
                                     const pageImages = (page.images || [])
                                         .sort((a, b) => normalizeOrder(a.order, 0) - normalizeOrder(b.order, 0));
+                                    const pageAboutStats = page.id === 'about'
+                                        ? (() => {
+                                            const statsMap = new Map<string, { label: string; value: string }>();
+                                            (page.sections || []).forEach((section) => {
+                                                if (!isStatSectionId(section.id)) return;
+                                                const suffix = getStatSuffix(section.id) || section.id;
+                                                const current = statsMap.get(suffix) || { label: '', value: '' };
+                                                if (section.id.startsWith(STAT_LABEL_PREFIX)) current.label = section.value || '';
+                                                if (section.id.startsWith(STAT_VALUE_PREFIX)) current.value = section.value || '';
+                                                statsMap.set(suffix, current);
+                                            });
+                                            return Array.from(statsMap.entries())
+                                                .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+                                                .map(([suffix, data]) => ({ suffix, ...data }));
+                                        })()
+                                        : [];
 
                                     return (
                                         <div key={page.id} className="field-group">
@@ -2468,6 +2488,50 @@ const VisualEditor: React.FC = () => {
                                             </div>
 
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+                                                {page.id === 'about' && (
+                                                    <div className="field-item-wrapper" style={{ position: 'relative', background: '#fcfcfd', padding: '1rem', borderRadius: '12px', border: '1px solid #f0f0f2' }}>
+                                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                                            <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 800 }}>
+                                                                Statistikalar
+                                                            </div>
+                                                            <button
+                                                                type="button"
+                                                                className="add-field-minimal"
+                                                                onClick={() => addAboutStatRow(pageIdx)}
+                                                            >
+                                                                <Plus size={14} /> Yeni Statistika
+                                                            </button>
+                                                        </div>
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                                            {pageAboutStats.map((row) => (
+                                                                <div key={row.suffix} style={{ display: 'grid', gridTemplateColumns: '1fr 180px auto', gap: '8px', alignItems: 'center' }}>
+                                                                    <input
+                                                                        type="text"
+                                                                        value={row.label}
+                                                                        onChange={(e) => updateAboutStatField(row.suffix, 'label', e.target.value, pageIdx)}
+                                                                        placeholder="Statistika adı"
+                                                                        style={{ padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', fontWeight: 700 }}
+                                                                    />
+                                                                    <input
+                                                                        type="text"
+                                                                        value={row.value}
+                                                                        onChange={(e) => updateAboutStatField(row.suffix, 'value', e.target.value, pageIdx)}
+                                                                        placeholder="Dəyər"
+                                                                        style={{ padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', fontWeight: 700 }}
+                                                                    />
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => removeAboutStatRow(row.suffix, pageIdx)}
+                                                                        style={{ background: '#fff', border: '1px solid #fee2e2', color: '#ef4444', borderRadius: '8px', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                                                                    >
+                                                                        <Trash2 size={14} />
+                                                                    </button>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+
                                                 {pageSections.map((section) => {
                                                     const sectionKey = extractSectionKey(section);
                                                     const canEditValue = canEditSectionField(section, 'value');
@@ -2517,8 +2581,29 @@ const VisualEditor: React.FC = () => {
                                             </div>
 
                                             <div style={{ marginTop: '1rem' }}>
-                                                <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '8px' }}>
-                                                    Şəkillər
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                                    <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 700 }}>
+                                                        Şəkillər
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        className="add-field-minimal"
+                                                        onClick={() => {
+                                                            const newPages = [...pages];
+                                                            const target = newPages[pageIdx];
+                                                            if (!target) return;
+                                                            target.images.push({
+                                                                id: `img-${target.images.length}-${Date.now()}`,
+                                                                path: '',
+                                                                alt: '',
+                                                                type: 'local',
+                                                                order: target.images.length
+                                                            });
+                                                            setPages(newPages);
+                                                        }}
+                                                    >
+                                                        <Plus size={14} /> Yeni Şəkil
+                                                    </button>
                                                 </div>
                                                 <div className="images-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
                                                     {pageImages.length === 0 && (
@@ -2611,7 +2696,7 @@ const VisualEditor: React.FC = () => {
                                     </h2>
                                     <div className="canvas-actions">
                                         {currentPage.id === 'about' && (
-                                            <button className="add-field-minimal" onClick={addAboutStatRow} style={{ background: '#f5f3ff', color: '#7c3aed', border: '1px solid #ddd6fe' }}>
+                                            <button className="add-field-minimal" onClick={() => addAboutStatRow()} style={{ background: '#f5f3ff', color: '#7c3aed', border: '1px solid #ddd6fe' }}>
                                                 <Trophy size={14} /> Statistika Əlavə Et
                                             </button>
                                         )}
@@ -2665,7 +2750,7 @@ const VisualEditor: React.FC = () => {
                                         <div className="field-group">
                                             <div className="field-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <label><Trophy size={16} /> Statistikalar</label>
-                                                <button className="add-field-minimal" onClick={addAboutStatRow}>
+                                                <button className="add-field-minimal" onClick={() => addAboutStatRow()}>
                                                     <Plus size={14} /> Yeni Statistika
                                                 </button>
                                             </div>
