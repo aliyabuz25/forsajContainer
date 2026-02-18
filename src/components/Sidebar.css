@@ -91,30 +91,39 @@
 .sidebar-menu {
     list-style: none;
     padding: 0 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
 }
 
 .sidebar-item {
-    margin-bottom: 4px;
+    margin-bottom: 0;
 }
 
 .sidebar-link {
     display: flex;
     align-items: center;
+    width: 100%;
     padding: 0.75rem 0.75rem;
     border-radius: var(--radius-md);
+    border: 1px solid transparent;
     color: var(--text-sidebar);
     cursor: pointer;
     position: relative;
+    transition: all 0.2s ease;
 }
 
 .sidebar-link:hover {
     background-color: var(--bg-sidebar-hover);
     color: var(--text-sidebar-active);
+    border-color: rgba(255, 255, 255, 0.08);
 }
 
 .sidebar-link.active {
     background-color: var(--primary);
     color: #fff;
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 16px -12px rgba(59, 130, 246, 0.8);
 }
 
 .sidebar-icon {

@@ -73,61 +73,31 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems, user, onLogout }) => {
         return <Icon className={className} size={18} />;
     };
 
-    const renderMenuItem = (item: SidebarItem) => {
-        const hasChildren = item.children && item.children.length > 0;
-
-        // Better active check including query params
-        const isCurrentActive = (path?: string) => {
-            if (!path) return false;
-            if (path.includes('?')) {
-                return (location.pathname + location.search) === path;
-            }
-            return location.pathname === path;
-        };
-
-        const isActive = isCurrentActive(item.path) || (hasChildren && item.children?.some(child => isCurrentActive(child.path)));
-
-        if (hasChildren) {
-            return (
-                <li key={item.title} className={`sidebar-item ${isActive ? 'active' : ''}`}>
-                    <div className={`sidebar-link has-children ${isActive ? 'active' : ''}`} style={{ cursor: 'default' }}>
-                        {item.icon && <IconComponent name={item.icon} className="sidebar-icon" />}
-                        <span className="sidebar-text">{item.title}</span>
-                    </div>
-                    <ul className="sidebar-submenu show">
-                        {item.children?.map(child => (
-                            <li key={child.title} className="sidebar-submenu-item">
-                                <NavLink
-                                    to={child.path || '#'}
-                                    className={() => `sidebar-submenu-link ${isCurrentActive(child.path) ? 'active' : ''}`}
-                                >
-                                    <Circle size={8} className="submenu-dot" />
-                                    <span>{child.title}</span>
-                                </NavLink>
-                            </li>
-                        ))}
-                    </ul>
-                </li>
-            );
+    // Better active check including query params
+    const isCurrentActive = (path?: string) => {
+        if (!path) return false;
+        if (path.includes('?')) {
+            return (location.pathname + location.search) === path;
         }
-
-        return (
-            <li key={item.title} className="sidebar-item">
-                <NavLink
-                    to={item.path || '#'}
-                    className={() => `sidebar-link ${isCurrentActive(item.path) ? 'active' : ''}`}
-                >
-                    {item.icon && <IconComponent name={item.icon} className="sidebar-icon" />}
-                    <span className="sidebar-text">{item.title}</span>
-                    {item.badge && (
-                        <span className={`badge ${item.badge.color} sidebar-badge`}>
-                            {item.badge.text}
-                        </span>
-                    )}
-                </NavLink>
-            </li>
-        );
+        return location.pathname === path;
     };
+
+    const renderLinkItem = (item: SidebarItem, parentIcon?: string) => (
+        <li key={item.title} className="sidebar-item">
+            <NavLink
+                to={item.path || '#'}
+                className={() => `sidebar-link ${isCurrentActive(item.path) ? 'active' : ''}`}
+            >
+                {(item.icon || parentIcon) && <IconComponent name={item.icon || parentIcon || ''} className="sidebar-icon" />}
+                <span className="sidebar-text">{item.title}</span>
+                {item.badge && (
+                    <span className={`badge ${item.badge.color} sidebar-badge`}>
+                        {item.badge.text}
+                    </span>
+                )}
+            </NavLink>
+        </li>
+    );
 
     const filterByRole = (items: SidebarItem[]): SidebarItem[] => {
         const restrictedPaths = ['/frontend-settings', '/users-management'];
@@ -163,7 +133,12 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems, user, onLogout }) => {
             <div className="sidebar-content">
                 <div className="sidebar-section-label">ƏSAS NAVİQASİYA</div>
                 <ul className="sidebar-menu">
-                    {filterByRole(menuItems).map(item => renderMenuItem(item))}
+                    {filterByRole(menuItems).flatMap(item => {
+                        if (item.children && item.children.length > 0) {
+                            return item.children.map(child => renderLinkItem(child, item.icon));
+                        }
+                        return renderLinkItem(item);
+                    })}
                     {menuItems.length === 0 && (
                         <div className="empty-sidebar-msg">
                             <p>Menyu boşdur</p>

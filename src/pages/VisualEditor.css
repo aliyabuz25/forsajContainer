@@ -101,6 +101,8 @@
 }
 
 .mode-btn {
+    appearance: none;
+    -webkit-appearance: none;
     padding: 5px 10px;
     border-radius: 6px;
     border: none;
@@ -136,6 +138,8 @@
 }
 
 .save-btn {
+    appearance: none;
+    -webkit-appearance: none;
     background: var(--premium-primary);
     color: white;
     border: none;
@@ -414,6 +418,8 @@
 }
 
 .add-section-btn {
+    appearance: none;
+    -webkit-appearance: none;
     background: #eff6ff;
     color: var(--primary);
     border: 1px solid #bfdbfe;
@@ -510,6 +516,8 @@
 }
 
 .btn-primary {
+    appearance: none;
+    -webkit-appearance: none;
     background: var(--premium-primary);
     color: white;
     border: none;
@@ -526,6 +534,8 @@
 }
 
 .btn-secondary {
+    appearance: none;
+    -webkit-appearance: none;
     background: white;
     color: var(--text-main);
     border: 1px solid var(--border-color);
@@ -548,6 +558,8 @@
 }
 
 .add-field-minimal {
+    appearance: none;
+    -webkit-appearance: none;
     background: #f0fdf4;
     color: #16a34a;
     border: 1px solid #bbf7d0;
