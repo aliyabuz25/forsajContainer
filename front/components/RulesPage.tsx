@@ -7,6 +7,9 @@ interface RuleSection {
   id: string;
   title: string;
   icon: React.ReactNode;
+  docName?: string;
+  docButton?: string;
+  docUrl?: string;
   rules: {
     subtitle: string;
     description: string;
@@ -19,10 +22,10 @@ const RulesPage: React.FC = () => {
   const rulesPage = getPage('rulespage');
 
   const ruleSections: RuleSection[] = useMemo(() => {
-    const tabField = /^RULE_TAB_(\d+)_(ID|TITLE|ICON)$/;
+    const tabField = /^RULE_TAB_(\d+)_(ID|TITLE|ICON|DOC_NAME|DOC_BUTTON|DOC_URL)$/;
     const itemField = /^RULE_TAB_(\d+)_ITEM_(\d+)_(TITLE|DESC)$/;
 
-    const tabsMap = new Map<number, { id?: string; title?: string; icon?: string; items: Map<number, { subtitle?: string; description?: string }> }>();
+    const tabsMap = new Map<number, { id?: string; title?: string; icon?: string; docName?: string; docButton?: string; docUrl?: string; items: Map<number, { subtitle?: string; description?: string }> }>();
     (rulesPage?.sections || []).forEach((section) => {
       const tabMatch = section.id.match(tabField);
       if (tabMatch) {
@@ -32,6 +35,9 @@ const RulesPage: React.FC = () => {
         if (field === 'ID') current.id = section.value || '';
         if (field === 'TITLE') current.title = section.value || '';
         if (field === 'ICON') current.icon = section.value || '';
+        if (field === 'DOC_NAME') current.docName = section.value || '';
+        if (field === 'DOC_BUTTON') current.docButton = section.value || '';
+        if (field === 'DOC_URL') current.docUrl = section.url || section.value || '';
         tabsMap.set(tabNo, current);
         return;
       }
@@ -74,92 +80,102 @@ const RulesPage: React.FC = () => {
           id: tab.id || `tab-${index}`,
           title: tab.title || '',
           icon: toIcon(tab.icon),
+          docName: tab.docName || '',
+          docButton: tab.docButton || '',
+          docUrl: tab.docUrl || '',
           rules
         };
       })
       .filter((tab) => tab.title && tab.rules.length > 0);
 
-    if (dynamicTabs.length > 0) return dynamicTabs;
-
-    return [
-    {
-      id: 'pilot',
-      title: getText('RULES_PILOT_TITLE', 'PİLOT PROTOKOLU'),
-      icon: <Info size={18} />,
-      rules: [
-        {
-          subtitle: getText('RULES_PILOT_SUB1', 'İSTİFADƏÇİ ÖHDƏLİKLƏRİ'),
-          description: getText('RULES_PILOT_DESC1', 'HƏR BİR İŞTİRAKÇI FEDERASİYANIN MÜƏYYƏN ETDİYİ BÜTÜN TEXNİKİ VƏ ETİK NORMALARI QEYD-ŞƏRTSİZ QƏBUL EDİR.')
-        },
-        {
-          subtitle: getText('RULES_PILOT_SUB2', 'DİSKVALİFİKASİYA'),
-          description: getText('RULES_PILOT_DESC2', 'PROTOKOLDAN KƏNARA ÇIXMAQ VƏ YA HAKİM QƏRARLARINA ETİRAZ ETMƏK DƏRHAL DİSKVALİFİKASİYA İLƏ NƏTİCƏLƏNƏ BİLƏR.')
-        },
-        {
-          subtitle: getText('RULES_PILOT_SUB3', 'TEXNİKİ TƏLƏBLƏR'),
-          description: getText('RULES_PILOT_DESC3', 'BÜTÜN AVADANLIQLAR YARIŞDAN 24 SAAT ƏVVƏL TEXNİKİ KOMİSSİYA TƏRƏFİNDƏN YOXLANILMALI VƏ TƏHLÜKƏSİZLİK SERTİFİKATI İLƏ TƏMİN EDİLMƏLİDİR.')
-        }
-      ]
-    },
-    {
-      id: 'technical',
-      title: getText('RULES_TECH_TITLE', 'TEXNİKİ NORMARTİVLƏR'),
-      icon: <Settings size={18} />,
-      rules: [
-        {
-          subtitle: getText('RULES_TECH_SUB1', 'TƏKƏR ÖLÇÜLƏRİ'),
-          description: getText('RULES_TECH_DESC1', 'PRO CLASS ÜÇÜN MAKSİMUM TƏKƏR ÖLÇÜSÜ 37 DÜYM, AMATEUR CLASS ÜÇÜN İSƏ 33 DÜYM OLARAQ MÜƏYYƏN EDİLMİŞDİR.')
-        },
-        {
-          subtitle: getText('RULES_TECH_SUB2', 'MÜHƏRRİK GÜCÜ'),
-          description: getText('RULES_TECH_DESC2', 'MÜHƏRRİK ÜZƏRİNDƏ APARILAN MODİFİKASİYALAR KATEQORİYA ÜZRƏ LİMİTLƏRİ AŞMAMALIDIR. TURBO SİSTEMLƏRİ YALNIZ XÜSUSİ KLASLARDA İCAZƏLİDİR.')
-        },
-        {
-          subtitle: getText('RULES_TECH_SUB3', 'ASQI SİSTEMİ'),
-          description: getText('RULES_TECH_DESC3', 'AVTOMOBİLİN KLİRENSİ (YERDƏN HÜNDÜRLÜYÜ) VƏ ASQI ARTIKULYASİYASI TƏHLÜKƏSİZLİK STANDARTLARINA UYĞUN OLMALIDIR.')
-        }
-      ]
-    },
-    {
-      id: 'safety',
-      title: getText('RULES_SAFETY_TITLE', 'TƏHLÜKƏSİZLİK QAYDALARI'),
-      icon: <ShieldAlert size={18} />,
-      rules: [
-        {
-          subtitle: getText('RULES_SAFETY_SUB1', 'KARKAS TƏLƏBİ'),
-          description: getText('RULES_SAFETY_DESC1', 'BÜTÜN AÇIQ VƏ YA MODİFİKASİYA OLUNMUŞ AVTOMOBİLLƏRDƏ FIA STANDARTLARINA UYĞUN TƏHLÜKƏSİZLİK KARKASI (ROLL CAGE) MƏCBURİDİR.')
-        },
-        {
-          subtitle: getText('RULES_SAFETY_SUB2', 'YANĞIN SÖNDÜRMƏ'),
-          description: getText('RULES_SAFETY_DESC2', 'HƏR BİR AVTOMOBİLDƏ ƏN AZI 2 KİLOQRAMLIQ, ASAN ƏLÇATAN YERDƏ YERLƏŞƏN YANĞINSÖNDÜRƏN BALON OLMALIDIR.')
-        },
-        {
-          subtitle: getText('RULES_SAFETY_SUB3', 'KƏMƏR VƏ DƏBİLQƏ'),
-          description: getText('RULES_SAFETY_DESC3', '5 NÖQTƏLİ TƏHLÜKƏSİZLİK KƏMƏRLƏRİ VƏ SERTİFİKATLI KASKALARIN (DƏBİLQƏLƏRİN) İSTİFADƏSİ BÜTÜN MƏRHƏLƏLƏRDƏ MƏCBURİDİR.')
-        }
-      ]
-    },
-    {
-      id: 'eco',
-      title: getText('RULES_ECO_TITLE', 'EKOLOJİ MƏSULİYYƏT'),
-      icon: <Leaf size={18} />,
-      rules: [
-        {
-          subtitle: getText('RULES_ECO_SUB1', 'TULLANTILARIN İDARƏ EDİLMƏSİ'),
-          description: getText('RULES_ECO_DESC1', 'YARIŞ ƏRAZİSİNDƏ VƏ TRASDA HƏR HANSI BİR TULLANTININ ATILMASI QƏTİ QADAĞANDIR. İŞTİRAKÇILAR "LEAVE NO TRACE" PRİNSİPİNƏ ƏMƏL ETMƏLİDİR.')
-        },
-        {
-          subtitle: getText('RULES_ECO_SUB2', 'MAYE SIZMALARI'),
-          description: getText('RULES_ECO_DESC2', 'AVTOMOBİLDƏN YAĞ VƏ YA SOYUDUCU MAYE SIZMASI OLDUĞU TƏQDİRDƏ PİLOT DƏRHAL DAYANMALI VƏ ƏRAZİNİN ÇİRKLƏNMƏSİNİN QARŞISINI ALMALIDIR.')
-        },
-        {
-          subtitle: getText('RULES_ECO_SUB3', 'MARŞRUTDAN KƏNARA ÇIXMAMAQ'),
-          description: getText('RULES_ECO_DESC3', 'TƏBİİ ÖRTÜYÜ QORUMAQ MƏQSƏDİ İLƏ MÜƏYYƏN OLUNMUŞ TRASDANKƏNAR SÜRÜŞLƏR VƏ YA YAŞIL SAHƏLƏRƏ ZƏRƏR VERMƏK QADAĞANDIR.')
-        }
-      ]
-    }
+    const baseDocButton = getText('BTN_DOWNLOAD_PDF', 'PDF YÜKLƏ');
+    const baseDocUrl = getUrl('BTN_DOWNLOAD_PDF', '');
+    const legacyTabs: RuleSection[] = [
+      {
+        id: 'pilot',
+        title: getText('RULES_PILOT_TITLE', 'PİLOT PROTOKOLU'),
+        icon: <Info size={18} />,
+        docName: 'PILOT_PROTOKOLU.PDF',
+        docButton: baseDocButton,
+        docUrl: baseDocUrl,
+        rules: [
+          { subtitle: getText('RULES_PILOT_SUB1', 'İSTİFADƏÇİ ÖHDƏLİKLƏRİ'), description: getText('RULES_PILOT_DESC1', 'HƏR BİR İŞTİRAKÇI FEDERASİYANIN MÜƏYYƏN ETDİYİ BÜTÜN TEXNİKİ VƏ ETİK NORMALARI QEYD-ŞƏRTSİZ QƏBUL EDİR.') },
+          { subtitle: getText('RULES_PILOT_SUB2', 'DİSKVALİFİKASİYA'), description: getText('RULES_PILOT_DESC2', 'PROTOKOLDAN KƏNARA ÇIXMAQ VƏ YA HAKİM QƏRARLARINA ETİRAZ ETMƏK DƏRHAL DİSKVALİFİKASİYA İLƏ NƏTİCƏLƏNƏ BİLƏR.') },
+          { subtitle: getText('RULES_PILOT_SUB3', 'TEXNİKİ TƏLƏBLƏR'), description: getText('RULES_PILOT_DESC3', 'BÜTÜN AVADANLIQLAR YARIŞDAN 24 SAAT ƏVVƏL TEXNİKİ KOMİSSİYA TƏRƏFİNDƏN YOXLANILMALI VƏ TƏHLÜKƏSİZLİK SERTİFİKATI İLƏ TƏMİN EDİLMƏLİDİR.') }
+        ]
+      },
+      {
+        id: 'technical',
+        title: getText('RULES_TECH_TITLE', 'TEXNİKİ NORMARTİVLƏR'),
+        icon: <Settings size={18} />,
+        docName: 'TEXNIKI_NORMATIVLER.PDF',
+        docButton: baseDocButton,
+        docUrl: baseDocUrl,
+        rules: [
+          { subtitle: getText('RULES_TECH_SUB1', 'TƏKƏR ÖLÇÜLƏRİ'), description: getText('RULES_TECH_DESC1', 'PRO CLASS ÜÇÜN MAKSİMUM TƏKƏR ÖLÇÜSÜ 37 DÜYM, AMATEUR CLASS ÜÇÜN İSƏ 33 DÜYM OLARAQ MÜƏYYƏN EDİLMİŞDİR.') },
+          { subtitle: getText('RULES_TECH_SUB2', 'MÜHƏRRİK GÜCÜ'), description: getText('RULES_TECH_DESC2', 'MÜHƏRRİK ÜZƏRİNDƏ APARILAN MODİFİKASİYALAR KATEQORİYA ÜZRƏ LİMİTLƏRİ AŞMAMALIDIR. TURBO SİSTEMLƏRİ YALNIZ XÜSUSİ KLASLARDA İCAZƏLİDİR.') },
+          { subtitle: getText('RULES_TECH_SUB3', 'ASQI SİSTEMİ'), description: getText('RULES_TECH_DESC3', 'AVTOMOBİLİN KLİRENSİ (YERDƏN HÜNDÜRLÜYÜ) VƏ ASQI ARTIKULYASİYASI TƏHLÜKƏSİZLİK STANDARTLARINA UYĞUN OLMALIDIR.') }
+        ]
+      },
+      {
+        id: 'safety',
+        title: getText('RULES_SAFETY_TITLE', 'TƏHLÜKƏSİZLİK QAYDALARI'),
+        icon: <ShieldAlert size={18} />,
+        docName: 'TEHLUKESIZLIK_QAYDALARI.PDF',
+        docButton: baseDocButton,
+        docUrl: baseDocUrl,
+        rules: [
+          { subtitle: getText('RULES_SAFETY_SUB1', 'KARKAS TƏLƏBİ'), description: getText('RULES_SAFETY_DESC1', 'BÜTÜN AÇIQ VƏ YA MODİFİKASİYA OLUNMUŞ AVTOMOBİLLƏRDƏ FIA STANDARTLARINA UYĞUN TƏHLÜKƏSİZLİK KARKASI (ROLL CAGE) MƏCBURİDİR.') },
+          { subtitle: getText('RULES_SAFETY_SUB2', 'YANĞIN SÖNDÜRMƏ'), description: getText('RULES_SAFETY_DESC2', 'HƏR BİR AVTOMOBİLDƏ ƏN AZI 2 KİLOQRAMLIQ, ASAN ƏLÇATAN YERDƏ YERLƏŞƏN YANĞINSÖNDÜRƏN BALON OLMALIDIR.') },
+          { subtitle: getText('RULES_SAFETY_SUB3', 'KƏMƏR VƏ DƏBİLQƏ'), description: getText('RULES_SAFETY_DESC3', '5 NÖQTƏLİ TƏHLÜKƏSİZLİK KƏMƏRLƏRİ VƏ SERTİFİKATLI KASKALARIN (DƏBİLQƏLƏRİN) İSTİFADƏSİ BÜTÜN MƏRHƏLƏLƏRDƏ MƏCBURİDİR.') }
+        ]
+      },
+      {
+        id: 'eco',
+        title: getText('RULES_ECO_TITLE', 'EKOLOJİ MƏSULİYYƏT'),
+        icon: <Leaf size={18} />,
+        docName: 'EKOLOJI_MESULIYYET.PDF',
+        docButton: baseDocButton,
+        docUrl: baseDocUrl,
+        rules: [
+          { subtitle: getText('RULES_ECO_SUB1', 'TULLANTILARIN İDARƏ EDİLMƏSİ'), description: getText('RULES_ECO_DESC1', 'YARIŞ ƏRAZİSİNDƏ VƏ TRASDA HƏR HANSI BİR TULLANTININ ATILMASI QƏTİ QADAĞANDIR. İŞTİRAKÇILAR "LEAVE NO TRACE" PRİNSİPİNƏ ƏMƏL ETMƏLİDİR.') },
+          { subtitle: getText('RULES_ECO_SUB2', 'MAYE SIZMALARI'), description: getText('RULES_ECO_DESC2', 'AVTOMOBİLDƏN YAĞ VƏ YA SOYUDUCU MAYE SIZMASI OLDUĞU TƏQDİRDƏ PİLOT DƏRHAL DAYANMALI VƏ ƏRAZİNİN ÇİRKLƏNMƏSİNİN QARŞISINI ALMALIDIR.') },
+          { subtitle: getText('RULES_ECO_SUB3', 'MARŞRUTDAN KƏNARA ÇIXMAMAQ'), description: getText('RULES_ECO_DESC3', 'TƏBİİ ÖRTÜYÜ QORUMAQ MƏQSƏDİ İLƏ MÜƏYYƏN OLUNMUŞ TRASDANKƏNAR SÜRÜŞLƏR VƏ YA YAŞIL SAHƏLƏRƏ ZƏRƏR VERMƏK QADAĞANDIR.') }
+        ]
+      }
     ];
-  }, [getText, rulesPage?.sections]);
+
+    if (!dynamicTabs.length) return legacyTabs;
+
+    const normalizeKey = (value: string) =>
+      (value || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+    const dynamicById = new Map(dynamicTabs.map((tab) => [normalizeKey(tab.id || tab.title), tab]));
+    const used = new Set<string>();
+
+    const merged = legacyTabs.map((legacyTab) => {
+      const key = normalizeKey(legacyTab.id || legacyTab.title);
+      const dynamic = dynamicById.get(key);
+      if (!dynamic) return legacyTab;
+      used.add(key);
+      return {
+        ...legacyTab,
+        ...dynamic,
+        title: dynamic.title || legacyTab.title,
+        docName: dynamic.docName || legacyTab.docName,
+        docButton: dynamic.docButton || legacyTab.docButton,
+        docUrl: dynamic.docUrl || legacyTab.docUrl,
+        rules: dynamic.rules.length ? dynamic.rules : legacyTab.rules
+      };
+    });
+
+    dynamicTabs.forEach((tab) => {
+      const key = normalizeKey(tab.id || tab.title);
+      if (!used.has(key)) merged.push(tab);
+    });
+
+    return merged;
+  }, [getText, getUrl, rulesPage?.sections]);
 
   useEffect(() => {
     if (!ruleSections.length) return;
@@ -217,17 +233,21 @@ const RulesPage: React.FC = () => {
               </div>
               <div>
                 <p className="text-gray-600 font-black italic text-[8px] uppercase tracking-[0.3em] mb-1">{getText('DOC_DOWNLOAD_LABEL', 'SƏNƏDİ YÜKLƏ')}</p>
-                <p className="text-white font-black italic text-[11px] uppercase tracking-tighter">{activeSection.toUpperCase()}_PROTOKOLU.PDF</p>
+                <p className="text-white font-black italic text-[11px] uppercase tracking-tighter">
+                  {currentSection?.docName || `${activeSection.toUpperCase()}_PROTOKOLU.PDF`}
+                </p>
               </div>
             </div>
             <button
               className="w-full bg-[#FF4D00] text-black py-4 font-black italic text-xs uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-white transition-all transform -skew-x-12"
               onClick={() => {
-                const url = getUrl('BTN_DOWNLOAD_PDF', '');
+                const url = currentSection?.docUrl || getUrl('BTN_DOWNLOAD_PDF', '');
                 if (url) window.open(url, '_blank');
               }}
             >
-              <span className="transform skew-x-12 flex items-center gap-2">{getText('BTN_DOWNLOAD_PDF', 'PDF YÜKLƏ')} <Download size={14} /></span>
+              <span className="transform skew-x-12 flex items-center gap-2">
+                {currentSection?.docButton || getText('BTN_DOWNLOAD_PDF', 'PDF YÜKLƏ')} <Download size={14} />
+              </span>
             </button>
           </div>
         </div>

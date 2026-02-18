@@ -235,9 +235,9 @@ const shouldSkipSectionInEditor = (section: Section) => {
 };
 
 const PARTNER_KEY_REGEX = /^PARTNER_(\d+)_(NAME|TAG|ICON|USE_IMAGE|IMAGE_ID)$/;
-const RULE_TAB_FIELD_REGEX = /^RULE_TAB_(\d+)_(ID|TITLE|ICON)$/;
+const RULE_TAB_FIELD_REGEX = /^RULE_TAB_(\d+)_(ID|TITLE|ICON|DOC_NAME|DOC_BUTTON|DOC_URL)$/;
 const RULE_TAB_ITEM_FIELD_REGEX = /^RULE_TAB_(\d+)_ITEM_(\d+)_(TITLE|DESC)$/;
-const RULE_TAB_SECTION_REGEX = /^RULE_TAB_\d+_(?:ID|TITLE|ICON|ITEM_\d+_(?:TITLE|DESC))$/;
+const RULE_TAB_SECTION_REGEX = /^RULE_TAB_\d+_(?:ID|TITLE|ICON|DOC_NAME|DOC_BUTTON|DOC_URL|ITEM_\d+_(?:TITLE|DESC))$/;
 type PartnerField = 'name' | 'tag' | 'icon' | 'useImage' | 'imageId';
 type PartnerRow = {
     index: number;
@@ -257,6 +257,9 @@ type RuleTabRow = {
     id: string;
     title: string;
     icon: string;
+    docName?: string;
+    docButton?: string;
+    docUrl?: string;
     items: RuleTabItemRow[];
 };
 
@@ -1272,10 +1275,89 @@ const VisualEditor: React.FC = () => {
         return token || fallback;
     };
 
+    const RULE_TAB_LEGACY_PRESETS = [
+        {
+            id: 'pilot',
+            icon: 'Info',
+            titleKey: 'RULES_PILOT_TITLE',
+            titleFallback: 'PİLOT PROTOKOLU',
+            docNameFallback: 'PILOT_PROTOKOLU.PDF',
+            items: [
+                { titleKey: 'RULES_PILOT_SUB1', titleFallback: 'İSTİFADƏÇİ ÖHDƏLİKLƏRİ', descKey: 'RULES_PILOT_DESC1', descFallback: 'HƏR BİR İŞTİRAKÇI FEDERASİYANIN MÜƏYYƏN ETDİYİ BÜTÜN TEXNİKİ VƏ ETİK NORMALARI QEYD-ŞƏRTSİZ QƏBUL EDİR.' },
+                { titleKey: 'RULES_PILOT_SUB2', titleFallback: 'DİSKVALİFİKASİYA', descKey: 'RULES_PILOT_DESC2', descFallback: 'PROTOKOLDAN KƏNARA ÇIXMAQ VƏ YA HAKİM QƏRARLARINA ETİRAZ ETMƏK DƏRHAL DİSKVALİFİKASİYA İLƏ NƏTİCƏLƏNƏ BİLƏR.' },
+                { titleKey: 'RULES_PILOT_SUB3', titleFallback: 'TEXNİKİ TƏLƏBLƏR', descKey: 'RULES_PILOT_DESC3', descFallback: 'BÜTÜN AVADANLIQLAR YARIŞDAN 24 SAAT ƏVVƏL TEXNİKİ KOMİSSİYA TƏRƏFİNDƏN YOXLANILMALI VƏ TƏHLÜKƏSİZLİK SERTİFİKATI İLƏ TƏMİN EDİLMƏLİDİR.' }
+            ]
+        },
+        {
+            id: 'technical',
+            icon: 'Settings',
+            titleKey: 'RULES_TECH_TITLE',
+            titleFallback: 'TEXNİKİ NORMARTİVLƏR',
+            docNameFallback: 'TEXNIKI_NORMATIVLER.PDF',
+            items: [
+                { titleKey: 'RULES_TECH_SUB1', titleFallback: 'TƏKƏR ÖLÇÜLƏRİ', descKey: 'RULES_TECH_DESC1', descFallback: 'PRO CLASS ÜÇÜN MAKSİMUM TƏKƏR ÖLÇÜSÜ 37 DÜYM, AMATEUR CLASS ÜÇÜN İSƏ 33 DÜYM OLARAQ MÜƏYYƏN EDİLMİŞDİR.' },
+                { titleKey: 'RULES_TECH_SUB2', titleFallback: 'MÜHƏRRİK GÜCÜ', descKey: 'RULES_TECH_DESC2', descFallback: 'MÜHƏRRİK ÜZƏRİNDƏ APARILAN MODİFİKASİYALAR KATEQORİYA ÜZRƏ LİMİTLƏRİ AŞMAMALIDIR. TURBO SİSTEMLƏRİ YALNIZ XÜSUSİ KLASLARDA İCAZƏLİDİR.' },
+                { titleKey: 'RULES_TECH_SUB3', titleFallback: 'ASQI SİSTEMİ', descKey: 'RULES_TECH_DESC3', descFallback: 'AVTOMOBİLİN KLİRENSİ (YERDƏN HÜNDÜRLÜYÜ) VƏ ASQI ARTIKULYASİYASI TƏHLÜKƏSİZLİK STANDARTLARINA UYĞUN OLMALIDIR.' }
+            ]
+        },
+        {
+            id: 'safety',
+            icon: 'ShieldAlert',
+            titleKey: 'RULES_SAFETY_TITLE',
+            titleFallback: 'TƏHLÜKƏSİZLİK QAYDALARI',
+            docNameFallback: 'TEHLUKESIZLIK_QAYDALARI.PDF',
+            items: [
+                { titleKey: 'RULES_SAFETY_SUB1', titleFallback: 'KARKAS TƏLƏBİ', descKey: 'RULES_SAFETY_DESC1', descFallback: 'BÜTÜN AÇIQ VƏ YA MODİFİKASİYA OLUNMUŞ AVTOMOBİLLƏRDƏ FIA STANDARTLARINA UYĞUN TƏHLÜKƏSİZLİK KARKASI (ROLL CAGE) MƏCBURİDİR.' },
+                { titleKey: 'RULES_SAFETY_SUB2', titleFallback: 'YANĞIN SÖNDÜRMƏ', descKey: 'RULES_SAFETY_DESC2', descFallback: 'HƏR BİR AVTOMOBİLDƏ ƏN AZI 2 KİLOQRAMLIQ, ASAN ƏLÇATAN YERDƏ YERLƏŞƏN YANĞINSÖNDÜRƏN BALON OLMALIDIR.' },
+                { titleKey: 'RULES_SAFETY_SUB3', titleFallback: 'KƏMƏR VƏ DƏBİLQƏ', descKey: 'RULES_SAFETY_DESC3', descFallback: '5 NÖQTƏLİ TƏHLÜKƏSİZLİK KƏMƏRLƏRİ VƏ SERTİFİKATLI KASKALARIN (DƏBİLQƏLƏRİN) İSTİFADƏSİ BÜTÜN MƏRHƏLƏLƏRDƏ MƏCBURİDİR.' }
+            ]
+        },
+        {
+            id: 'eco',
+            icon: 'Leaf',
+            titleKey: 'RULES_ECO_TITLE',
+            titleFallback: 'EKOLOJİ MƏSULİYYƏT',
+            docNameFallback: 'EKOLOJI_MESULIYYET.PDF',
+            items: [
+                { titleKey: 'RULES_ECO_SUB1', titleFallback: 'TULLANTILARIN İDARƏ EDİLMƏSİ', descKey: 'RULES_ECO_DESC1', descFallback: 'YARIŞ ƏRAZİSİNDƏ VƏ TRASDA HƏR HANSI BİR TULLANTININ ATILMASI QƏTİ QADAĞANDIR. İŞTİRAKÇILAR "LEAVE NO TRACE" PRİNSİPİNƏ ƏMƏL ETMƏLİDİR.' },
+                { titleKey: 'RULES_ECO_SUB2', titleFallback: 'MAYE SIZMALARI', descKey: 'RULES_ECO_DESC2', descFallback: 'AVTOMOBİLDƏN YAĞ VƏ YA SOYUDUCU MAYE SIZMASI OLDUĞU TƏQDİRDƏ PİLOT DƏRHAL DAYANMALI VƏ ƏRAZİNİN ÇİRKLƏNMƏSİNİN QARŞISINI ALMALIDIR.' },
+                { titleKey: 'RULES_ECO_SUB3', titleFallback: 'MARŞRUTDAN KƏNARA ÇIXMAMAQ', descKey: 'RULES_ECO_DESC3', descFallback: 'TƏBİİ ÖRTÜYÜ QORUMAQ MƏQSƏDİ İLƏ MÜƏYYƏN OLUNMUŞ TRASDANKƏNAR SÜRÜŞLƏR VƏ YA YAŞIL SAHƏLƏRƏ ZƏRƏR VERMƏK QADAĞANDIR.' }
+            ]
+        }
+    ];
+
+    const pickLegacyRuleSectionValue = (sections: Section[], key: string, fallback: string) => {
+        const raw = normalizePlainText((sections.find((s) => s.id === key)?.value || '').toString());
+        if (!raw || looksLikeKeyToken(raw)) return fallback;
+        return raw;
+    };
+
+    const buildLegacyRuleTabRows = (sections: Section[]): RuleTabRow[] => {
+        const docButtonFallback = pickLegacyRuleSectionValue(sections, 'BTN_DOWNLOAD_PDF', 'PDF YÜKLƏ');
+        const docUrlFallback = toAbsoluteUrl((sections.find((s) => s.id === 'BTN_DOWNLOAD_PDF')?.url || '').toString());
+
+        return RULE_TAB_LEGACY_PRESETS.map((preset, index) => ({
+            index: index + 1,
+            id: preset.id,
+            title: pickLegacyRuleSectionValue(sections, preset.titleKey, preset.titleFallback),
+            icon: preset.icon,
+            docName: preset.docNameFallback,
+            docButton: docButtonFallback,
+            docUrl: docUrlFallback,
+            items: preset.items.map((item, itemIndex) => ({
+                index: itemIndex + 1,
+                title: pickLegacyRuleSectionValue(sections, item.titleKey, item.titleFallback),
+                desc: pickLegacyRuleSectionValue(sections, item.descKey, item.descFallback)
+            }))
+        }));
+    };
+
+    const normalizeRuleTabKey = (value: string) => normalizeRuleTabSlug(value || '', '');
+
     const getRulesTabRows = (page: PageContent | undefined): RuleTabRow[] => {
         if (!page || page.id !== 'rulespage') return [];
 
-        const tabs = new Map<number, { id: string; title: string; icon: string; items: Map<number, { title: string; desc: string }> }>();
+        const tabs = new Map<number, { id: string; title: string; icon: string; docName: string; docButton: string; docUrl: string; items: Map<number, { title: string; desc: string }> }>();
         (page.sections || []).forEach((section) => {
             const tabMatch = section.id.match(RULE_TAB_FIELD_REGEX);
             if (tabMatch) {
@@ -1285,11 +1367,17 @@ const VisualEditor: React.FC = () => {
                     id: `tab-${tabNo}`,
                     title: '',
                     icon: 'Info',
+                    docName: '',
+                    docButton: '',
+                    docUrl: '',
                     items: new Map<number, { title: string; desc: string }>()
                 };
                 if (field === 'ID') current.id = section.value || `tab-${tabNo}`;
                 if (field === 'TITLE') current.title = section.value || '';
                 if (field === 'ICON') current.icon = section.value || 'Info';
+                if (field === 'DOC_NAME') current.docName = section.value || '';
+                if (field === 'DOC_BUTTON') current.docButton = section.value || '';
+                if (field === 'DOC_URL') current.docUrl = toAbsoluteUrl(section.url || section.value || '');
                 tabs.set(tabNo, current);
                 return;
             }
@@ -1303,6 +1391,9 @@ const VisualEditor: React.FC = () => {
                     id: `tab-${tabNo}`,
                     title: '',
                     icon: 'Info',
+                    docName: '',
+                    docButton: '',
+                    docUrl: '',
                     items: new Map<number, { title: string; desc: string }>()
                 };
                 const item = current.items.get(itemNo) || { title: '', desc: '' };
@@ -1313,13 +1404,16 @@ const VisualEditor: React.FC = () => {
             }
         });
 
-        return Array.from(tabs.entries())
+        const dynamicRows = Array.from(tabs.entries())
             .sort((a, b) => a[0] - b[0])
             .map(([index, tab]) => ({
                 index,
                 id: tab.id || `tab-${index}`,
                 title: tab.title || '',
                 icon: tab.icon || 'Info',
+                docName: tab.docName || '',
+                docButton: tab.docButton || '',
+                docUrl: tab.docUrl || '',
                 items: Array.from(tab.items.entries())
                     .sort((a, b) => a[0] - b[0])
                     .map(([itemIndex, item]) => ({
@@ -1329,6 +1423,40 @@ const VisualEditor: React.FC = () => {
                     }))
             }))
             .filter((tab) => tab.title || tab.items.length > 0);
+
+        const legacyRows = buildLegacyRuleTabRows(page.sections || []);
+        if (!dynamicRows.length) return legacyRows;
+
+        const dynamicByKey = new Map<string, RuleTabRow>();
+        dynamicRows.forEach((row) => {
+            dynamicByKey.set(normalizeRuleTabKey(row.id || row.title || ''), row);
+        });
+
+        const usedKeys = new Set<string>();
+        const mergedRows: RuleTabRow[] = legacyRows.map((legacyRow) => {
+            const key = normalizeRuleTabKey(legacyRow.id || legacyRow.title || '');
+            const dynamic = dynamicByKey.get(key);
+            if (!dynamic) return legacyRow;
+            usedKeys.add(key);
+            return {
+                ...legacyRow,
+                ...dynamic,
+                id: dynamic.id || legacyRow.id,
+                title: dynamic.title || legacyRow.title,
+                icon: dynamic.icon || legacyRow.icon,
+                docName: dynamic.docName || legacyRow.docName,
+                docButton: dynamic.docButton || legacyRow.docButton,
+                docUrl: dynamic.docUrl || legacyRow.docUrl,
+                items: (dynamic.items && dynamic.items.length > 0) ? dynamic.items : legacyRow.items
+            };
+        });
+
+        dynamicRows.forEach((row) => {
+            const key = normalizeRuleTabKey(row.id || row.title || '');
+            if (!usedKeys.has(key)) mergedRows.push(row);
+        });
+
+        return mergedRows.map((row, index) => ({ ...row, index: index + 1 }));
     };
 
     const rewriteRulesTabRows = (rows: RuleTabRow[], pageIdx: number = selectedPageIndex) => {
@@ -1345,11 +1473,17 @@ const VisualEditor: React.FC = () => {
             const safeId = normalizeRuleTabSlug(row.id || row.title || '', `tab-${tabNo}`);
             const safeTitle = normalizePlainText(row.title || `SEKME ${tabNo}`);
             const safeIcon = RULE_TAB_ICON_PRESETS.includes(row.icon) ? row.icon : 'Info';
+            const safeDocName = normalizePlainText(row.docName || `${safeId.toUpperCase()}_PROTOKOLU.PDF`);
+            const safeDocButton = normalizePlainText(row.docButton || 'PDF YÜKLƏ');
+            const safeDocUrl = toAbsoluteUrl(row.docUrl || '');
 
             nextSections.push(
                 { id: `RULE_TAB_${tabNo}_ID`, type: 'text', label: `Qayda Sekməsi ${tabNo} ID`, value: safeId },
                 { id: `RULE_TAB_${tabNo}_TITLE`, type: 'text', label: `Qayda Sekməsi ${tabNo} Başlıq`, value: safeTitle },
-                { id: `RULE_TAB_${tabNo}_ICON`, type: 'text', label: `Qayda Sekməsi ${tabNo} İkon`, value: safeIcon }
+                { id: `RULE_TAB_${tabNo}_ICON`, type: 'text', label: `Qayda Sekməsi ${tabNo} İkon`, value: safeIcon },
+                { id: `RULE_TAB_${tabNo}_DOC_NAME`, type: 'text', label: `Sekmə ${tabNo} Sənəd Adı`, value: safeDocName },
+                { id: `RULE_TAB_${tabNo}_DOC_BUTTON`, type: 'text', label: `Sekmə ${tabNo} Sənəd Düyməsi`, value: safeDocButton },
+                { id: `RULE_TAB_${tabNo}_DOC_URL`, type: 'text', label: `Sekmə ${tabNo} Sənəd Linki`, value: safeDocUrl, ...(safeDocUrl ? { url: safeDocUrl } : {}) }
             );
 
             (row.items || []).forEach((item, itemIndex) => {
@@ -1373,6 +1507,9 @@ const VisualEditor: React.FC = () => {
             id: `tab-${nextNo}`,
             title: `SEKME ${nextNo}`,
             icon: 'Info',
+            docName: `TAB_${nextNo}_PROTOKOLU.PDF`,
+            docButton: 'PDF YÜKLƏ',
+            docUrl: '',
             items: [{ index: 1, title: 'YENİ MADDƏ', desc: 'Maddə təsviri...' }]
         });
         rewriteRulesTabRows(rows, pageIdx);
@@ -1397,7 +1534,7 @@ const VisualEditor: React.FC = () => {
 
     const updateRulesTabField = (
         rowIdx: number,
-        field: 'id' | 'title' | 'icon',
+        field: 'id' | 'title' | 'icon' | 'docName' | 'docButton' | 'docUrl',
         value: string,
         pageIdx: number = selectedPageIndex
     ) => {
@@ -2016,6 +2153,7 @@ const VisualEditor: React.FC = () => {
         if (currentPage?.id === 'about' && isStatSectionId(s.id)) return false;
         if (currentPage?.id === 'partners' && (PARTNER_KEY_REGEX.test(s.id) || s.id === 'SECTION_TITLE')) return false;
         if (currentPage?.id === 'rulespage' && RULE_TAB_SECTION_REGEX.test(s.id)) return false;
+        if (currentPage?.id === 'rulespage' && s.id.startsWith('RULES_')) return false;
         return !searchTerm ||
             s.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
             s.value.toLowerCase().includes(searchTerm.toLowerCase());
@@ -2943,6 +3081,7 @@ const VisualEditor: React.FC = () => {
                                             if (!isSectionVisibleInAdmin(section) || shouldSkipSectionInEditor(section)) return false;
                                             if (page.id === 'about' && isStatSectionId(section.id)) return false;
                                             if (page.id === 'rulespage' && RULE_TAB_SECTION_REGEX.test(section.id)) return false;
+                                            if (page.id === 'rulespage' && section.id.startsWith('RULES_')) return false;
                                             return true;
                                         })
                                         .sort((a, b) => normalizeOrder(a.order, 0) - normalizeOrder(b.order, 0));
@@ -3091,6 +3230,32 @@ const VisualEditor: React.FC = () => {
                                                                                     <Trash2 size={14} />
                                                                                 </button>
                                                                             </div>
+                                                                        </div>
+                                                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 180px', gap: '8px', marginBottom: '8px' }}>
+                                                                            <input
+                                                                                type="text"
+                                                                                value={row.docName || ''}
+                                                                                onChange={(e) => updateRulesTabField(rowIndex, 'docName', e.target.value, pageIdx)}
+                                                                                placeholder="Sənəd adı (Məs: PILOT_PROTOKOLU.PDF)"
+                                                                                style={{ padding: '9px 10px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '12px' }}
+                                                                            />
+                                                                            <input
+                                                                                type="text"
+                                                                                value={row.docButton || ''}
+                                                                                onChange={(e) => updateRulesTabField(rowIndex, 'docButton', e.target.value, pageIdx)}
+                                                                                placeholder="Düymə mətni (Məs: PDF YÜKLƏ)"
+                                                                                style={{ padding: '9px 10px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '12px' }}
+                                                                            />
+                                                                        </div>
+                                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                                                            <Globe size={14} style={{ color: '#94a3b8' }} />
+                                                                            <input
+                                                                                type="text"
+                                                                                value={row.docUrl || ''}
+                                                                                onChange={(e) => updateRulesTabField(rowIndex, 'docUrl', e.target.value, pageIdx)}
+                                                                                placeholder="Sənəd linki (Məs: /uploads/pilot.pdf və ya https://...)"
+                                                                                style={{ width: '100%', padding: '9px 10px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '12px' }}
+                                                                            />
                                                                         </div>
                                                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                                                             {(row.items || []).map((item, itemIndex) => (
@@ -3575,6 +3740,32 @@ const VisualEditor: React.FC = () => {
                                                                         <Trash2 size={14} />
                                                                     </button>
                                                                 </div>
+                                                            </div>
+                                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 180px', gap: '8px', marginBottom: '8px' }}>
+                                                                <input
+                                                                    type="text"
+                                                                    value={row.docName || ''}
+                                                                    onChange={(e) => updateRulesTabField(rowIndex, 'docName', e.target.value)}
+                                                                    placeholder="Sənəd adı (Məs: PILOT_PROTOKOLU.PDF)"
+                                                                    style={{ padding: '9px 10px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '12px' }}
+                                                                />
+                                                                <input
+                                                                    type="text"
+                                                                    value={row.docButton || ''}
+                                                                    onChange={(e) => updateRulesTabField(rowIndex, 'docButton', e.target.value)}
+                                                                    placeholder="Düymə mətni (Məs: PDF YÜKLƏ)"
+                                                                    style={{ padding: '9px 10px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '12px' }}
+                                                                />
+                                                            </div>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                                                <Globe size={14} style={{ color: '#94a3b8' }} />
+                                                                <input
+                                                                    type="text"
+                                                                    value={row.docUrl || ''}
+                                                                    onChange={(e) => updateRulesTabField(rowIndex, 'docUrl', e.target.value)}
+                                                                    placeholder="Sənəd linki (Məs: /uploads/pilot.pdf və ya https://...)"
+                                                                    style={{ width: '100%', padding: '9px 10px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '12px' }}
+                                                                />
                                                             </div>
 
                                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
