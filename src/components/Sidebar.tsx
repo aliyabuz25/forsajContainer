@@ -174,14 +174,6 @@ const Sidebar: React.FC<SidebarProps> = ({ menuItems, user, onLogout }) => {
                 </div>
             </div>
 
-            <div className="sidebar-user">
-                <img src={`https://ui-avatars.com/api/?name=${user?.name || 'Admin'}&background=${userRole === 'master' ? '3b82f6' : 'f59e0b'}&color=fff`} alt="İstifadəçi" />
-                <div className="user-info">
-                    <span className="user-name">{user?.name || 'İdarəçi'}</span>
-                    <span className="user-role">{userRole === 'master' ? 'Baş Admin' : 'Redaktor'}</span>
-                </div>
-            </div>
-
             <div className="sidebar-content">
                 <div className="sidebar-section-label">ƏSAS NAVİQASİYA</div>
                 <ul className="sidebar-menu">

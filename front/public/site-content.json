@@ -4,105 +4,99 @@
     "title": "HAQQIMIZDA",
     "sections": [
       {
-        "id": "txt-pi-lotlar-label-123",
+        "id": "lbl-pi-lotlar-842",
         "type": "text",
-        "label": "KEY: txt-pi-lotlar-label-123",
+        "label": "PİLOTLAR",
         "value": "PİLOTLAR"
       },
       {
-        "id": "lbl-stats-pilots-288",
+        "id": "lbl-stats-pilots-12",
         "type": "text",
         "label": "STATS_PILOTS",
         "value": "STATS_PILOTS"
       },
       {
-        "id": "txt-yari-lar-label-123",
+        "id": "lbl-yari-lar-107",
         "type": "text",
-        "label": "KEY: txt-yari-lar-label-123",
+        "label": "YARIŞLAR",
         "value": "YARIŞLAR"
       },
       {
-        "id": "lbl-stats-races-920",
+        "id": "lbl-stats-races-570",
         "type": "text",
         "label": "STATS_RACES",
         "value": "STATS_RACES"
       },
       {
-        "id": "txt-g-ncl-r-label-123",
+        "id": "lbl-g-ncl-r-76",
         "type": "text",
-        "label": "KEY: txt-g-ncl-r-label-123",
+        "label": "GƏNCLƏR",
         "value": "GƏNCLƏR"
       },
       {
-        "id": "lbl-stats-youth-87",
+        "id": "lbl-stats-youth-230",
         "type": "text",
         "label": "STATS_YOUTH",
         "value": "STATS_YOUTH"
       },
       {
-        "id": "txt-val-safety-title-123",
+        "id": "lbl-t-hl-k-si-zli-k-479",
         "type": "text",
-        "label": "KEY: txt-val-safety-title-123",
+        "label": "TƏHLÜKƏSİZLİK",
         "value": "TƏHLÜKƏSİZLİK"
       },
       {
-        "id": "txt-val-safety-desc-123",
+        "id": "lbl-ekstremal-i-dman-908",
         "type": "text",
-        "label": "KEY: txt-val-safety-desc-123",
+        "label": "EKSTREMAL İDMANDA CA...",
         "value": "EKSTREMAL İDMANDA CAN SAĞLIĞI BİZİM BİR NÖMRƏLİ QAYDAMIZDIR. BÜTÜN TEXNİKALARIMIZ FIA STANDARTLARINA UYĞUN YOXLANILIR."
       },
       {
-        "id": "txt-val-community-title-123",
+        "id": "lbl-forsaj-bi-r-klub-174",
         "type": "text",
-        "label": "KEY: txt-val-community-title-123",
-        "value": "İCMA RUHU"
-      },
-      {
-        "id": "txt-val-community-desc-123",
-        "type": "text",
-        "label": "KEY: txt-val-community-desc-123",
+        "label": "FORSAJ BİR KLUBDAN D...",
         "value": "FORSAJ BİR KLUBDAN DAHA ÇOX, SADİQ VƏ BÖYÜK BİR AİLƏDİR. BİRİMİZ HAMIMIZ, HAMIMIZ BİRİMİZ ÜÇÜN!"
       },
       {
-        "id": "txt-val-nature-title-123",
+        "id": "lbl-t-bi-ti-qoru-361",
         "type": "text",
-        "label": "KEY: txt-val-nature-title-123",
+        "label": "TƏBİƏTİ QORU",
         "value": "TƏBİƏTİ QORU"
       },
       {
-        "id": "txt-val-nature-desc-123",
+        "id": "lbl-bi-z-offroad-ed--342",
         "type": "text",
-        "label": "KEY: txt-val-nature-desc-123",
+        "label": "BİZ OFFROAD EDƏRKƏN ...",
         "value": "BİZ OFFROAD EDƏRKƏN TƏBİƏTƏ ZƏRƏR VERMƏMƏYİ ÖZÜMÜZƏ BORC BİLİRİK. EKOLOJİ BALANS BİZİM ÜÇÜN MÜQƏDDƏSDİR."
       },
       {
-        "id": "txt-val-excellence-title-123",
+        "id": "lbl-m-k-mm-lli-k-223",
         "type": "text",
-        "label": "KEY: txt-val-excellence-title-123",
+        "label": "MÜKƏMMƏLLİK",
         "value": "MÜKƏMMƏLLİK"
       },
       {
-        "id": "txt-val-excellence-desc-123",
+        "id": "lbl-h-r-yari-da-h--238",
         "type": "text",
-        "label": "KEY: txt-val-excellence-desc-123",
+        "label": "HƏR YARIŞDA, HƏR DÖN...",
         "value": "HƏR YARIŞDA, HƏR DÖNGƏDƏ DAHA YAXŞI OLMAĞA ÇALIŞIRIQ. TƏLİMLƏRİMİZ PEŞƏKAR İNSTRUKTORLAR TƏRƏFİNDƏN İDARƏ OLUNUR."
       },
       {
-        "id": "txt-haqqimizda-904",
+        "id": "lbl-haqqimizda-16",
         "type": "text",
-        "label": "KEY: txt-haqqimizda-904",
+        "label": "HAQQIMIZDA",
         "value": "HAQQIMIZDA"
       },
       {
-        "id": "lbl-forsaj-club-713",
+        "id": "lbl-forsaj-club-494",
         "type": "text",
         "label": "FORSAJ CLUB",
         "value": "FORSAJ CLUB"
       },
       {
-        "id": "txt-klubumuz-sad-c-bir-552",
+        "id": "lbl-klubumuz-sad-c--90",
         "type": "text",
-        "label": "KEY: txt-klubumuz-sad-c-bir-552",
+        "label": "Klubumuz sadəcə bir ...",
         "value": "Klubumuz sadəcə bir həvəskar qrupu deyil, ölkəmizi beynəlxalq ralli xəritəsinə daxil etməyi hədəfləyən rəsmi və peşəkar bir platformadır. 2018-ci ildən bəri biz 50-dən çox rəsmi yarış, 100-dən çox ekspedisiya və saysız-hesabsız adrenalin dolu anlar yaşamışıq."
       },
       {
@@ -112,51 +106,51 @@
         "value": "Forsaj Club Detail"
       },
       {
-        "id": "txt-bi-zi-m-mi-ssi-yamiz-424",
+        "id": "lbl-bi-zi-m-mi-ssi-yami-445",
         "type": "text",
-        "label": "KEY: txt-bi-zi-m-mi-ssi-yamiz-424",
+        "label": "BİZİM MİSSİYAMIZ",
         "value": "BİZİM MİSSİYAMIZ"
       },
       {
-        "id": "txt-az-rbaycan-n-h-r-bir-45",
+        "id": "lbl-az-rbaycan-n-h--532",
         "type": "text",
-        "label": "KEY: txt-az-rbaycan-n-h-r-bir-45",
+        "label": "Azərbaycanın hər bir...",
         "value": "Azərbaycanın hər bir guşəsində offroad idmanını təbliğ etmək, yerli pilotları beynəlxalq standartlara uyğun yetişdirmək və təbiəti qoruyaraq ekstremal adrenalin təcrübəsi bəxş etmək."
       },
       {
-        "id": "txt-h-d-fi-mi-z-dakar-ral-50",
+        "id": "lbl-h-d-fi-mi-z-daka-157",
         "type": "text",
-        "label": "KEY: txt-h-d-fi-mi-z-dakar-ral-50",
+        "label": "HƏDƏFİMİZ: DAKAR RAL...",
         "value": "HƏDƏFİMİZ: DAKAR RALLİ 2026"
       },
       {
-        "id": "txt-bi-zi-m-baxi-imiz-944",
+        "id": "lbl-bi-zi-m-baxi-imiz-459",
         "type": "text",
-        "label": "KEY: txt-bi-zi-m-baxi-imiz-944",
+        "label": "BİZİM BAXIŞIMIZ",
         "value": "BİZİM BAXIŞIMIZ"
       },
       {
-        "id": "txt-regionun-n-b-y-k-mo-901",
+        "id": "lbl-regionun-n-b-y-759",
         "type": "text",
-        "label": "KEY: txt-regionun-n-b-y-k-mo-901",
+        "label": "Regionun ən böyük mo...",
         "value": "Regionun ən böyük motorsport hubuna çevrilmək, rəqəmsal və fiziki infrastrukturlarla pilotlarımızı dəstəkləmək və motorsportu hər kəs üçün əlçatan bir ehtirasa çevirmək."
       },
       {
-        "id": "txt-qafqazin-li-der-klubu-758",
+        "id": "lbl-qafqazin-li-der--28",
         "type": "text",
-        "label": "KEY: txt-qafqazin-li-der-klubu-758",
+        "label": "QAFQAZIN LİDER KLUBU...",
         "value": "QAFQAZIN LİDER KLUBUNA ÇEVRİLMƏK"
       },
       {
-        "id": "txt-fundamental-pri-nsi-pl-219",
+        "id": "lbl-fundamental-pri--211",
         "type": "text",
-        "label": "KEY: txt-fundamental-pri-nsi-pl-219",
+        "label": "FUNDAMENTAL PRİNSİPL...",
         "value": "FUNDAMENTAL PRİNSİPLƏR"
       },
       {
-        "id": "txt-sas-d-y-rl-ri-mi-z-482",
+        "id": "lbl--sas-d-y-rl-ri-m-994",
         "type": "text",
-        "label": "KEY: txt-sas-d-y-rl-ri-mi-z-482",
+        "label": "ƏSAS DƏYƏRLƏRİMİZ",
         "value": "ƏSAS DƏYƏRLƏRİMİZ"
       }
     ],
@@ -173,7 +167,7 @@
         "value": "SON XƏBƏRLƏR"
       },
       {
-        "id": "lbl-section-title-100",
+        "id": "lbl-section-title-921",
         "type": "text",
         "label": "SECTION_TITLE",
         "value": "SECTION_TITLE"
@@ -185,7 +179,7 @@
         "value": "Motorsport və Offroad dünyasından yeniliklər"
       },
       {
-        "id": "lbl-section-subtitl-680",
+        "id": "lbl-section-subtitl-190",
         "type": "text",
         "label": "SECTION_SUBTITLE",
         "value": "SECTION_SUBTITLE"
@@ -197,7 +191,7 @@
         "value": "HAMISI"
       },
       {
-        "id": "lbl-view-all-btn-293",
+        "id": "lbl-view-all-btn-459",
         "type": "text",
         "label": "VIEW_ALL_BTN",
         "value": "VIEW_ALL_BTN"
@@ -209,7 +203,7 @@
         "value": "SON XƏBƏR"
       },
       {
-        "id": "lbl-featured-label-325",
+        "id": "lbl-featured-label-994",
         "type": "text",
         "label": "FEATURED_LABEL",
         "value": "FEATURED_LABEL"
@@ -228,7 +222,7 @@
         "value": "GERİ QAYIT"
       },
       {
-        "id": "lbl-btn-back-725",
+        "id": "lbl-btn-back-203",
         "type": "text",
         "label": "BTN_BACK",
         "value": "BTN_BACK"
@@ -240,7 +234,7 @@
         "value": "BU XƏBƏRİ PAYLAŞIN"
       },
       {
-        "id": "lbl-share-label-586",
+        "id": "lbl-share-label-927",
         "type": "text",
         "label": "SHARE_LABEL",
         "value": "SHARE_LABEL"
@@ -252,7 +246,7 @@
         "value": "DİGƏR XƏBƏRLƏR"
       },
       {
-        "id": "lbl-other-news-397",
+        "id": "lbl-other-news-401",
         "type": "text",
         "label": "OTHER_NEWS",
         "value": "OTHER_NEWS"
@@ -264,7 +258,7 @@
         "value": "BÜTÜN XƏBƏRLƏR"
       },
       {
-        "id": "lbl-btn-all-news-946",
+        "id": "lbl-btn-all-news-107",
         "type": "text",
         "label": "BTN_ALL_NEWS",
         "value": "BTN_ALL_NEWS"
@@ -276,13 +270,13 @@
         "value": "XƏBƏRLƏR"
       },
       {
-        "id": "lbl-page-title-440",
+        "id": "lbl-page-title-82",
         "type": "text",
         "label": "PAGE_TITLE",
         "value": "PAGE_TITLE"
       },
       {
-        "id": "lbl-page-subtitle-943",
+        "id": "lbl-page-subtitle-932",
         "type": "text",
         "label": "PAGE_SUBTITLE",
         "value": "PAGE_SUBTITLE"
@@ -294,7 +288,7 @@
         "value": "HƏLƏ Kİ XƏBƏR YOXDUR"
       },
       {
-        "id": "lbl-no-news-6",
+        "id": "lbl-no-news-15",
         "type": "text",
         "label": "NO_NEWS",
         "value": "NO_NEWS"
@@ -306,7 +300,7 @@
         "value": "XƏBƏRİ OXU"
       },
       {
-        "id": "lbl-btn-read-news-130",
+        "id": "lbl-btn-read-news-847",
         "type": "text",
         "label": "BTN_READ_NEWS",
         "value": "BTN_READ_NEWS"
@@ -318,7 +312,7 @@
         "value": "SON XƏBƏR"
       },
       {
-        "id": "lbl-label-latest-224",
+        "id": "lbl-label-latest-417",
         "type": "text",
         "label": "LABEL_LATEST",
         "value": "LABEL_LATEST"
@@ -330,7 +324,7 @@
         "value": "OXU"
       },
       {
-        "id": "lbl-btn-read-532",
+        "id": "lbl-btn-read-511",
         "type": "text",
         "label": "BTN_READ",
         "value": "BTN_READ"
@@ -343,55 +337,55 @@
     "title": "Tədbirlər Səhifəsi",
     "sections": [
       {
-        "id": "lbl-f-rdi-i-tirak--961",
+        "id": "lbl-f-rdi-i-tirak--578",
         "type": "text",
         "label": "Fərdi İştirakçı",
         "value": "Fərdi İştirakçı"
       },
       {
-        "id": "lbl-club-4x4-279",
+        "id": "lbl-club-4x4-413",
         "type": "text",
         "label": "Club 4X4",
         "value": "Club 4X4"
       },
       {
-        "id": "lbl-extreme-4x4-130",
+        "id": "lbl-extreme-4x4-347",
         "type": "text",
         "label": "Extreme 4X4",
         "value": "Extreme 4X4"
       },
       {
-        "id": "lbl-forsaj-club-707",
+        "id": "lbl-forsaj-club-438",
         "type": "text",
         "label": "Forsaj Club",
         "value": "Forsaj Club"
       },
       {
-        "id": "lbl-offroad-az-648",
+        "id": "lbl-offroad-az-117",
         "type": "text",
         "label": "Offroad.az",
         "value": "Offroad.az"
       },
       {
-        "id": "lbl-overland-4x4-404",
+        "id": "lbl-overland-4x4-638",
         "type": "text",
         "label": "Overland 4X4",
         "value": "Overland 4X4"
       },
       {
-        "id": "lbl-patrolclub-az-345",
+        "id": "lbl-patrolclub-az-358",
         "type": "text",
         "label": "PatrolClub.az",
         "value": "PatrolClub.az"
       },
       {
-        "id": "lbl-victory-club-175",
+        "id": "lbl-victory-club-693",
         "type": "text",
         "label": "Victory Club",
         "value": "Victory Club"
       },
       {
-        "id": "lbl-z-f-r-4x4-club-282",
+        "id": "lbl-z-f-r-4x4-club-32",
         "type": "text",
         "label": "Zəfər 4X4 Club",
         "value": "Zəfər 4X4 Club"
@@ -403,7 +397,7 @@
         "value": "YARIŞDA İŞTİRAK"
       },
       {
-        "id": "lbl-modal-title-768",
+        "id": "lbl-modal-title-998",
         "type": "text",
         "label": "MODAL_TITLE",
         "value": "MODAL_TITLE"
@@ -439,7 +433,7 @@
         "value": "GERİ QAYIT"
       },
       {
-        "id": "lbl-btn-back-96",
+        "id": "lbl-btn-back-167",
         "type": "text",
         "label": "BTN_BACK",
         "value": "BTN_BACK"
@@ -451,49 +445,49 @@
         "value": "PİLOT QEYDİYYATI"
       },
       {
-        "id": "lbl-pilot-reg-title-39",
+        "id": "lbl-pilot-reg-title-768",
         "type": "text",
         "label": "PILOT_REG_TITLE",
         "value": "PILOT_REG_TITLE"
       },
       {
-        "id": "lbl-tam-ad-216",
+        "id": "lbl-tam-ad-583",
         "type": "text",
         "label": "Tam ad",
         "value": "Tam ad"
       },
       {
-        "id": "lbl-pilot-registrat-574",
+        "id": "lbl-pilot-registrat-94",
         "type": "text",
         "label": "Pilot Registration",
         "value": "Pilot Registration"
       },
       {
-        "id": "lbl-toyota-550",
+        "id": "lbl-toyota-578",
         "type": "text",
         "label": "Toyota",
         "value": "Toyota"
       },
       {
-        "id": "lbl-post-685",
+        "id": "lbl-post-911",
         "type": "text",
         "label": "POST",
         "value": "POST"
       },
       {
-        "id": "lbl-content-type-96",
+        "id": "lbl-content-type-745",
         "type": "text",
         "label": "Content-Type",
         "value": "Content-Type"
       },
       {
-        "id": "lbl-qeydiyyat-m-rac-538",
+        "id": "lbl-qeydiyyat-m-rac-212",
         "type": "text",
         "label": "Qeydiyyat müraciətin...",
         "value": "Qeydiyyat müraciətiniz uğurla göndərildi!"
       },
       {
-        "id": "lbl-gond-rilm-zama-763",
+        "id": "lbl-gond-rilm-zama-490",
         "type": "text",
         "label": "Gondərilmə zamanı xə...",
         "value": "Gondərilmə zamanı xəta baş verdi."
@@ -505,7 +499,7 @@
         "value": "AD VƏ SOYAD"
       },
       {
-        "id": "lbl-field-name-451",
+        "id": "lbl-field-name-142",
         "type": "text",
         "label": "FIELD_NAME",
         "value": "FIELD_NAME"
@@ -517,7 +511,7 @@
         "value": "Tam ad daxil edin"
       },
       {
-        "id": "lbl-placeholder-nam-865",
+        "id": "lbl-placeholder-nam-107",
         "type": "text",
         "label": "PLACEHOLDER_NAME",
         "value": "PLACEHOLDER_NAME"
@@ -529,7 +523,7 @@
         "value": "TELEFON"
       },
       {
-        "id": "lbl-field-phone-353",
+        "id": "lbl-field-phone-118",
         "type": "text",
         "label": "FIELD_PHONE",
         "value": "FIELD_PHONE"
@@ -541,7 +535,7 @@
         "value": "AVTOMOBİLİN MARKA/MODELİ"
       },
       {
-        "id": "lbl-field-car-model-955",
+        "id": "lbl-field-car-model-313",
         "type": "text",
         "label": "FIELD_CAR_MODEL",
         "value": "FIELD_CAR_MODEL"
@@ -553,7 +547,7 @@
         "value": "Məs: Toyota LC 105"
       },
       {
-        "id": "lbl-placeholder-car-165",
+        "id": "lbl-placeholder-car-909",
         "type": "text",
         "label": "PLACEHOLDER_CAR",
         "value": "PLACEHOLDER_CAR"
@@ -565,7 +559,7 @@
         "value": "TƏKƏR ÖLÇÜSÜ"
       },
       {
-        "id": "lbl-field-tire-size-417",
+        "id": "lbl-field-tire-size-394",
         "type": "text",
         "label": "FIELD_TIRE_SIZE",
         "value": "FIELD_TIRE_SIZE"
@@ -577,7 +571,7 @@
         "value": "Məs: 35 DÜYM"
       },
       {
-        "id": "lbl-placeholder-tir-929",
+        "id": "lbl-placeholder-tir-382",
         "type": "text",
         "label": "PLACEHOLDER_TIRE",
         "value": "PLACEHOLDER_TIRE"
@@ -589,7 +583,7 @@
         "value": "MÜHƏRRİK HƏCMİ"
       },
       {
-        "id": "lbl-field-engine-598",
+        "id": "lbl-field-engine-420",
         "type": "text",
         "label": "FIELD_ENGINE",
         "value": "FIELD_ENGINE"
@@ -601,7 +595,7 @@
         "value": "Məs: 4.4L"
       },
       {
-        "id": "lbl-placeholder-eng-839",
+        "id": "lbl-placeholder-eng-907",
         "type": "text",
         "label": "PLACEHOLDER_ENGINE",
         "value": "PLACEHOLDER_ENGINE"
@@ -613,7 +607,7 @@
         "value": "TƏMSİL ETDİYİ KLUB"
       },
       {
-        "id": "lbl-field-club-150",
+        "id": "lbl-field-club-83",
         "type": "text",
         "label": "FIELD_CLUB",
         "value": "FIELD_CLUB"
@@ -625,7 +619,7 @@
         "value": "QEYDİYYATI TAMAMLA"
       },
       {
-        "id": "lbl-btn-complete-re-348",
+        "id": "lbl-btn-complete-re-938",
         "type": "text",
         "label": "BTN_COMPLETE_REG",
         "value": "BTN_COMPLETE_REG"
@@ -655,7 +649,7 @@
         "value": "TƏSVİR"
       },
       {
-        "id": "lbl-section-desc-873",
+        "id": "lbl-section-desc-294",
         "type": "text",
         "label": "SECTION_DESC",
         "value": "SECTION_DESC"
@@ -667,7 +661,7 @@
         "value": "Bu tədbir haqqında ətraflı məlumat tezliklə paylaşılacaq."
       },
       {
-        "id": "lbl-desc-placeholde-706",
+        "id": "lbl-desc-placeholde-267",
         "type": "text",
         "label": "DESC_PLACEHOLDER",
         "value": "DESC_PLACEHOLDER"
@@ -679,7 +673,7 @@
         "value": "TƏLİMATI YÜKLƏ"
       },
       {
-        "id": "lbl-download-title-447",
+        "id": "lbl-download-title-367",
         "type": "text",
         "label": "DOWNLOAD_TITLE",
         "value": "DOWNLOAD_TITLE"
@@ -691,7 +685,7 @@
         "value": "YARIŞA HAZIRLIQ VƏ TEXNİKİ REQLAMENT HAQQINDA BÜTÜN MƏLUMATLAR BU SƏNƏDDƏ QEYD OLUNUB."
       },
       {
-        "id": "lbl-download-desc-613",
+        "id": "lbl-download-desc-218",
         "type": "text",
         "label": "DOWNLOAD_DESC",
         "value": "DOWNLOAD_DESC"
@@ -703,7 +697,7 @@
         "value": "PDF YÜKLƏ"
       },
       {
-        "id": "lbl-btn-download-pd-244",
+        "id": "lbl-btn-download-pd-425",
         "type": "text",
         "label": "BTN_DOWNLOAD_PDF",
         "value": "BTN_DOWNLOAD_PDF"
@@ -715,7 +709,7 @@
         "value": "QAYDALAR VƏ TƏLƏBLƏR"
       },
       {
-        "id": "lbl-section-rules-304",
+        "id": "lbl-section-rules-516",
         "type": "text",
         "label": "SECTION_RULES",
         "value": "SECTION_RULES"
@@ -727,7 +721,7 @@
         "value": "Yarış qaydaları iştirakçılara brifinq zamanı elan ediləcək."
       },
       {
-        "id": "lbl-rules-placehold-630",
+        "id": "lbl-rules-placehold-395",
         "type": "text",
         "label": "RULES_PLACEHOLDER",
         "value": "RULES_PLACEHOLDER"
@@ -739,7 +733,7 @@
         "value": "SUALINIZ VAR?"
       },
       {
-        "id": "lbl-sidebar-questio-157",
+        "id": "lbl-sidebar-questio-985",
         "type": "text",
         "label": "SIDEBAR_QUESTION_TIT...",
         "value": "SIDEBAR_QUESTION_TITLE"
@@ -751,7 +745,7 @@
         "value": "YARIŞLA BAĞLI ƏLAVƏ SUALLARINIZ ÜÇÜN BİZİMLƏ ƏLAQƏ SAXLAYIN."
       },
       {
-        "id": "lbl-sidebar-questio-253",
+        "id": "lbl-sidebar-questio-757",
         "type": "text",
         "label": "SIDEBAR_QUESTION_DES...",
         "value": "SIDEBAR_QUESTION_DESC"
@@ -763,7 +757,7 @@
         "value": "ƏLAQƏ"
       },
       {
-        "id": "lbl-btn-contact-616",
+        "id": "lbl-btn-contact-115",
         "type": "text",
         "label": "BTN_CONTACT",
         "value": "BTN_CONTACT"
@@ -775,19 +769,19 @@
         "value": "TƏDBİRLƏR"
       },
       {
-        "id": "lbl-page-title-555",
+        "id": "lbl-page-title-830",
         "type": "text",
         "label": "PAGE_TITLE",
         "value": "PAGE_TITLE"
       },
       {
-        "id": "lbl-page-subtitle-91",
+        "id": "lbl-page-subtitle-369",
         "type": "text",
         "label": "PAGE_SUBTITLE",
         "value": "PAGE_SUBTITLE"
       },
       {
-        "id": "lbl-tab-planned-435",
+        "id": "lbl-tab-planned-900",
         "type": "text",
         "label": "TAB_PLANNED",
         "value": "TAB_PLANNED"
@@ -799,7 +793,7 @@
         "value": "KEÇMİŞ TƏDBİRLƏR"
       },
       {
-        "id": "lbl-tab-past-296",
+        "id": "lbl-tab-past-360",
         "type": "text",
         "label": "TAB_PAST",
         "value": "TAB_PAST"
@@ -811,7 +805,7 @@
         "value": "OFFROAD FEATURED"
       },
       {
-        "id": "lbl-label-featured-818",
+        "id": "lbl-label-featured-18",
         "type": "text",
         "label": "LABEL_FEATURED",
         "value": "LABEL_FEATURED"
@@ -823,7 +817,7 @@
         "value": "DAHA ƏTRAFLI"
       },
       {
-        "id": "lbl-btn-more-info-940",
+        "id": "lbl-btn-more-info-464",
         "type": "text",
         "label": "BTN_MORE_INFO",
         "value": "BTN_MORE_INFO"
@@ -835,7 +829,7 @@
         "value": "ƏTRAFLI BAX"
       },
       {
-        "id": "lbl-btn-view-detail-371",
+        "id": "lbl-btn-view-detail-269",
         "type": "text",
         "label": "BTN_VIEW_DETAILS",
         "value": "BTN_VIEW_DETAILS"
@@ -854,13 +848,13 @@
         "value": "REYTİNQ"
       },
       {
-        "id": "lbl-cat-ranking-suf-558",
+        "id": "lbl-cat-ranking-suf-233",
         "type": "text",
         "label": "CAT_RANKING_SUFFIX",
         "value": "CAT_RANKING_SUFFIX"
       },
       {
-        "id": "lbl-cat-subtitle-625",
+        "id": "lbl-cat-subtitle-813",
         "type": "text",
         "label": "CAT_SUBTITLE",
         "value": "CAT_SUBTITLE"
@@ -872,7 +866,7 @@
         "value": "GERİ QAYIT"
       },
       {
-        "id": "lbl-back-button-514",
+        "id": "lbl-back-button-902",
         "type": "text",
         "label": "BACK_BUTTON",
         "value": "BACK_BUTTON"
@@ -884,7 +878,7 @@
         "value": "XAL"
       },
       {
-        "id": "lbl-points-label-777",
+        "id": "lbl-points-label-114",
         "type": "text",
         "label": "POINTS_LABEL",
         "value": "POINTS_LABEL"
@@ -896,13 +890,13 @@
         "value": "SÜRÜCÜLƏR"
       },
       {
-        "id": "lbl-page-title-133",
+        "id": "lbl-page-title-59",
         "type": "text",
         "label": "PAGE_TITLE",
         "value": "PAGE_TITLE"
       },
       {
-        "id": "lbl-page-subtitle-801",
+        "id": "lbl-page-subtitle-660",
         "type": "text",
         "label": "PAGE_SUBTITLE",
         "value": "PAGE_SUBTITLE"
@@ -914,7 +908,7 @@
         "value": "PODIUM LEADERS"
       },
       {
-        "id": "lbl-podium-label-494",
+        "id": "lbl-podium-label-948",
         "type": "text",
         "label": "PODIUM_LABEL",
         "value": "PODIUM_LABEL"
@@ -926,7 +920,7 @@
         "value": "PTS"
       },
       {
-        "id": "lbl-pts-label-972",
+        "id": "lbl-pts-label-922",
         "type": "text",
         "label": "PTS_LABEL",
         "value": "PTS_LABEL"
@@ -938,7 +932,7 @@
         "value": "TOP 10 GRID"
       },
       {
-        "id": "lbl-grid-label-874",
+        "id": "lbl-grid-label-335",
         "type": "text",
         "label": "GRID_LABEL",
         "value": "GRID_LABEL"
@@ -950,7 +944,7 @@
         "value": "TAM SIRALAMA"
       },
       {
-        "id": "lbl-full-standings--869",
+        "id": "lbl-full-standings--76",
         "type": "text",
         "label": "FULL_STANDINGS_TITLE",
         "value": "FULL_STANDINGS_TITLE"
@@ -962,7 +956,7 @@
         "value": "BÜTÜN PİLOTLAR"
       },
       {
-        "id": "lbl-full-standings--568",
+        "id": "lbl-full-standings--929",
         "type": "text",
         "label": "FULL_STANDINGS_SUB",
         "value": "FULL_STANDINGS_SUB"
@@ -974,7 +968,7 @@
         "value": "HAMISINA BAX"
       },
       {
-        "id": "lbl-view-all-btn-240",
+        "id": "lbl-view-all-btn-662",
         "type": "text",
         "label": "VIEW_ALL_BTN",
         "value": "VIEW_ALL_BTN"
@@ -993,13 +987,13 @@
         "value": "QALEREYA"
       },
       {
-        "id": "lbl-page-title-680",
+        "id": "lbl-page-title-717",
         "type": "text",
         "label": "PAGE_TITLE",
         "value": "PAGE_TITLE"
       },
       {
-        "id": "lbl-page-subtitle-117",
+        "id": "lbl-page-subtitle-902",
         "type": "text",
         "label": "PAGE_SUBTITLE",
         "value": "PAGE_SUBTITLE"
@@ -1011,7 +1005,7 @@
         "value": "FOTOLAR"
       },
       {
-        "id": "lbl-tab-photos-650",
+        "id": "lbl-tab-photos-507",
         "type": "text",
         "label": "TAB_PHOTOS",
         "value": "TAB_PHOTOS"
@@ -1023,13 +1017,13 @@
         "value": "VİDEOLAR"
       },
       {
-        "id": "lbl-tab-videos-754",
+        "id": "lbl-tab-videos-736",
         "type": "text",
         "label": "TAB_VIDEOS",
         "value": "TAB_VIDEOS"
       },
       {
-        "id": "lbl-dynamic-collect-3",
+        "id": "lbl-dynamic-collect-613",
         "type": "text",
         "label": "DYNAMIC_COLLECTION",
         "value": "DYNAMIC_COLLECTION"
@@ -1041,7 +1035,7 @@
         "value": "TOPLAM"
       },
       {
-        "id": "lbl-total-label-820",
+        "id": "lbl-total-label-269",
         "type": "text",
         "label": "TOTAL_LABEL",
         "value": "TOTAL_LABEL"
@@ -1053,7 +1047,7 @@
         "value": "FOTO"
       },
       {
-        "id": "lbl-type-photo-688",
+        "id": "lbl-type-photo-514",
         "type": "text",
         "label": "TYPE_PHOTO",
         "value": "TYPE_PHOTO"
@@ -1065,7 +1059,7 @@
         "value": "VİDEO"
       },
       {
-        "id": "lbl-type-video-392",
+        "id": "lbl-type-video-779",
         "type": "text",
         "label": "TYPE_VIDEO",
         "value": "TYPE_VIDEO"
@@ -1077,7 +1071,7 @@
         "value": "HƏLƏ Kİ FOTO ƏLAVƏ EDİLMƏYİB"
       },
       {
-        "id": "lbl-no-photos-412",
+        "id": "lbl-no-photos-55",
         "type": "text",
         "label": "NO_PHOTOS",
         "value": "NO_PHOTOS"
@@ -1089,7 +1083,7 @@
         "value": "HƏLƏ Kİ VİDEO ƏLAVƏ EDİLMƏYİB"
       },
       {
-        "id": "lbl-no-videos-878",
+        "id": "lbl-no-videos-748",
         "type": "text",
         "label": "NO_VIDEOS",
         "value": "NO_VIDEOS"
@@ -1108,7 +1102,7 @@
         "value": "PİLOT PROTOKOLU"
       },
       {
-        "id": "lbl-rules-pilot-tit-822",
+        "id": "lbl-rules-pilot-tit-627",
         "type": "text",
         "label": "RULES_PILOT_TITLE",
         "value": "RULES_PILOT_TITLE",
@@ -1121,7 +1115,7 @@
         "value": "İSTİFADƏÇİ ÖHDƏLİKLƏRİ"
       },
       {
-        "id": "lbl-rules-pilot-sub-896",
+        "id": "lbl-rules-pilot-sub-55",
         "type": "text",
         "label": "RULES_PILOT_SUB1",
         "value": "RULES_PILOT_SUB1"
@@ -1133,7 +1127,7 @@
         "value": "HƏR BİR İŞTİRAKÇI FEDERASİYANIN MÜƏYYƏN ETDİYİ BÜTÜN TEXNİKİ VƏ ETİK NORMALARI QEYD-ŞƏRTSİZ QƏBUL EDİR."
       },
       {
-        "id": "lbl-rules-pilot-des-281",
+        "id": "lbl-rules-pilot-des-707",
         "type": "text",
         "label": "RULES_PILOT_DESC1",
         "value": "RULES_PILOT_DESC1"
@@ -1145,7 +1139,7 @@
         "value": "DİSKVALİFİKASİYA"
       },
       {
-        "id": "lbl-rules-pilot-sub-279",
+        "id": "lbl-rules-pilot-sub-64",
         "type": "text",
         "label": "RULES_PILOT_SUB2",
         "value": "RULES_PILOT_SUB2"
@@ -1157,7 +1151,7 @@
         "value": "PROTOKOLDAN KƏNARA ÇIXMAQ VƏ YA HAKİM QƏRARLARINA ETİRAZ ETMƏK DƏRHAL DİSKVALİFİKASİYA İLƏ NƏTİCƏLƏNƏ BİLƏR."
       },
       {
-        "id": "lbl-rules-pilot-des-757",
+        "id": "lbl-rules-pilot-des-497",
         "type": "text",
         "label": "RULES_PILOT_DESC2",
         "value": "RULES_PILOT_DESC2"
@@ -1169,7 +1163,7 @@
         "value": "TEXNİKİ TƏLƏBLƏR"
       },
       {
-        "id": "lbl-rules-pilot-sub-858",
+        "id": "lbl-rules-pilot-sub-753",
         "type": "text",
         "label": "RULES_PILOT_SUB3",
         "value": "RULES_PILOT_SUB3"
@@ -1181,7 +1175,7 @@
         "value": "BÜTÜN AVADANLIQLAR YARIŞDAN 24 SAAT ƏVVƏL TEXNİKİ KOMİSSİYA TƏRƏFİNDƏN YOXLANILMALI VƏ TƏHLÜKƏSİZLİK SERTİFİKATI İLƏ TƏMİN EDİLMƏLİDİR."
       },
       {
-        "id": "lbl-rules-pilot-des-218",
+        "id": "lbl-rules-pilot-des-98",
         "type": "text",
         "label": "RULES_PILOT_DESC3",
         "value": "RULES_PILOT_DESC3"
@@ -1193,7 +1187,7 @@
         "value": "TEXNİKİ NORMARTİVLƏR"
       },
       {
-        "id": "lbl-rules-tech-titl-104",
+        "id": "lbl-rules-tech-titl-698",
         "type": "text",
         "label": "RULES_TECH_TITLE",
         "value": "RULES_TECH_TITLE",
@@ -1206,7 +1200,7 @@
         "value": "TƏKƏR ÖLÇÜLƏRİ"
       },
       {
-        "id": "lbl-rules-tech-sub1-546",
+        "id": "lbl-rules-tech-sub1-225",
         "type": "text",
         "label": "RULES_TECH_SUB1",
         "value": "RULES_TECH_SUB1"
@@ -1218,7 +1212,7 @@
         "value": "PRO CLASS ÜÇÜN MAKSİMUM TƏKƏR ÖLÇÜSÜ 37 DÜYM, AMATEUR CLASS ÜÇÜN İSƏ 33 DÜYM OLARAQ MÜƏYYƏN EDİLMİŞDİR."
       },
       {
-        "id": "lbl-rules-tech-desc-317",
+        "id": "lbl-rules-tech-desc-633",
         "type": "text",
         "label": "RULES_TECH_DESC1",
         "value": "RULES_TECH_DESC1"
@@ -1230,7 +1224,7 @@
         "value": "MÜHƏRRİK GÜCÜ"
       },
       {
-        "id": "lbl-rules-tech-sub2-596",
+        "id": "lbl-rules-tech-sub2-132",
         "type": "text",
         "label": "RULES_TECH_SUB2",
         "value": "RULES_TECH_SUB2"
@@ -1242,7 +1236,7 @@
         "value": "MÜHƏRRİK ÜZƏRİNDƏ APARILAN MODİFİKASİYALAR KATEQORİYA ÜZRƏ LİMİTLƏRİ AŞMAMALIDIR. TURBO SİSTEMLƏRİ YALNIZ XÜSUSİ KLASLARDA İCAZƏLİDİR."
       },
       {
-        "id": "lbl-rules-tech-desc-132",
+        "id": "lbl-rules-tech-desc-349",
         "type": "text",
         "label": "RULES_TECH_DESC2",
         "value": "RULES_TECH_DESC2"
@@ -1254,13 +1248,13 @@
         "value": "ASQI SİSTEMİ"
       },
       {
-        "id": "lbl-rules-tech-sub3-84",
+        "id": "lbl-rules-tech-sub3-81",
         "type": "text",
         "label": "RULES_TECH_SUB3",
         "value": "RULES_TECH_SUB3"
       },
       {
-        "id": "lbl-rules-tech-desc-334",
+        "id": "lbl-rules-tech-desc-196",
         "type": "text",
         "label": "RULES_TECH_DESC3",
         "value": "RULES_TECH_DESC3"
@@ -1272,7 +1266,7 @@
         "value": "TƏHLÜKƏSİZLİK QAYDALARI"
       },
       {
-        "id": "lbl-rules-safety-ti-265",
+        "id": "lbl-rules-safety-ti-950",
         "type": "text",
         "label": "RULES_SAFETY_TITLE",
         "value": "RULES_SAFETY_TITLE",
@@ -1285,13 +1279,13 @@
         "value": "KARKAS TƏLƏBİ"
       },
       {
-        "id": "lbl-rules-safety-su-810",
+        "id": "lbl-rules-safety-su-641",
         "type": "text",
         "label": "RULES_SAFETY_SUB1",
         "value": "RULES_SAFETY_SUB1"
       },
       {
-        "id": "lbl-rules-safety-de-934",
+        "id": "lbl-rules-safety-de-559",
         "type": "text",
         "label": "RULES_SAFETY_DESC1",
         "value": "RULES_SAFETY_DESC1"
@@ -1303,7 +1297,7 @@
         "value": "YANĞIN SÖNDÜRMƏ"
       },
       {
-        "id": "lbl-rules-safety-su-488",
+        "id": "lbl-rules-safety-su-719",
         "type": "text",
         "label": "RULES_SAFETY_SUB2",
         "value": "RULES_SAFETY_SUB2"
@@ -1315,7 +1309,7 @@
         "value": "HƏR BİR AVTOMOBİLDƏ ƏN AZI 2 KİLOQRAMLIQ, ASAN ƏLÇATAN YERDƏ YERLƏŞƏN YANĞINSÖNDÜRƏN BALON OLMALIDIR."
       },
       {
-        "id": "lbl-rules-safety-de-774",
+        "id": "lbl-rules-safety-de-577",
         "type": "text",
         "label": "RULES_SAFETY_DESC2",
         "value": "RULES_SAFETY_DESC2"
@@ -1327,13 +1321,13 @@
         "value": "KƏMƏR VƏ DƏBİLQƏ"
       },
       {
-        "id": "lbl-rules-safety-su-425",
+        "id": "lbl-rules-safety-su-702",
         "type": "text",
         "label": "RULES_SAFETY_SUB3",
         "value": "RULES_SAFETY_SUB3"
       },
       {
-        "id": "lbl-rules-safety-de-621",
+        "id": "lbl-rules-safety-de-342",
         "type": "text",
         "label": "RULES_SAFETY_DESC3",
         "value": "RULES_SAFETY_DESC3"
@@ -1345,7 +1339,7 @@
         "value": "EKOLOJİ MƏSULİYYƏT"
       },
       {
-        "id": "lbl-rules-eco-title-80",
+        "id": "lbl-rules-eco-title-97",
         "type": "text",
         "label": "RULES_ECO_TITLE",
         "value": "RULES_ECO_TITLE",
@@ -1358,19 +1352,19 @@
         "value": "TULLANTILARIN İDARƏ EDİLMƏSİ"
       },
       {
-        "id": "lbl-rules-eco-sub1-595",
+        "id": "lbl-rules-eco-sub1-393",
         "type": "text",
         "label": "RULES_ECO_SUB1",
         "value": "RULES_ECO_SUB1"
       },
       {
-        "id": "lbl-rules-eco-desc1-641",
+        "id": "lbl-rules-eco-desc1-352",
         "type": "text",
         "label": "RULES_ECO_DESC1",
         "value": "RULES_ECO_DESC1"
       },
       {
-        "id": "lbl-leave-no-trace-536",
+        "id": "lbl-leave-no-trace-745",
         "type": "text",
         "label": "LEAVE NO TRACE",
         "value": "LEAVE NO TRACE"
@@ -1382,7 +1376,7 @@
         "value": "MAYE SIZMALARI"
       },
       {
-        "id": "lbl-rules-eco-sub2-723",
+        "id": "lbl-rules-eco-sub2-965",
         "type": "text",
         "label": "RULES_ECO_SUB2",
         "value": "RULES_ECO_SUB2"
@@ -1394,7 +1388,7 @@
         "value": "AVTOMOBİLDƏN YAĞ VƏ YA SOYUDUCU MAYE SIZMASI OLDUĞU TƏQDİRDƏ PİLOT DƏRHAL DAYANMALI VƏ ƏRAZİNİN ÇİRKLƏNMƏSİNİN QARŞISINI ALMALIDIR."
       },
       {
-        "id": "lbl-rules-eco-desc2-974",
+        "id": "lbl-rules-eco-desc2-619",
         "type": "text",
         "label": "RULES_ECO_DESC2",
         "value": "RULES_ECO_DESC2"
@@ -1406,7 +1400,7 @@
         "value": "MARŞRUTDAN KƏNARA ÇIXMAMAQ"
       },
       {
-        "id": "lbl-rules-eco-sub3-256",
+        "id": "lbl-rules-eco-sub3-36",
         "type": "text",
         "label": "RULES_ECO_SUB3",
         "value": "RULES_ECO_SUB3"
@@ -1418,7 +1412,7 @@
         "value": "TƏBİİ ÖRTÜYÜ QORUMAQ MƏQSƏDİ İLƏ MÜƏYYƏN OLUNMUŞ TRASDANKƏNAR SÜRÜŞLƏR VƏ YA YAŞIL SAHƏLƏRƏ ZƏRƏR VERMƏK QADAĞANDIR."
       },
       {
-        "id": "lbl-rules-eco-desc3-504",
+        "id": "lbl-rules-eco-desc3-822",
         "type": "text",
         "label": "RULES_ECO_DESC3",
         "value": "RULES_ECO_DESC3"
@@ -1430,7 +1424,7 @@
         "value": "QAYDALAR"
       },
       {
-        "id": "lbl-page-title-373",
+        "id": "lbl-page-title-609",
         "type": "text",
         "label": "PAGE_TITLE",
         "value": "PAGE_TITLE"
@@ -1442,7 +1436,7 @@
         "value": "FORSAJ MOTORSPORT OFFICIAL RULES"
       },
       {
-        "id": "lbl-page-subtitle-107",
+        "id": "lbl-page-subtitle-264",
         "type": "text",
         "label": "PAGE_SUBTITLE",
         "value": "PAGE_SUBTITLE"
@@ -1454,7 +1448,7 @@
         "value": "SƏNƏDİ YÜKLƏ"
       },
       {
-        "id": "lbl-doc-download-la-673",
+        "id": "lbl-doc-download-la-880",
         "type": "text",
         "label": "DOC_DOWNLOAD_LABEL",
         "value": "DOC_DOWNLOAD_LABEL"
@@ -1466,7 +1460,7 @@
         "value": "PDF YÜKLƏ"
       },
       {
-        "id": "lbl-btn-download-pd-278",
+        "id": "lbl-btn-download-pd-186",
         "type": "text",
         "label": "BTN_DOWNLOAD_PDF",
         "value": "BTN_DOWNLOAD_PDF"
@@ -1479,19 +1473,19 @@
     "title": "Əlaqə Səhifəsi",
     "sections": [
       {
-        "id": "lbl-social-instagra-527",
+        "id": "lbl-social-instagra-175",
         "type": "text",
         "label": "SOCIAL_INSTAGRAM",
         "value": "SOCIAL_INSTAGRAM"
       },
       {
-        "id": "lbl-social-youtube-488",
+        "id": "lbl-social-youtube-478",
         "type": "text",
         "label": "SOCIAL_YOUTUBE",
         "value": "SOCIAL_YOUTUBE"
       },
       {
-        "id": "lbl-social-facebook-535",
+        "id": "lbl-social-facebook-941",
         "type": "text",
         "label": "SOCIAL_FACEBOOK",
         "value": "SOCIAL_FACEBOOK"
@@ -1503,13 +1497,13 @@
         "value": "ƏLAQƏ"
       },
       {
-        "id": "lbl-page-title-410",
+        "id": "lbl-page-title-8",
         "type": "text",
         "label": "PAGE_TITLE",
         "value": "PAGE_TITLE"
       },
       {
-        "id": "lbl-page-subtitle-975",
+        "id": "lbl-page-subtitle-966",
         "type": "text",
         "label": "PAGE_SUBTITLE",
         "value": "PAGE_SUBTITLE"
@@ -1521,13 +1515,13 @@
         "value": "BAŞ OFİS"
       },
       {
-        "id": "lbl-office-label-775",
+        "id": "lbl-office-label-492",
         "type": "text",
         "label": "OFFICE_LABEL",
         "value": "OFFICE_LABEL"
       },
       {
-        "id": "lbl-contact-address-945",
+        "id": "lbl-contact-address-599",
         "type": "text",
         "label": "CONTACT_ADDRESS_1",
         "value": "CONTACT_ADDRESS_1"
@@ -1539,37 +1533,37 @@
         "value": "AZADLIQ 102, BAKI"
       },
       {
-        "id": "lbl-address-line-1-479",
+        "id": "lbl-address-line-1-35",
         "type": "text",
         "label": "ADDRESS_LINE_1",
         "value": "ADDRESS_LINE_1"
       },
       {
-        "id": "lbl-contact-address-73",
+        "id": "lbl-contact-address-391",
         "type": "text",
         "label": "CONTACT_ADDRESS_2",
         "value": "CONTACT_ADDRESS_2"
       },
       {
-        "id": "lbl-address-line-2-135",
+        "id": "lbl-address-line-2-740",
         "type": "text",
         "label": "ADDRESS_LINE_2",
         "value": "ADDRESS_LINE_2"
       },
       {
-        "id": "lbl-contact-hours-643",
+        "id": "lbl-contact-hours-602",
         "type": "text",
         "label": "CONTACT_HOURS",
         "value": "CONTACT_HOURS"
       },
       {
-        "id": "lbl-work-hours-923",
+        "id": "lbl-work-hours-73",
         "type": "text",
         "label": "WORK_HOURS",
         "value": "WORK_HOURS"
       },
       {
-        "id": "txt-online-477",
+        "id": "txt-online-352",
         "type": "text",
         "label": "ONLINE",
         "value": "ONLINE"
@@ -1581,13 +1575,13 @@
         "value": "ƏLAQƏ NÖMRƏSİ"
       },
       {
-        "id": "lbl-phone-label-631",
+        "id": "lbl-phone-label-81",
         "type": "text",
         "label": "PHONE_LABEL",
         "value": "PHONE_LABEL"
       },
       {
-        "id": "lbl-contact-phone-609",
+        "id": "lbl-contact-phone-446",
         "type": "text",
         "label": "CONTACT_PHONE",
         "value": "CONTACT_PHONE"
@@ -1599,13 +1593,13 @@
         "value": "E-POÇT ÜNVANI"
       },
       {
-        "id": "lbl-email-label-441",
+        "id": "lbl-email-label-748",
         "type": "text",
         "label": "EMAIL_LABEL",
         "value": "EMAIL_LABEL"
       },
       {
-        "id": "lbl-contact-email-975",
+        "id": "lbl-contact-email-289",
         "type": "text",
         "label": "CONTACT_EMAIL",
         "value": "CONTACT_EMAIL"
@@ -1617,13 +1611,13 @@
         "value": "PROTOCOL@FORSAJ.AZ"
       },
       {
-        "id": "lbl-email-address-547",
+        "id": "lbl-email-address-947",
         "type": "text",
         "label": "EMAIL_Address",
         "value": "EMAIL_Address"
       },
       {
-        "id": "lbl-dept-hq-title-372",
+        "id": "lbl-dept-hq-title-722",
         "type": "text",
         "label": "DEPT_HQ_TITLE",
         "value": "DEPT_HQ_TITLE"
@@ -1635,13 +1629,13 @@
         "value": "ÜMUMİ SORĞULAR VƏ İDARƏETMƏ"
       },
       {
-        "id": "lbl-dept-hq-desc-531",
+        "id": "lbl-dept-hq-desc-774",
         "type": "text",
         "label": "DEPT_HQ_DESC",
         "value": "DEPT_HQ_DESC"
       },
       {
-        "id": "lbl-dept-hq-email-281",
+        "id": "lbl-dept-hq-email-666",
         "type": "text",
         "label": "DEPT_HQ_EMAIL",
         "value": "DEPT_HQ_EMAIL"
@@ -1659,7 +1653,7 @@
         "value": "MEDİA VƏ PR"
       },
       {
-        "id": "lbl-dept-pr-title-499",
+        "id": "lbl-dept-pr-title-555",
         "type": "text",
         "label": "DEPT_PR_TITLE",
         "value": "DEPT_PR_TITLE"
@@ -1671,13 +1665,13 @@
         "value": "MƏTBUAT VƏ ƏMƏKDAŞLIQ"
       },
       {
-        "id": "lbl-dept-pr-desc-373",
+        "id": "lbl-dept-pr-desc-510",
         "type": "text",
         "label": "DEPT_PR_DESC",
         "value": "DEPT_PR_DESC"
       },
       {
-        "id": "lbl-dept-pr-email-6",
+        "id": "lbl-dept-pr-email-731",
         "type": "text",
         "label": "DEPT_PR_EMAIL",
         "value": "DEPT_PR_EMAIL"
@@ -1695,7 +1689,7 @@
         "value": "TEXNİKİ DƏSTƏK"
       },
       {
-        "id": "lbl-dept-tech-title-24",
+        "id": "lbl-dept-tech-title-154",
         "type": "text",
         "label": "DEPT_TECH_TITLE",
         "value": "DEPT_TECH_TITLE"
@@ -1707,13 +1701,13 @@
         "value": "PİLOTLAR ÜÇÜN TEXNİKİ YARDIM"
       },
       {
-        "id": "lbl-dept-tech-desc-847",
+        "id": "lbl-dept-tech-desc-154",
         "type": "text",
         "label": "DEPT_TECH_DESC",
         "value": "DEPT_TECH_DESC"
       },
       {
-        "id": "lbl-dept-tech-email-185",
+        "id": "lbl-dept-tech-email-542",
         "type": "text",
         "label": "DEPT_TECH_EMAIL",
         "value": "DEPT_TECH_EMAIL"
@@ -1731,43 +1725,43 @@
         "value": "MÜRACİƏT FORMU"
       },
       {
-        "id": "lbl-form-title-392",
+        "id": "lbl-form-title-803",
         "type": "text",
         "label": "FORM_TITLE",
         "value": "FORM_TITLE"
       },
       {
-        "id": "lbl-ad-soyad-238",
+        "id": "lbl-ad-soyad-513",
         "type": "text",
         "label": "AD SOYAD",
         "value": "AD SOYAD"
       },
       {
-        "id": "lbl-telefon-541",
+        "id": "lbl-telefon-212",
         "type": "text",
         "label": "TELEFON",
         "value": "TELEFON"
       },
       {
-        "id": "lbl-post-864",
+        "id": "lbl-post-905",
         "type": "text",
         "label": "POST",
         "value": "POST"
       },
       {
-        "id": "lbl-content-type-369",
+        "id": "lbl-content-type-241",
         "type": "text",
         "label": "Content-Type",
         "value": "Content-Type"
       },
       {
-        "id": "lbl-m-raci-tiniz-u--321",
+        "id": "lbl-m-raci-tiniz-u--93",
         "type": "text",
         "label": "Müraciətiniz uğurla ...",
         "value": "Müraciətiniz uğurla göndərildi!"
       },
       {
-        "id": "lbl-gond-rilm-zama-930",
+        "id": "lbl-gond-rilm-zama-610",
         "type": "text",
         "label": "Gondərilmə zamanı xə...",
         "value": "Gondərilmə zamanı xəta baş verdi."
@@ -1779,7 +1773,7 @@
         "value": "AD VƏ SOYAD"
       },
       {
-        "id": "lbl-field-name-labe-760",
+        "id": "lbl-field-name-labe-259",
         "type": "text",
         "label": "FIELD_NAME_LABEL",
         "value": "FIELD_NAME_LABEL"
@@ -1791,7 +1785,7 @@
         "value": "AD SOYAD DAXİL EDİN"
       },
       {
-        "id": "lbl-field-name-plac-592",
+        "id": "lbl-field-name-plac-159",
         "type": "text",
         "label": "FIELD_NAME_PLACEHOLD...",
         "value": "FIELD_NAME_PLACEHOLDER"
@@ -1803,7 +1797,7 @@
         "value": "ƏLAQƏ VASİTƏSİ"
       },
       {
-        "id": "lbl-field-contact-l-382",
+        "id": "lbl-field-contact-l-843",
         "type": "text",
         "label": "FIELD_CONTACT_LABEL",
         "value": "FIELD_CONTACT_LABEL"
@@ -1815,7 +1809,7 @@
         "value": "TELEFON VƏ YA EMAIL"
       },
       {
-        "id": "lbl-field-contact-p-167",
+        "id": "lbl-field-contact-p-528",
         "type": "text",
         "label": "FIELD_CONTACT_PLACEH...",
         "value": "FIELD_CONTACT_PLACEHOLDER"
@@ -1827,7 +1821,7 @@
         "value": "MÜRACİƏT İSTİQAMƏTİ"
       },
       {
-        "id": "lbl-field-topic-lab-810",
+        "id": "lbl-field-topic-lab-327",
         "type": "text",
         "label": "FIELD_TOPIC_LABEL",
         "value": "FIELD_TOPIC_LABEL"
@@ -1839,7 +1833,7 @@
         "value": "ÜMUMİ SORĞU"
       },
       {
-        "id": "lbl-topic-general-829",
+        "id": "lbl-topic-general-621",
         "type": "text",
         "label": "TOPIC_GENERAL",
         "value": "TOPIC_GENERAL"
@@ -1851,7 +1845,7 @@
         "value": "PİLOT QEYDİYYATI"
       },
       {
-        "id": "lbl-topic-pilot-988",
+        "id": "lbl-topic-pilot-542",
         "type": "text",
         "label": "TOPIC_PILOT",
         "value": "TOPIC_PILOT"
@@ -1863,7 +1857,7 @@
         "value": "TEXNİKİ YARDIM"
       },
       {
-        "id": "lbl-topic-tech-289",
+        "id": "lbl-topic-tech-334",
         "type": "text",
         "label": "TOPIC_TECH",
         "value": "TOPIC_TECH"
@@ -1875,7 +1869,7 @@
         "value": "MESAJINIZ"
       },
       {
-        "id": "lbl-field-message-l-554",
+        "id": "lbl-field-message-l-571",
         "type": "text",
         "label": "FIELD_MESSAGE_LABEL",
         "value": "FIELD_MESSAGE_LABEL"
@@ -1887,7 +1881,7 @@
         "value": "BURADA YAZIN..."
       },
       {
-        "id": "lbl-field-message-p-326",
+        "id": "lbl-field-message-p-835",
         "type": "text",
         "label": "FIELD_MESSAGE_PLACEH...",
         "value": "FIELD_MESSAGE_PLACEHOLDER"
@@ -1899,7 +1893,7 @@
         "value": "MESAJI GÖNDƏR"
       },
       {
-        "id": "lbl-btn-send-118",
+        "id": "lbl-btn-send-374",
         "type": "text",
         "label": "BTN_SEND",
         "value": "BTN_SEND"
@@ -1918,7 +1912,7 @@
         "value": "KATEQORİYA LİDƏRLƏRİ"
       },
       {
-        "id": "lbl-section-title-710",
+        "id": "lbl-section-title-237",
         "type": "text",
         "label": "SECTION_TITLE",
         "value": "SECTION_TITLE"
@@ -1930,7 +1924,7 @@
         "value": "HƏR KLASS ÜZRƏ MÖVSÜMÜN ƏN GÜCLÜ PİLOTLARI"
       },
       {
-        "id": "lbl-section-subtitl-346",
+        "id": "lbl-section-subtitl-440",
         "type": "text",
         "label": "SECTION_SUBTITLE",
         "value": "SECTION_SUBTITLE"
@@ -1942,7 +1936,7 @@
         "value": "BÜTÜN REYTİNG"
       },
       {
-        "id": "lbl-view-all-btn-184",
+        "id": "lbl-view-all-btn-127",
         "type": "text",
         "label": "VIEW_ALL_BTN",
         "value": "VIEW_ALL_BTN"
@@ -1954,7 +1948,7 @@
         "value": "XAL"
       },
       {
-        "id": "lbl-score-label-435",
+        "id": "lbl-score-label-618",
         "type": "text",
         "label": "SCORE_LABEL",
         "value": "SCORE_LABEL"
@@ -1967,25 +1961,25 @@
     "title": "Sayt Sonu",
     "sections": [
       {
-        "id": "lbl-site-logo-light-930",
+        "id": "lbl-site-logo-light-57",
         "type": "text",
         "label": "SITE_LOGO_LIGHT",
         "value": "SITE_LOGO_LIGHT"
       },
       {
-        "id": "lbl-social-instagra-68",
+        "id": "lbl-social-instagra-34",
         "type": "text",
         "label": "SOCIAL_INSTAGRAM",
         "value": "SOCIAL_INSTAGRAM"
       },
       {
-        "id": "lbl-social-youtube-41",
+        "id": "lbl-social-youtube-776",
         "type": "text",
         "label": "SOCIAL_YOUTUBE",
         "value": "SOCIAL_YOUTUBE"
       },
       {
-        "id": "lbl-social-facebook-743",
+        "id": "lbl-social-facebook-788",
         "type": "text",
         "label": "SOCIAL_FACEBOOK",
         "value": "SOCIAL_FACEBOOK"
@@ -2061,105 +2055,105 @@
         "url": "rules"
       },
       {
-        "id": "attr-forsaj-logo-11",
+        "id": "attr-forsaj-logo-395",
         "type": "text",
         "label": "ALT: Forsaj Logo...",
         "value": "Forsaj Logo"
       },
       {
-        "id": "txt-forsaj-752",
+        "id": "txt-forsaj-773",
         "type": "text",
         "label": "FORSAJ",
         "value": "FORSAJ"
       },
       {
-        "id": "txt-club-245",
+        "id": "txt-club-442",
         "type": "text",
         "label": "CLUB",
         "value": "CLUB"
       },
       {
-        "id": "txt-az-rbaycan-n-n-89",
+        "id": "txt-az-rbaycan-n-n-249",
         "type": "text",
         "label": "Azərbaycanın ən pres...",
         "value": "Azərbaycanın ən prestijli motorsport mərkəzi. Sərhədsiz offroad həyəcanını bizimlə yaşayın."
       },
       {
-        "id": "txt--nvan-202",
+        "id": "txt--nvan-155",
         "type": "text",
         "label": "ÜNVAN",
         "value": "ÜNVAN"
       },
       {
-        "id": "lbl-contact-address-515",
+        "id": "lbl-contact-address-200",
         "type": "text",
         "label": "CONTACT_ADDRESS_1",
         "value": "CONTACT_ADDRESS_1"
       },
       {
-        "id": "lbl-azadliq-102-ba-575",
+        "id": "lbl-azadliq-102-ba-73",
         "type": "text",
         "label": "AZADLIQ 102, BAKI",
         "value": "AZADLIQ 102, BAKI"
       },
       {
-        "id": "txt--laq--70",
+        "id": "txt--laq--161",
         "type": "text",
         "label": "ƏLAQƏ",
         "value": "ƏLAQƏ"
       },
       {
-        "id": "lbl-contact-phone-376",
+        "id": "lbl-contact-phone-498",
         "type": "text",
         "label": "CONTACT_PHONE",
         "value": "CONTACT_PHONE"
       },
       {
-        "id": "txt-navi-qasi-ya-959",
+        "id": "txt-navi-qasi-ya-133",
         "type": "text",
         "label": "NAVİQASİYA",
         "value": "NAVİQASİYA"
       },
       {
-        "id": "txt-motorsport-655",
+        "id": "txt-motorsport-590",
         "type": "text",
         "label": "MOTORSPORT",
         "value": "MOTORSPORT"
       },
       {
-        "id": "txt-x-b-rdar-ol-90",
+        "id": "txt-x-b-rdar-ol-578",
         "type": "text",
         "label": "XƏBƏRDAR OL",
         "value": "XƏBƏRDAR OL"
       },
       {
-        "id": "txt-yar-t-qvimi-v-196",
+        "id": "txt-yar-t-qvimi-v-414",
         "type": "text",
         "label": "Yarış təqvimi və xəb...",
         "value": "Yarış təqvimi və xəbərlərdən anında xəbərdar olmaq üçün abunə olun."
       },
       {
-        "id": "attr-email-daxi-l-edi--326",
+        "id": "attr-email-daxi-l-edi--293",
         "type": "text",
         "label": "PLACEHOLDER: EMAIL DAXİL EDİ...",
         "value": "EMAIL DAXİL EDİN"
       },
       {
-        "id": "txt--2024-forsaj-c-751",
+        "id": "txt--2024-forsaj-c-32",
         "type": "text",
         "label": "© 2024 FORSAJ CLUB. ...",
         "value": "© 2024 FORSAJ CLUB. ALL RIGHTS RESERVED.",
         "url": "#"
       },
       {
-        "id": "txt-privacy-policy-642",
+        "id": "txt-privacy-policy-517",
         "type": "text",
         "label": "PRIVACY POLICY",
         "value": "Privacy Policy",
         "url": "#"
       },
       {
-        "id": "txt-terms-of-servic-572",
+        "id": "txt-terms-of-servic-731",
         "type": "text",
         "label": "TERMS OF SERVICE",
         "value": "Terms of Service",
@@ -2210,7 +2204,7 @@
     "title": "Sürüşən Yazı",
     "sections": [
       {
-        "id": "lbl-forsaj-club-646",
+        "id": "lbl-forsaj-club-40",
         "type": "text",
         "label": "FORSAJ CLUB",
         "value": "FORSAJ CLUB"
@@ -2223,70 +2217,70 @@
     "title": "Naviqasiya",
     "sections": [
       {
-        "id": "lbl-site-logo-light-293",
+        "id": "lbl-site-logo-light-358",
         "type": "text",
         "label": "SITE_LOGO_LIGHT",
         "value": "SITE_LOGO_LIGHT",
         "url": "home"
       },
       {
-        "id": "lbl-ana-s-hi-f--570",
+        "id": "lbl-ana-s-hi-f--462",
         "type": "text",
         "label": "ANA SƏHİFƏ",
         "value": "ANA SƏHİFƏ",
         "url": "home"
       },
       {
-        "id": "lbl-haqqimizda-909",
+        "id": "lbl-haqqimizda-78",
         "type": "text",
         "label": "HAQQIMIZDA",
         "value": "HAQQIMIZDA",
         "url": "home"
       },
       {
-        "id": "lbl-x-b-rl-r-645",
+        "id": "lbl-x-b-rl-r-639",
         "type": "text",
         "label": "XƏBƏRLƏR",
         "value": "XƏBƏRLƏR",
         "url": "home"
       },
       {
-        "id": "lbl-t-dbi-rl-r-148",
+        "id": "lbl-t-dbi-rl-r-316",
         "type": "text",
         "label": "TƏDBİRLƏR",
         "value": "TƏDBİRLƏR",
         "url": "about"
       },
       {
-        "id": "lbl-s-r-c-l-r-230",
+        "id": "lbl-s-r-c-l-r-927",
         "type": "text",
         "label": "SÜRÜCÜLƏR",
         "value": "SÜRÜCÜLƏR",
         "url": "news"
       },
       {
-        "id": "lbl-qalereya-464",
+        "id": "lbl-qalereya-403",
         "type": "text",
         "label": "QALEREYA",
         "value": "QALEREYA",
         "url": "events"
       },
       {
-        "id": "lbl-qaydalar-355",
+        "id": "lbl-qaydalar-555",
         "type": "text",
         "label": "QAYDALAR",
         "value": "QAYDALAR",
         "url": "drivers"
       },
       {
-        "id": "lbl--laq--40",
+        "id": "lbl--laq--270",
         "type": "text",
         "label": "ƏLAQƏ",
         "value": "ƏLAQƏ",
         "url": "gallery"
       },
       {
-        "id": "attr-forsaj-logo-379",
+        "id": "attr-forsaj-logo-65",
         "type": "text",
         "label": "ALT: Forsaj Logo...",
         "value": "Forsaj Logo"
@@ -2299,7 +2293,7 @@
     "title": "Növbəti Yarış",
     "sections": [
       {
-        "id": "lbl-race-date-377",
+        "id": "lbl-race-date-269",
         "type": "text",
         "label": "RACE_DATE",
         "value": "RACE_DATE"
@@ -2311,7 +2305,7 @@
         "value": "SUMQAYIT"
       },
       {
-        "id": "lbl-race-city-193",
+        "id": "lbl-race-city-117",
         "type": "text",
         "label": "RACE_CITY",
         "value": "RACE_CITY"
@@ -2323,13 +2317,13 @@
         "value": "CHALLENGE"
       },
       {
-        "id": "lbl-race-type-26",
+        "id": "lbl-race-type-531",
         "type": "text",
         "label": "RACE_TYPE",
         "value": "RACE_TYPE"
       },
       {
-        "id": "lbl-race-location-705",
+        "id": "lbl-race-location-215",
         "type": "text",
         "label": "RACE_LOCATION",
         "value": "RACE_LOCATION"
@@ -2341,7 +2335,7 @@
         "value": "NÖVBƏTİ YARIŞ"
       },
       {
-        "id": "lbl-section-title-245",
+        "id": "lbl-section-title-998",
         "type": "text",
         "label": "SECTION_TITLE",
         "value": "SECTION_TITLE"
@@ -2353,13 +2347,13 @@
         "value": "LİVE REGİSTRATİON OPEN"
       },
       {
-        "id": "lbl-section-subtitl-947",
+        "id": "lbl-section-subtitl-186",
         "type": "text",
         "label": "SECTION_SUBTITLE",
         "value": "SECTION_SUBTITLE"
       },
       {
-        "id": "lbl-view-all-btn-75",
+        "id": "lbl-view-all-btn-340",
         "type": "text",
         "label": "VIEW_ALL_BTN",
         "value": "VIEW_ALL_BTN"
@@ -2372,19 +2366,19 @@
         "url": "events"
       },
       {
-        "id": "attr-next-race-741",
+        "id": "attr-next-race-781",
         "type": "text",
         "label": "ALT: Next Race...",
         "value": "Next Race"
       },
       {
-        "id": "lbl-race-location-b-62",
+        "id": "lbl-race-location-b-844",
         "type": "text",
         "label": "RACE_LOCATION_BG",
         "value": "RACE_LOCATION_BG"
       },
       {
-        "id": "lbl-register-btn-804",
+        "id": "lbl-register-btn-873",
         "type": "text",
         "label": "REGISTER_BTN",
         "value": "REGISTER_BTN"
@@ -2404,35 +2398,35 @@
     "title": "Tərəfdaşlar",
     "sections": [
       {
-        "id": "lbl-azmf-710",
+        "id": "lbl-azmf-945",
         "type": "text",
         "label": "AZMF",
         "value": "AZMF",
         "url": "partner_1"
       },
       {
-        "id": "lbl-offroad-az-195",
+        "id": "lbl-offroad-az-536",
         "type": "text",
         "label": "OFFROAD AZ",
         "value": "OFFROAD AZ",
         "url": "partner_1"
       },
       {
-        "id": "lbl-global-4x4-215",
+        "id": "lbl-global-4x4-941",
         "type": "text",
         "label": "GLOBAL 4X4",
         "value": "GLOBAL 4X4",
         "url": "partner_2"
       },
       {
-        "id": "lbl-race-tech-41",
+        "id": "lbl-race-tech-482",
         "type": "text",
         "label": "RACE TECH",
         "value": "RACE TECH",
         "url": "partner_3"
       },
       {
-        "id": "lbl-official-partne-102",
+        "id": "lbl-official-partne-160",
         "type": "text",
         "label": "OFFICIAL PARTNER",
         "value": "OFFICIAL PARTNER"
@@ -2444,7 +2438,7 @@
         "value": "RƏSMİ TƏRƏFDAŞLARIMIZ"
       },
       {
-        "id": "lbl-section-title-54",
+        "id": "lbl-section-title-152",
         "type": "text",
         "label": "SECTION_TITLE",
         "value": "SECTION_TITLE"
@@ -2463,7 +2457,7 @@
         "value": "VİDEO ARXİVİ"
       },
       {
-        "id": "lbl-section-title-665",
+        "id": "lbl-section-title-745",
         "type": "text",
         "label": "SECTION_TITLE",
         "value": "SECTION_TITLE"
@@ -2475,7 +2469,7 @@
         "value": "Tarixi yarışların unudulmaz anları"
       },
       {
-        "id": "lbl-section-subtitl-724",
+        "id": "lbl-section-subtitl-117",
         "type": "text",
         "label": "SECTION_SUBTITLE",
         "value": "SECTION_SUBTITLE"
@@ -2487,7 +2481,7 @@
         "value": "BÜTÜN QALEREYA"
       },
       {
-        "id": "lbl-view-all-btn-868",
+        "id": "lbl-view-all-btn-426",
         "type": "text",
         "label": "VIEW_ALL_BTN",
         "value": "VIEW_ALL_BTN"
@@ -2500,7 +2494,7 @@
     "title": "Offroad Nədir?",
     "sections": [
       {
-        "id": "lbl-texni--906",
+        "id": "lbl-texni--398",
         "type": "text",
         "label": "TEXNİ",
         "value": "TEXNİ"
@@ -2572,7 +2566,7 @@
         "value": "Offroad – yalnız yolsuzluq şəraitində hərəkət etmək deyil, həm də dözümlülük, strateji düşüncə və mühəndislik bacarığının sınağıdır. Azərbaycanın čətin dağlıq relyefi bu idman növü üçün dünyada ən maraqlı məkanlardan biri hesab olunur."
       },
       {
-        "id": "attr-offroad-culture-273",
+        "id": "attr-offroad-culture-928",
         "type": "text",
         "label": "ALT: Offroad Culture...",
         "value": "Offroad Culture"
@@ -2586,7 +2580,7 @@
     ],
     "images": [
       {
-        "id": "img-148",
+        "id": "img-556",
         "path": "https://picsum.photos/id/107/800/600",
         "alt": "Bölmədəki Şəkil",
         "type": "local"
@@ -2604,25 +2598,25 @@
         "value": "Forsaj Club - Offroad Motorsport Hub"
       },
       {
-        "id": "lbl-seo-title-595",
+        "id": "lbl-seo-title-479",
         "type": "text",
         "label": "SEO_TITLE",
         "value": "SEO_TITLE"
       },
       {
-        "id": "lbl-seo-description-455",
+        "id": "lbl-seo-description-878",
         "type": "text",
         "label": "SEO_DESCRIPTION",
         "value": "SEO_DESCRIPTION"
       },
       {
-        "id": "lbl-seo-keywords-426",
+        "id": "lbl-seo-keywords-372",
         "type": "text",
         "label": "SEO_KEYWORDS",
         "value": "SEO_KEYWORDS"
       },
       {
-        "id": "lbl-seo-canonical-u-623",
+        "id": "lbl-seo-canonical-u-224",
         "type": "text",
         "label": "SEO_CANONICAL_URL",
         "value": "SEO_CANONICAL_URL"
@@ -2634,7 +2628,7 @@
         "value": "index,follow"
       },
       {
-        "id": "lbl-seo-robots-333",
+        "id": "lbl-seo-robots-923",
         "type": "text",
         "label": "SEO_ROBOTS",
         "value": "SEO_ROBOTS"
@@ -2652,31 +2646,31 @@
         "value": "az"
       },
       {
-        "id": "lbl-seo-language-734",
+        "id": "lbl-seo-language-178",
         "type": "text",
         "label": "SEO_LANGUAGE",
         "value": "SEO_LANGUAGE"
       },
       {
-        "id": "lbl-seo-og-title-382",
+        "id": "lbl-seo-og-title-973",
         "type": "text",
         "label": "SEO_OG_TITLE",
         "value": "SEO_OG_TITLE"
       },
       {
-        "id": "lbl-seo-og-descript-255",
+        "id": "lbl-seo-og-descript-797",
         "type": "text",
         "label": "SEO_OG_DESCRIPTION",
         "value": "SEO_OG_DESCRIPTION"
       },
       {
-        "id": "lbl-seo-og-image-264",
+        "id": "lbl-seo-og-image-535",
         "type": "text",
         "label": "SEO_OG_IMAGE",
         "value": "SEO_OG_IMAGE"
       },
       {
-        "id": "lbl-seo-og-url-878",
+        "id": "lbl-seo-og-url-692",
         "type": "text",
         "label": "SEO_OG_URL",
         "value": "SEO_OG_URL"
@@ -2688,37 +2682,37 @@
         "value": "summary_large_image"
       },
       {
-        "id": "lbl-seo-twitter-car-838",
+        "id": "lbl-seo-twitter-car-598",
         "type": "text",
         "label": "SEO_TWITTER_CARD",
         "value": "SEO_TWITTER_CARD"
       },
       {
-        "id": "lbl-seo-twitter-sit-879",
+        "id": "lbl-seo-twitter-sit-35",
         "type": "text",
         "label": "SEO_TWITTER_SITE",
         "value": "SEO_TWITTER_SITE"
       },
       {
-        "id": "lbl-seo-twitter-cre-118",
+        "id": "lbl-seo-twitter-cre-963",
         "type": "text",
         "label": "SEO_TWITTER_CREATOR",
         "value": "SEO_TWITTER_CREATOR"
       },
       {
-        "id": "lbl-seo-google-veri-261",
+        "id": "lbl-seo-google-veri-225",
         "type": "text",
         "label": "SEO_GOOGLE_VERIFICAT...",
         "value": "SEO_GOOGLE_VERIFICATION"
       },
       {
-        "id": "lbl-seo-bing-verifi-283",
+        "id": "lbl-seo-bing-verifi-562",
         "type": "text",
         "label": "SEO_BING_VERIFICATIO...",
         "value": "SEO_BING_VERIFICATION"
       },
       {
-        "id": "lbl-seo-yandex-veri-184",
+        "id": "lbl-seo-yandex-veri-272",
         "type": "text",
         "label": "SEO_YANDEX_VERIFICAT...",
         "value": "SEO_YANDEX_VERIFICATION"

@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import VisualEditor from './pages/VisualEditor';
-import FrontendSettings from './pages/FrontendSettings';
 import UsersManager from './pages/UsersManager';
 import SetupGuide from './components/SetupGuide';
 import Login from './pages/Login';
@@ -31,7 +30,7 @@ const titleMap: Record<string, string> = {
   QAYDALAR: 'Qaydalar',
   'ƏLAQƏ': 'Əlaqə',
   'ADMİN HESABLARI': 'İstifadəçi İdarəsi',
-  'SİSTEM AYARLARI': 'Frontend Ayarları',
+  'SİSTEM AYARLARI': 'Sistem Ayarları',
 };
 
 const childTitleMap: Record<string, string> = {
@@ -109,13 +108,6 @@ const App: React.FC = () => {
           const data = await response.json();
           let items = Array.isArray(data) ? data : [];
 
-          // Normalize menu titles to avoid confusing duplicates in sidebar labels.
-          items = items.map((item: any) => {
-            if (item?.path === '/frontend-settings') {
-              return { ...item, title: 'Frontend Ayarları' };
-            }
-            return item;
-          });
           items = items.map((item: SidebarItem) => prettifyItem(item));
 
           // Inject "Müraciətlər" item if not present
@@ -136,43 +128,37 @@ const App: React.FC = () => {
             delete hasApplications.badge;
           }
 
-          // Remove any existing system-settings variants before injecting the canonical one.
-          // This catches cases like: "SİSTEM AYARLARI", "Sistem Ayarları", "System Settings", id=general.
-          items = items.filter((i: any) => {
-            const normalizedTitle = normalizeText(i?.title || '');
-            const normalizedId = normalizeText(i?.id || '');
-            const normalizedPath = normalizeText(i?.path || '');
-            const looksLikeSystemSettingsTitle =
-              normalizedTitle === 'sistem ayarlari' ||
-              normalizedTitle === 'system settings';
-            const looksLikeSystemSettingsId =
-              normalizedId === 'general' ||
-              normalizedId === 'settings' ||
-              normalizedId === 'sistem-ayarlari';
-            const looksLikeSystemSettingsPath =
-              normalizedPath === '/general-settings' ||
-              normalizedPath === '/settings';
-
-            return !(
-              looksLikeSystemSettingsTitle ||
-              looksLikeSystemSettingsId ||
-              looksLikeSystemSettingsPath
-            );
-          });
-
-          // Force inject "Sistem Ayarları" (with SEO tab) at the end.
-          items = [
-            ...items,
-            {
-              title: 'Sistem Ayarları',
-              icon: 'Settings',
-              children: [
-                { title: 'SEO Ayarları', path: '/general-settings?tab=seo', icon: 'Globe' },
-                { title: 'Ümumi Ayarlar', path: '/general-settings?tab=general', icon: 'Settings' },
-                { title: 'Əlaqə və Sosial', path: '/general-settings?tab=contact', icon: 'Phone' },
-              ]
-            }
+          // Ensure a single canonical "Sistem Ayarları" item with required children.
+          const requiredSystemChildren: SidebarItem[] = [
+            { title: 'SEO Ayarları', path: '/general-settings?tab=seo', icon: 'Globe' },
+            { title: 'Ümumi Parametrlər', path: '/general-settings?tab=general', icon: 'Sliders' },
+            { title: 'Əlaqə və Sosial', path: '/general-settings?tab=contact', icon: 'Phone' },
+            { title: 'Tətbiq Ayarları', path: '/general-settings?tab=stats', icon: 'Activity' },
           ];
+
+          const systemIdx = items.findIndex((i: any) => normalizeText(i?.title || '') === 'sistem ayarlari');
+          if (systemIdx === -1) {
+            items = [
+              ...items,
+              {
+                title: 'Sistem Ayarları',
+                icon: 'Settings',
+                children: requiredSystemChildren
+              }
+            ];
+          } else {
+            const existing = items[systemIdx];
+            const mergedChildren = new Map<string, SidebarItem>();
+            (existing.children || []).forEach((c: SidebarItem) => {
+              const key = `${normalizeText(c.title)}|${normalizeText((c as any).path || '')}`;
+              mergedChildren.set(key, c);
+            });
+            requiredSystemChildren.forEach((c) => {
+              const key = `${normalizeText(c.title)}|${normalizeText((c as any).path || '')}`;
+              mergedChildren.set(key, c);
+            });
+            items[systemIdx] = { ...existing, children: Array.from(mergedChildren.values()), icon: existing.icon || 'Settings' };
+          }
 
           // Final guard against any duplicate menu items by path+title.
           const deduped = new Map<string, SidebarItem>();
@@ -234,10 +220,6 @@ const App: React.FC = () => {
                       <Route path="/general-settings" element={<GeneralSettings />} />
 
                       <Route path="/users-management" element={<UsersManager currentUser={user} />} />
-
-                      <Route path="/frontend-settings" element={
-                        user.role === 'master' ? <FrontendSettings /> : <div className="fade-in"><h1>İcazə yoxdur</h1><p>Bu səhifə yalnız Baş Admin üçündür.</p></div>
-                      } />
 
                       <Route path="*" element={<div className="fade-in"><h1>Səhifə tapılmadı</h1></div>} />
                     </>

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Save, Type, Image as ImageIcon, Layout, Globe, Plus, Trash2, X, Search, Calendar, FileText, Trophy, RotateCcw, Video, Play, ChevronUp, ChevronDown } from 'lucide-react';
+import { Save, Type, Image as ImageIcon, Layout, Globe, Plus, Trash2, X, Search, Calendar, FileText, Trophy, Video, Play, ChevronUp, ChevronDown } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
@@ -145,6 +145,14 @@ const normalizePlainText = (value: string) => {
         .trim();
 };
 
+const toAbsoluteUrl = (rawValue: string) => {
+    const value = (rawValue || '').trim();
+    if (!value) return '';
+    if (/^(https?:)?\/\//i.test(value)) return value;
+    const normalizedPath = value.startsWith('/') ? value : `/${value}`;
+    return `${window.location.origin}${normalizedPath}`;
+};
+
 const containsHtmlNoise = (value: string) =>
     /&(?:lt|gt|nbsp|quot|amp);|<\/?[a-z][^>]*>/i.test(value || '');
 
@@ -224,11 +232,11 @@ const componentLabels: Record<string, string> = {
     'gallerypage': 'Qalereya Səhifəsi',
     'contactpage': 'Əlaqə Səhifəsi',
     'rulespage': 'Qaydalar Səhifəsi',
-    'news': 'Xəbərlər Paneli',
-    'drivers': 'Sürücülər Paneli',
+    'news': 'Xəbərlər',
+    'drivers': 'Sürücülər',
     'categoryleaders': 'Kateqoriya Liderləri',
-    'gallery': 'Qalereya Paneli',
-    'videos': 'Videolar Paneli',
+    'gallery': 'Qalereya',
+    'videos': 'Videolar',
     'videoarchive': 'Video Arxiv',
     'footer': 'Sayt Sonu',
     'partners': 'Tərəfdaşlar',
@@ -239,6 +247,32 @@ const componentLabels: Record<string, string> = {
     'settings': 'Ümumi Parametrlər',
     'general': 'SİSTEM AYARLARI',
     'app': 'Tətbiq Ayarları'
+};
+
+const TAB_PAGE_GROUPS: Record<string, string[]> = {
+    home: ['navbar', 'hero', 'marquee', 'categoryleaders', 'nextrace', 'partners', 'footer'],
+    abouttab: ['about', 'mission_vision', 'values'],
+    newstab: ['newspage'],
+    eventstab: ['eventspage'],
+    driverstab: ['drivers'],
+    gallerytab: ['gallerypage', 'gallery', 'videos', 'videoarchive'],
+    rulestab: ['rulespage'],
+    contacttab: ['contactpage']
+};
+
+const PAGE_TO_TAB_GROUP: Record<string, string> = Object.entries(TAB_PAGE_GROUPS).reduce((acc, [tabKey, pageIds]) => {
+    pageIds.forEach((id) => {
+        acc[id] = tabKey;
+    });
+    return acc;
+}, {} as Record<string, string>);
+
+const resolvePageGroup = (pageParam?: string | null) => {
+    if (!pageParam) return [];
+    if (TAB_PAGE_GROUPS[pageParam]) return TAB_PAGE_GROUPS[pageParam];
+    const tabKey = PAGE_TO_TAB_GROUP[pageParam];
+    if (tabKey && TAB_PAGE_GROUPS[tabKey]) return TAB_PAGE_GROUPS[tabKey];
+    return [pageParam];
 };
 
 const CONTENT_VERSION_KEY = 'forsaj_site_content_version';
@@ -282,6 +316,7 @@ const VisualEditor: React.FC = () => {
     const [editorMode, setEditorMode] = useState<'extract' | 'events' | 'news' | 'drivers' | 'videos' | 'photos'>('extract');
 
     const [galleryPhotos, setGalleryPhotos] = useState<GalleryPhotoItem[]>([]);
+    const autoSyncTriggeredRef = useRef(false);
     const [selectedPhotoId, setSelectedPhotoId] = useState<number | null>(null);
     const [photoForm, setPhotoForm] = useState<Partial<GalleryPhotoItem>>({});
 
@@ -604,6 +639,12 @@ const VisualEditor: React.FC = () => {
         loadContent();
     }, []);
 
+    useEffect(() => {
+        if (autoSyncTriggeredRef.current) return;
+        autoSyncTriggeredRef.current = true;
+        startExtraction();
+    }, []);
+
     // Sync URL params to state
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
@@ -614,7 +655,8 @@ const VisualEditor: React.FC = () => {
             setEditorMode(modeParam as any);
         } else if (pageParam) {
             setEditorMode('extract');
-            const idx = pages.findIndex(p => p.id === pageParam);
+            const candidateIds = resolvePageGroup(pageParam);
+            const idx = pages.findIndex(p => candidateIds.includes(p.id));
             if (idx !== -1) setSelectedPageIndex(idx);
         }
     }, [location.search, pages]);
@@ -667,7 +709,6 @@ const VisualEditor: React.FC = () => {
                 localStorage.setItem('forsaj_extracted', 'true');
                 localStorage.setItem(CONTENT_VERSION_KEY, Date.now().toString());
                 toast.success('Sinxronizasiya tamamlandı! Baza yeniləndi.', { id: toastId });
-                setTimeout(() => window.location.reload(), 1500);
             }, 500);
 
         } catch (error: any) {
@@ -697,6 +738,17 @@ const VisualEditor: React.FC = () => {
 
             newPages[pageIdx].sections[sectionIdx][field] = nextValue;
             setPages(newPages);
+        }
+    };
+
+    const normalizeSectionUrl = (pageIdx: number, sectionId: string) => {
+        const page = pages[pageIdx];
+        if (!page) return;
+        const section = page.sections.find(s => s.id === sectionId);
+        if (!section || !section.url) return;
+        const normalized = toAbsoluteUrl(section.url);
+        if (normalized && normalized !== section.url) {
+            handleSectionChange(pageIdx, sectionId, 'url', normalized);
         }
     };
 
@@ -730,18 +782,6 @@ const VisualEditor: React.FC = () => {
         setIsModalOpen(false);
         setNewSectionTitle('');
         toast.success('Yeni bölmə əlavə edildi!');
-    };
-
-    const deleteSection = (index: number, e: React.MouseEvent) => {
-        e.stopPropagation();
-        if (window.confirm('Bu bölməni silmək istədiyinizə əminsiniz?')) {
-            const newPages = pages.filter((_, i) => i !== index);
-            setPages(newPages);
-            if (selectedPageIndex >= newPages.length) {
-                setSelectedPageIndex(Math.max(0, newPages.length - 1));
-            }
-            toast.success('Bölmə silindi');
-        }
     };
 
     const addField = (type: 'text' | 'image', customLabel?: string, customId?: string) => {
@@ -959,24 +999,31 @@ const VisualEditor: React.FC = () => {
         setIsImageSelectorOpen(true);
     };
 
-    const uploadImage = async (file: File): Promise<string | null> => {
+    const uploadAsset = async (
+        file: File,
+        options?: { loadingText?: string; successText?: string; errorText?: string }
+    ): Promise<string | null> => {
         const formData = new FormData();
         formData.append('image', file);
-        const uploadId = toast.loading('Şəkil yüklənir...');
+        const uploadId = toast.loading(options?.loadingText || 'Şəkil yüklənir...');
         try {
             const response = await fetch('/api/upload-image', { method: 'POST', body: formData });
             if (response.ok) {
                 const data = await response.json();
-                toast.success('Şəkil uğurla yükləndi', { id: uploadId });
+                toast.success(options?.successText || 'Şəkil uğurla yükləndi', { id: uploadId });
                 return data.url;
             } else {
                 throw new Error('Upload fail');
             }
         } catch (err) {
             console.error('Upload error:', err);
-            toast.error('Görsəl yüklənərkən xəta baş verdi', { id: uploadId });
+            toast.error(options?.errorText || 'Görsəl yüklənərkən xəta baş verdi', { id: uploadId });
             return null;
         }
+    };
+
+    const uploadImage = async (file: File): Promise<string | null> => {
+        return uploadAsset(file);
     };
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, pageIdx: number, imgId: string) => {
@@ -1505,28 +1552,19 @@ const VisualEditor: React.FC = () => {
     }
 
     const currentPage = pages[selectedPageIndex];
-
-    // Filter logic
-    const filteredPages = pages.map((page, idx) => ({ page, idx })).filter(({ page }) => {
-        if (!searchTerm) return true;
-
-        const lower = searchTerm.toLowerCase();
-        const matchTitle = page.title.toLowerCase().includes(lower);
-
-        // Match against all sections
-        const matchText = page.sections.some(s =>
-            isSectionVisibleInAdmin(s) && (
-            (s.label.toLowerCase().includes(lower) || s.value.toLowerCase().includes(lower))
-            )
-        );
-
-        // Match against all images
-        const matchImg = page.images.some(i =>
-            (i.alt.toLowerCase().includes(lower) || i.path.toLowerCase().includes(lower))
-        );
-
-        return matchTitle || matchText || matchImg;
-    });
+    const activeGroupIds = resolvePageGroup(pageParam);
+    const activeGroupPages = activeGroupIds
+        .map((id) => {
+            const pageIdx = pages.findIndex((page) => page.id === id);
+            if (pageIdx === -1) return null;
+            return { page: pages[pageIdx], pageIdx };
+        })
+        .filter(Boolean) as { page: PageContent; pageIdx: number }[];
+    const isGroupedRequest = !!pageParam && (
+        !!TAB_PAGE_GROUPS[pageParam] ||
+        !!PAGE_TO_TAB_GROUP[pageParam]
+    );
+    const isGroupedTabView = editorMode === 'extract' && isGroupedRequest && activeGroupPages.length > 0;
 
     const displayedSections = (currentPage?.sections || []).filter(s => {
         if (!isSectionVisibleInAdmin(s)) return false;
@@ -1607,27 +1645,11 @@ const VisualEditor: React.FC = () => {
 
                     <div className="header-actions">
                         <button
-                            className="sync-btn-compact"
-                            onClick={() => window.location.reload()}
-                            title="Səhifəni yenilə"
-                        >
-                            <RotateCcw size={16} />
-                        </button>
-                        <button
-                            className="sync-btn-compact"
-                            onClick={startExtraction}
-                            disabled={isExtracting}
-                            style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#166534', fontWeight: '600', gap: '6px' }}
-                        >
-                            <RotateCcw size={16} className={isExtracting ? 'spin' : ''} />
-                            {isExtracting ? 'Sinxron...' : 'Sinxron'}
-                        </button>
-                        <button
                             className={`save-btn ${isSaving ? 'saving' : ''}`}
                             onClick={saveChanges}
                             disabled={isSaving}
                         >
-                            {isSaving ? 'Gözləyin...' : <><Save size={16} /> Yenilə</>}
+                            {isSaving ? 'Gözləyin...' : <><Save size={16} /> Saxla</>}
                         </button>
                     </div>
                 </div>
@@ -1673,7 +1695,7 @@ const VisualEditor: React.FC = () => {
             </div>
 
             {editorMode === 'news' ? (
-                <div className="editor-layout">
+                <div className="editor-layout with-sidebar">
                     <aside className="page-list">
                         <div className="list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                             <h3>Xəbərlər</h3>
@@ -1710,17 +1732,17 @@ const VisualEditor: React.FC = () => {
                         </div>
                     </aside>
 
-                    <main className="editor-canvas" style={{ padding: '0' }}>
+                    <main className="editor-canvas editor-canvas-flat">
                         {selectedNewsId !== null && newsForm.id !== undefined ? (
-                            <div style={{ padding: '2rem', height: '100%', overflowY: 'auto' }}>
-                                <div className="canvas-header" style={{ marginBottom: '2rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+                            <div className="editor-workspace">
+                                <div className="canvas-header canvas-header-block">
                                     <h2 style={{ fontSize: '2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
                                         <FileText size={22} /> Xəbəri Redaktə Et
                                     </h2>
                                     <p style={{ color: '#64748b' }}>{newsForm.title} // ID: {newsForm.id}</p>
                                 </div>
 
-                                <div className="edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                                <div className="edit-grid grid-2">
                                     <div className="form-group">
                                         <label>BAŞLIQ (AZ)</label>
                                         <input
@@ -1755,14 +1777,13 @@ const VisualEditor: React.FC = () => {
                                             <option value="published">Dərc edilib</option>
                                         </select>
                                     </div>
-                                    <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                                    <div className="form-group full-span">
                                         <label>ŞƏKİL</label>
-                                        <div style={{ display: 'flex', gap: '10px' }}>
+                                        <div className="input-row">
                                             <input
                                                 type="text"
                                                 value={newsForm.img}
                                                 onChange={(e) => handleNewsChange('img', e.target.value, newsForm.id)}
-                                                style={{ flex: 1 }}
                                             />
                                             <input
                                                 type="file"
@@ -1779,7 +1800,7 @@ const VisualEditor: React.FC = () => {
                                             <button onClick={() => document.getElementById('news-full-img')?.click()} className="btn-secondary">Yüklə</button>
                                         </div>
                                     </div>
-                                    <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                                    <div className="form-group full-span">
                                         <label>MƏZMUN</label>
                                         <QuillEditor
                                             id="news-full-desc"
@@ -1789,12 +1810,12 @@ const VisualEditor: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
+                                <div className="editor-savebar">
                                     <button className="btn-primary" onClick={saveChanges}>Yadda Saxla</button>
                                 </div>
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94a3b8', flexDirection: 'column', gap: '1rem' }}>
+                            <div className="editor-empty">
                                 <FileText size={48} style={{ opacity: 0.2 }} />
                                 <p>Redaktə etmək üçün sol tərəfdən xəbər seçin və ya yeni yaradın.</p>
                             </div>
@@ -1802,7 +1823,7 @@ const VisualEditor: React.FC = () => {
                     </main>
                 </div>
             ) : editorMode === 'events' ? (
-                <div className="editor-layout">
+                <div className="editor-layout with-sidebar">
                     <aside className="page-list">
                         <div className="list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                             <h3>Tədbirlər</h3>
@@ -1839,17 +1860,17 @@ const VisualEditor: React.FC = () => {
                         </div>
                     </aside>
 
-                    <main className="editor-canvas" style={{ padding: '0' }}>
+                    <main className="editor-canvas editor-canvas-flat">
                         {selectedEventId !== null && eventForm.id !== undefined ? (
-                            <div style={{ padding: '2rem', height: '100%', overflowY: 'auto' }}>
-                                <div className="canvas-header" style={{ marginBottom: '2rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+                            <div className="editor-workspace">
+                                <div className="canvas-header canvas-header-block">
                                     <h2 style={{ fontSize: '2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
                                         <Calendar size={22} /> Tədbiri Redaktə Et
                                     </h2>
                                     <p style={{ color: '#64748b' }}>{eventForm.title} // ID: {eventForm.id}</p>
                                 </div>
 
-                                <div className="edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                                <div className="edit-grid grid-2">
                                     <div className="form-group">
                                         <label>TƏDBİR ADI</label>
                                         <input
@@ -1892,14 +1913,13 @@ const VisualEditor: React.FC = () => {
                                             <option value="past">Keçmiş</option>
                                         </select>
                                     </div>
-                                    <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                                    <div className="form-group full-span">
                                         <label>ŞƏKİL</label>
-                                        <div style={{ display: 'flex', gap: '10px' }}>
+                                        <div className="input-row">
                                             <input
                                                 type="text"
                                                 value={eventForm.img}
                                                 onChange={(e) => handleEventChange('img', e.target.value, eventForm.id)}
-                                                style={{ flex: 1 }}
                                             />
                                             <input
                                                 type="file"
@@ -1916,7 +1936,7 @@ const VisualEditor: React.FC = () => {
                                             <button onClick={() => document.getElementById('event-full-img')?.click()} className="btn-secondary">Yüklə</button>
                                         </div>
                                     </div>
-                                    <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                                    <div className="form-group full-span">
                                         <label>TƏSVİR</label>
                                         <QuillEditor
                                             id="event-full-desc"
@@ -1924,16 +1944,40 @@ const VisualEditor: React.FC = () => {
                                             onChange={(val: string) => handleEventChange('description', val, eventForm.id)}
                                         />
                                     </div>
-                                    <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                                    <div className="form-group full-span">
                                         <label>PDF URL</label>
-                                        <input
-                                            type="text"
-                                            value={eventForm.pdfUrl || ''}
-                                            onChange={(e) => handleEventChange('pdfUrl', e.target.value, eventForm.id)}
-                                            placeholder="https://.../rules.pdf"
-                                        />
+                                        <div className="input-row">
+                                            <input
+                                                type="text"
+                                                value={eventForm.pdfUrl || ''}
+                                                onChange={(e) => handleEventChange('pdfUrl', e.target.value, eventForm.id)}
+                                                placeholder="https://.../rules.pdf"
+                                            />
+                                            <input
+                                                type="file"
+                                                id="event-full-pdf"
+                                                accept=".pdf,application/pdf"
+                                                style={{ display: 'none' }}
+                                                onChange={async (e) => {
+                                                    const f = e.target.files?.[0];
+                                                    if (!f) return;
+                                                    if (f.type !== 'application/pdf' && !f.name.toLowerCase().endsWith('.pdf')) {
+                                                        toast.error('Yalnız PDF faylı yüklənə bilər');
+                                                        return;
+                                                    }
+                                                    const url = await uploadAsset(f, {
+                                                        loadingText: 'PDF yüklənir...',
+                                                        successText: 'PDF uğurla yükləndi',
+                                                        errorText: 'PDF yüklənərkən xəta baş verdi'
+                                                    });
+                                                    if (url) handleEventChange('pdfUrl', url, eventForm.id);
+                                                    (e.target as HTMLInputElement).value = '';
+                                                }}
+                                            />
+                                            <button type="button" onClick={() => document.getElementById('event-full-pdf')?.click()} className="btn-secondary">PDF Yüklə</button>
+                                        </div>
                                     </div>
-                                    <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                                    <div className="form-group full-span">
                                         <label>QAYDALAR</label>
                                         <QuillEditor
                                             id="event-full-rules"
@@ -1943,12 +1987,12 @@ const VisualEditor: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
+                                <div className="editor-savebar">
                                     <button className="btn-primary" onClick={saveChanges}>Yadda Saxla</button>
                                 </div>
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94a3b8', flexDirection: 'column', gap: '1rem' }}>
+                            <div className="editor-empty">
                                 <Calendar size={48} style={{ opacity: 0.2 }} />
                                 <p>Redaktə etmək üçün sol tərəfdən tədbir seçin və ya yeni yaradın.</p>
                             </div>
@@ -1956,7 +2000,7 @@ const VisualEditor: React.FC = () => {
                     </main>
                 </div>
             ) : editorMode === 'drivers' ? (
-                <div className="editor-layout">
+                <div className="editor-layout with-sidebar">
                     <aside className="page-list">
                         <div className="list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                             <h3>Kateqoriyalar</h3>
@@ -2013,15 +2057,15 @@ const VisualEditor: React.FC = () => {
                         </div>
                     </aside>
 
-                    <main className="editor-canvas" style={{ padding: '0' }}>
+                    <main className="editor-canvas editor-canvas-flat">
                         {selectedDriverId !== null && driverForm.id !== undefined ? (
-                            <div style={{ padding: '2rem', height: '100%', overflowY: 'auto' }}>
-                                <div className="canvas-header" style={{ marginBottom: '2rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+                            <div className="editor-workspace">
+                                <div className="canvas-header canvas-header-block">
                                     <h2 style={{ fontSize: '2rem' }}>{driverForm.name}</h2>
                                     <p style={{ color: '#64748b' }}>{driverCategories.find(c => c.id === selectedCatId)?.name} // RANK #{driverForm.rank}</p>
                                 </div>
 
-                                <div className="edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                                <div className="edit-grid grid-2">
                                     <div className="form-group">
                                         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>SÜRÜCÜNÜN ADI VƏ SOYADI</label>
                                         <input
@@ -2086,9 +2130,9 @@ const VisualEditor: React.FC = () => {
                                         />
                                     </div>
 
-                                    <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                                    <div className="form-group full-span">
                                         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>PİLOT ŞƏKLİ</label>
-                                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                        <div className="input-row">
                                             <div style={{ width: '80px', height: '80px', borderRadius: '50%', overflow: 'hidden', background: '#f1f5f9', border: '2px solid var(--primary)' }}>
                                                 {driverForm.img ? (
                                                     <img src={driverForm.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -2098,7 +2142,7 @@ const VisualEditor: React.FC = () => {
                                                     </div>
                                                 )}
                                             </div>
-                                            <div style={{ flex: 1, display: 'flex', gap: '0.5rem' }}>
+                                            <div className="input-row" style={{ flex: 1 }}>
                                                 <input
                                                     type="text"
                                                     value={driverForm.img || ''}
@@ -2129,14 +2173,14 @@ const VisualEditor: React.FC = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
+                                <div className="editor-savebar">
                                     <button className="btn-primary" onClick={handleDriverSave} disabled={isSaving}>
                                         {isSaving ? 'Gözləyin...' : 'Sürücünü Yadda Saxla'}
                                     </button>
                                 </div>
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94a3b8', flexDirection: 'column', gap: '1rem' }}>
+                            <div className="editor-empty">
                                 <Trophy size={48} style={{ opacity: 0.2 }} />
                                 <p>Redaktə etmək üçün sol tərəfdən sürücü seçin.</p>
                             </div>
@@ -2144,7 +2188,7 @@ const VisualEditor: React.FC = () => {
                     </main>
                 </div>
             ) : editorMode === 'videos' ? (
-                <div className="editor-layout">
+                <div className="editor-layout with-sidebar">
                     <aside className="page-list">
                         <div className="list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                             <h3>Videolar</h3>
@@ -2183,15 +2227,15 @@ const VisualEditor: React.FC = () => {
                         </div>
                     </aside>
 
-                    <main className="editor-canvas" style={{ padding: '0' }}>
+                    <main className="editor-canvas editor-canvas-flat">
                         {selectedVideoId !== null && videoForm.id !== undefined ? (
-                            <div style={{ padding: '2rem', height: '100%', overflowY: 'auto' }}>
-                                <div className="canvas-header" style={{ marginBottom: '2rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+                            <div className="editor-workspace">
+                                <div className="canvas-header canvas-header-block">
                                     <h2 style={{ fontSize: '2rem' }}>Video Redaktəsi</h2>
                                     <p style={{ color: '#64748b' }}>{videoForm.title} // ID: {videoForm.id}</p>
                                 </div>
 
-                                <div className="edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem', maxWidth: '800px' }}>
+                                <div className="edit-grid grid-1">
                                     <div className="form-group">
                                         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>VİDEO BAŞLIĞI</label>
                                         <input
@@ -2217,7 +2261,7 @@ const VisualEditor: React.FC = () => {
                                         <p style={{ fontSize: '11px', color: '#64748b', marginTop: '6px' }}>YouTube linkini daxil etdikdə şəkil və ID avtomatik təyin olunacaq.</p>
                                     </div>
 
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                                    <div className="edit-grid grid-2-compact">
                                         <div className="form-group">
                                             <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>MÜDDƏT (MƏS: 05:20)</label>
                                             <input
@@ -2271,7 +2315,7 @@ const VisualEditor: React.FC = () => {
                                 </div>
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94a3b8', flexDirection: 'column', gap: '1rem' }}>
+                            <div className="editor-empty">
                                 <Video size={48} style={{ opacity: 0.2 }} />
                                 <p>Redaktə etmək üçün sol tərəfdən video seçin və ya yeni əlavə edin.</p>
                             </div>
@@ -2279,7 +2323,7 @@ const VisualEditor: React.FC = () => {
                     </main>
                 </div>
             ) : editorMode === 'photos' ? (
-                <div className="editor-layout">
+                <div className="editor-layout with-sidebar">
                     <aside className="page-list">
                         <div className="list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                             <h3>Foto Arxiv</h3>
@@ -2316,15 +2360,15 @@ const VisualEditor: React.FC = () => {
                         </div>
                     </aside>
 
-                    <main className="editor-canvas" style={{ padding: '0' }}>
+                    <main className="editor-canvas editor-canvas-flat">
                         {selectedPhotoId !== null && photoForm.id !== undefined ? (
-                            <div style={{ padding: '2rem', height: '100%', overflowY: 'auto' }}>
-                                <div className="canvas-header" style={{ marginBottom: '2rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+                            <div className="editor-workspace">
+                                <div className="canvas-header canvas-header-block">
                                     <h2 style={{ fontSize: '2rem' }}>Şəkil Redaktəsi</h2>
                                     <p style={{ color: '#64748b' }}>{photoForm.title} // ID: {photoForm.id}</p>
                                 </div>
 
-                                <div className="edit-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem', maxWidth: '800px' }}>
+                                <div className="edit-grid grid-1">
                                     <div className="form-group">
                                         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '12px', color: '#64748b' }}>ŞƏKİL BAŞLIĞI</label>
                                         <input
@@ -2374,7 +2418,7 @@ const VisualEditor: React.FC = () => {
                                 </div>
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94a3b8', flexDirection: 'column', gap: '1rem' }}>
+                            <div className="editor-empty">
                                 <ImageIcon size={48} style={{ opacity: 0.2 }} />
                                 <p>Redaktə etmək üçün sol tərəfdən şəkil seçin və ya yeni əlavə edin.</p>
                             </div>
@@ -2383,39 +2427,116 @@ const VisualEditor: React.FC = () => {
                 </div>
             ) : (
                 <div className="editor-layout">
-                    <aside className="page-list">
-                        <div className="list-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                            <h3>Komponentlər</h3>
-                            <button className="add-section-btn" onClick={() => setIsModalOpen(true)}>
-                                <Plus size={16} />
-                            </button>
-                        </div>
-                        <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}>
-                            {filteredPages.map(({ page, idx }) => (
-                                <div key={idx} className="page-nav-wrapper" style={{ position: 'relative', marginBottom: '4px' }}>
-                                    <button
-                                        className={`page-nav-item ${selectedPageIndex === idx ? 'active' : ''}`}
-                                        onClick={() => setSelectedPageIndex(idx)}
-                                        style={{ width: '100%', paddingRight: '40px', textAlign: 'left' }}
-                                    >
-                                        <Layout size={16} /> {componentLabels[page.id] || page.title || page.id}
-                                    </button>
-                                    {!componentLabels[page.id] && (
-                                        <button
-                                            className="delete-section-btn"
-                                            onClick={(e) => deleteSection(idx, e)}
-                                            style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#ff4d4f', opacity: 0.3, cursor: 'pointer' }}
-                                        >
-                                            <Trash2 size={14} />
-                                        </button>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </aside>
+                    <main className="editor-canvas" style={{ width: '100%' }}>
+                        {isGroupedTabView ? (
+                            <div className="edit-fields" style={{ width: '100%' }}>
+                                {activeGroupPages.map(({ page, pageIdx }) => {
+                                    const pageSections = (page.sections || [])
+                                        .filter((section) => isSectionVisibleInAdmin(section))
+                                        .sort((a, b) => normalizeOrder(a.order, 0) - normalizeOrder(b.order, 0));
+                                    const pageImages = (page.images || [])
+                                        .sort((a, b) => normalizeOrder(a.order, 0) - normalizeOrder(b.order, 0));
 
-                    <main className="editor-canvas">
-                        {currentPage ? (
+                                    return (
+                                        <div key={page.id} className="field-group">
+                                            <div className="canvas-header">
+                                                <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                                                    {componentLabels[page.id] || page.title}
+                                                </h2>
+                                            </div>
+
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+                                                {pageSections.map((section) => {
+                                                    const sectionKey = extractSectionKey(section);
+                                                    const canEditValue = canEditSectionField(section, 'value');
+                                                    const canEditUrl = canEditSectionField(section, 'url');
+                                                    const hasUrl = !!section.url?.trim();
+                                                    return (
+                                                        <div key={`${page.id}-${section.id}`} className="field-item-wrapper" style={{ position: 'relative', background: '#fcfcfd', padding: '1rem', borderRadius: '12px', border: '1px solid #f0f0f2' }}>
+                                                            <div style={{ fontSize: '11px', color: '#64748b', fontWeight: 700, marginBottom: '6px' }}>
+                                                                {sectionKey ? humanizeKey(sectionKey) : section.label}
+                                                            </div>
+                                                            <textarea
+                                                                rows={3}
+                                                                value={section.value}
+                                                                disabled={!canEditValue}
+                                                                onChange={(e) => handleSectionChange(pageIdx, section.id, 'value', e.target.value)}
+                                                                style={{ width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', lineHeight: 1.4, resize: 'vertical' }}
+                                                            />
+
+                                                            {hasUrl && (
+                                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '0.75rem' }}>
+                                                                    <Globe size={14} style={{ color: '#94a3b8' }} />
+                                                                    <input
+                                                                        type="text"
+                                                                        value={section.url || ''}
+                                                                        disabled={!canEditUrl}
+                                                                        onChange={(e) => handleSectionChange(pageIdx, section.id, 'url', e.target.value)}
+                                                                        onBlur={() => normalizeSectionUrl(pageIdx, section.id)}
+                                                                        placeholder="https://example.com/path"
+                                                                        style={{ fontSize: '12px', padding: '6px 10px', border: '1px solid #e2e8f0', borderRadius: '6px', flex: 1 }}
+                                                                    />
+                                                                </div>
+                                                            )}
+
+                                                            {!hasUrl && canEditUrl && (
+                                                                <button
+                                                                    type="button"
+                                                                    className="add-field-minimal"
+                                                                    onClick={() => handleSectionChange(pageIdx, section.id, 'url', `${window.location.origin}/`)}
+                                                                    style={{ marginTop: '0.75rem' }}
+                                                                >
+                                                                    <Plus size={14} /> Link əlavə et
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+
+                                            <div style={{ marginTop: '1rem' }}>
+                                                <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 700, marginBottom: '8px' }}>
+                                                    Şəkillər
+                                                </div>
+                                                <div className="images-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
+                                                    {pageImages.length === 0 && (
+                                                        <div className="empty-fields-tip" style={{ gridColumn: '1/-1', textAlign: 'center', padding: '1rem', border: '1px dashed #cbd5e1', borderRadius: '10px', color: '#64748b' }}>
+                                                            Bu bölmədə şəkil yoxdur.
+                                                        </div>
+                                                    )}
+                                                    {pageImages.map((img) => (
+                                                        <div key={`${page.id}-${img.id}`} className="image-edit-card" style={{ border: '1px solid #eee', borderRadius: '12px', padding: '0.75rem', background: '#fff' }}>
+                                                            <input
+                                                                type="text"
+                                                                value={img.path}
+                                                                placeholder="Tam şəkil linki"
+                                                                onChange={(e) => {
+                                                                    const newPages = [...pages];
+                                                                    const target = newPages[pageIdx];
+                                                                    if (!target) return;
+                                                                    const idx = target.images.findIndex((i) => i.id === img.id);
+                                                                    if (idx === -1) return;
+                                                                    target.images[idx].path = e.target.value;
+                                                                    setPages(newPages);
+                                                                }}
+                                                                style={{ width: '100%', fontSize: '12px', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: '6px', marginBottom: '8px' }}
+                                                            />
+                                                            <input
+                                                                type="text"
+                                                                value={img.alt}
+                                                                placeholder="Alt mətni"
+                                                                onChange={(e) => handleImageAltChange(pageIdx, img.id, e.target.value)}
+                                                                style={{ width: '100%', fontSize: '12px', padding: '8px 10px', border: '1px solid #e2e8f0', borderRadius: '6px' }}
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : currentPage ? (
                             <>
                                 <div className="canvas-header">
                                     <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>
@@ -2631,6 +2752,7 @@ const VisualEditor: React.FC = () => {
                                                     const editableLabel = canEditSectionField(section, 'label');
                                                     const editableValue = canEditSectionField(section, 'value');
                                                     const editableUrl = canEditSectionField(section, 'url');
+                                                    const hasUrlValue = !!(section.url || '').trim();
                                                     const deletable = canDeleteSection(section);
                                                     const realSections = currentPage?.sections || [];
                                                     const realIndex = realSections.findIndex(s => s.id === section.id);
@@ -2638,19 +2760,21 @@ const VisualEditor: React.FC = () => {
                                                     const canMoveDown = realIndex >= 0 && realIndex < realSections.length - 1;
 
                                                     return (
-                                                        <div key={section.id} className="field-item-wrapper" style={{ position: 'relative', background: editable ? '#fcfcfd' : '#f8fafc', padding: '1rem', borderRadius: '12px', border: editable ? '1px solid #f0f0f2' : '1px dashed #cbd5e1' }}>
-                                                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
+                                                        <div key={section.id} className="field-item-wrapper" style={{ background: editable ? '#fcfcfd' : '#f8fafc', padding: '1.25rem', borderRadius: '14px', border: editable ? '1px solid #e5e7eb' : '1px dashed #cbd5e1' }}>
+                                                            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
                                                                 <input
                                                                     type="text"
                                                                     value={looksLikeKeyToken(section.label) ? humanizeKey(section.label) : section.label}
                                                                     onChange={(e) => handleSectionChange(selectedPageIndex, section.id, 'label', e.target.value)}
                                                                     disabled={!editableLabel}
-                                                                    style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', border: 'none', background: 'none', width: 'auto', padding: 0 }}
+                                                                    style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', border: 'none', background: 'none', width: 'auto', padding: 0 }}
                                                                 />
-                                                                <span style={{ fontSize: '10px', color: editable ? '#ccc' : '#475569' }}>
-                                                                    {editable ? (key ? '• Açar mətn' : '• Mətn sahəsi') : '• Kilidli sistem sahəsi'}
-                                                                </span>
-                                                                <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#94a3b8', fontWeight: 700 }}>
+                                                                {key && (
+                                                                    <span style={{ fontSize: '10px', color: '#475569', background: '#f1f5f9', borderRadius: '999px', padding: '3px 8px', fontWeight: 700 }}>
+                                                                        Açar mətn
+                                                                    </span>
+                                                                )}
+                                                                <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 700, marginLeft: 'auto' }}>
                                                                     Sıra: {visibleIndex + 1}
                                                                 </span>
                                                             </div>
@@ -2670,43 +2794,55 @@ const VisualEditor: React.FC = () => {
                                                                     readOnly={!editableValue}
                                                                 />
                                                             )}
-                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                                <Globe size={14} style={{ color: '#94a3b8' }} />
-                                                                <input
-                                                                    type="text"
-                                                                    value={section.url || ''}
-                                                                    onChange={(e) => handleSectionChange(selectedPageIndex, section.id, 'url', e.target.value)}
-                                                                    disabled={!editableUrl}
-                                                                    placeholder="URL (Məs: /about veya https://...)"
-                                                                    style={{ fontSize: '12px', padding: '6px 10px', border: '1px solid #e2e8f0', borderRadius: '6px', flex: 1 }}
-                                                                />
-                                                            </div>
-                                                            {deletable && (
-                                                                <button
-                                                                    className="field-delete-btn"
-                                                                    onClick={() => removeField('text', section.id)}
-                                                                    style={{ position: 'absolute', right: '10px', top: '10px', background: '#fff', border: '1px solid #fee2e2', color: '#ef4444', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}
-                                                                >
-                                                                    <Trash2 size={12} />
-                                                                </button>
+                                                            {hasUrlValue && (
+                                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '0.75rem' }}>
+                                                                    <Globe size={14} style={{ color: '#94a3b8' }} />
+                                                                    <input
+                                                                        type="text"
+                                                                        value={toAbsoluteUrl(section.url || '')}
+                                                                        onChange={(e) => handleSectionChange(selectedPageIndex, section.id, 'url', e.target.value)}
+                                                                        onBlur={() => normalizeSectionUrl(selectedPageIndex, section.id)}
+                                                                        disabled={!editableUrl}
+                                                                        placeholder="URL (Məs: /about veya https://...)"
+                                                                        style={{ fontSize: '12px', padding: '6px 10px', border: '1px solid #e2e8f0', borderRadius: '6px', flex: 1 }}
+                                                                    />
+                                                                </div>
                                                             )}
-                                                            <div style={{ position: 'absolute', right: deletable ? '42px' : '10px', top: '10px', display: 'flex', gap: '6px' }}>
+                                                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '0.9rem' }}>
+                                                                {!hasUrlValue && editableUrl && (
+                                                                    <button
+                                                                        title="Link əlavə et"
+                                                                        onClick={() => handleSectionChange(selectedPageIndex, section.id, 'url', `${window.location.origin}/`)}
+                                                                        style={{ background: '#fff', border: '1px solid #dbeafe', color: '#2563eb', borderRadius: '8px', padding: '6px 10px', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontSize: '12px' }}
+                                                                    >
+                                                                        <Globe size={12} /> Link əlavə et
+                                                                    </button>
+                                                                )}
                                                                 <button
                                                                     title="Yuxarı daşı"
                                                                     onClick={() => moveField('text', section.id, 'up')}
                                                                     disabled={!canMoveUp}
-                                                                    style={{ background: '#fff', border: '1px solid #e2e8f0', color: canMoveUp ? '#334155' : '#cbd5e1', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: canMoveUp ? 'pointer' : 'not-allowed' }}
+                                                                    style={{ background: '#fff', border: '1px solid #e2e8f0', color: canMoveUp ? '#334155' : '#cbd5e1', borderRadius: '8px', padding: '6px 10px', display: 'flex', alignItems: 'center', gap: 6, cursor: canMoveUp ? 'pointer' : 'not-allowed', fontSize: '12px' }}
                                                                 >
-                                                                    <ChevronUp size={12} />
+                                                                    <ChevronUp size={12} /> Yuxarı
                                                                 </button>
                                                                 <button
                                                                     title="Aşağı daşı"
                                                                     onClick={() => moveField('text', section.id, 'down')}
                                                                     disabled={!canMoveDown}
-                                                                    style={{ background: '#fff', border: '1px solid #e2e8f0', color: canMoveDown ? '#334155' : '#cbd5e1', borderRadius: '50%', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: canMoveDown ? 'pointer' : 'not-allowed' }}
+                                                                    style={{ background: '#fff', border: '1px solid #e2e8f0', color: canMoveDown ? '#334155' : '#cbd5e1', borderRadius: '8px', padding: '6px 10px', display: 'flex', alignItems: 'center', gap: 6, cursor: canMoveDown ? 'pointer' : 'not-allowed', fontSize: '12px' }}
                                                                 >
-                                                                    <ChevronDown size={12} />
+                                                                    <ChevronDown size={12} /> Aşağı
                                                                 </button>
+                                                                {deletable && (
+                                                                    <button
+                                                                        className="field-delete-btn"
+                                                                        onClick={() => removeField('text', section.id)}
+                                                                        style={{ background: '#fff', border: '1px solid #fee2e2', color: '#ef4444', borderRadius: '8px', padding: '6px 10px', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontSize: '12px' }}
+                                                                    >
+                                                                        <Trash2 size={12} /> Sil
+                                                                    </button>
+                                                                )}
                                                             </div>
                                                         </div>
                                                     );

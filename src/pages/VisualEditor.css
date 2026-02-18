@@ -161,9 +161,14 @@
 }
 
 .editor-layout {
+    display: block;
+}
+
+.editor-layout.with-sidebar {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 1.5rem;
+    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
 }
 
 .page-list {
@@ -234,6 +239,7 @@
     border: 1px solid var(--border-color);
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    min-width: 0;
 }
 
 .canvas-header {
@@ -702,4 +708,90 @@
 
 .event-editor-full {
     animation: fadeIn 0.4s ease-out;
+}
+
+.editor-canvas-flat {
+    padding: 0 !important;
+}
+
+.editor-workspace {
+    padding: 1.25rem;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.canvas-header-block {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.75rem;
+}
+
+.edit-grid.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.edit-grid.grid-1 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    max-width: 920px;
+}
+
+.edit-grid.grid-2-compact {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.form-group.full-span {
+    grid-column: 1 / -1;
+}
+
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.editor-savebar {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #eef2f7;
+}
+
+.editor-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #94a3b8;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+    padding: 1.5rem;
+}
+
+/* Responsive layout for mode editors (news/events/drivers/videos/photos). */
+@media (max-width: 1100px) {
+    .editor-layout.with-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .editor-layout.with-sidebar .page-list {
+        position: static;
+        top: auto;
+    }
+
+    .edit-grid.grid-2,
+    .edit-grid.grid-2-compact {
+        grid-template-columns: 1fr;
+    }
+
+    .input-row {
+        flex-wrap: wrap;
+    }
 }
